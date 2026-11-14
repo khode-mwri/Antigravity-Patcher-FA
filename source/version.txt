@@ -14,12 +14,12 @@ VSVersionInfo(
       StringTable(
         '040904B0',
          [StringStruct('CompanyName', 'DrAmir0240'),
-          StringStruct('FileDescription', 'Open AG Patcher'),
+          StringStruct('FileDescription', 'Antigravity Patcher'),
            StringStruct('FileVersion', '1.3.8'),
-          StringStruct('InternalName', 'open_ag_patcher'),
+          StringStruct('InternalName', 'antigravity_patcher'),
           StringStruct('LegalCopyright', '© 2026'),
-          StringStruct('OriginalFilename', 'Open_AG_Patcher_Windows.exe'),
-          StringStruct('ProductName', 'Open AG Patcher'),
+          StringStruct('OriginalFilename', 'Antigravity_Patcher_Windows.exe'),
+          StringStruct('ProductName', 'Antigravity Patcher'),
            StringStruct('ProductVersion', '1.3.8')])
       ]),
     VarFileInfo([VarStruct('Translation', [1033, 1200])])

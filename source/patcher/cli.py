@@ -322,9 +322,9 @@ def print_target_info(main_js_path, manager_path="", agy_path="", vscode_path=""
 def show_about():
     clear_screen()
     print_banner()
-    print_menu_section("ABOUT OPEN AG PATCHER")
+    print_menu_section("ABOUT ANTIGRAVITY PATCHER")
     print()
-    print(f"  {color('Open AG Patcher', COLOR_BOLD, COLOR_CYAN)} v{VERSION}")
+    print(f"  {color('Antigravity Patcher', COLOR_BOLD, COLOR_CYAN)} v{VERSION}")
     print("  Open-source region lock bypass tool for Antigravity products:")
     print("  Antigravity IDE, Antigravity 2.0 (language_server), and Antigravity CLI (agy).")
     print("  Allows using Antigravity without VPN or changing Google account region.")

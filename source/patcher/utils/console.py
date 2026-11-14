@@ -107,7 +107,7 @@ def _frame_row(left, right="", accent=COLOR_CYAN):
 
 
 def print_banner():
-    title_left = color("Open AG Patcher", COLOR_BOLD)
+    title_left = color("Antigravity Patcher", COLOR_BOLD)
     title_right = color(f"v{VERSION}", COLOR_GREEN, COLOR_BOLD)
 
     label_col = 10
