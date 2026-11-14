@@ -6,85 +6,276 @@
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge" alt="GPL-3.0 License"></a>
 </p>
 
-پچر متن‌باز برای **Antigravity 2.0**، **Antigravity IDE**، **Antigravity CLI (ابزار `agy`)** و **افزونه Google Antigravity در VS Code**: این ابزار محدودیت‌های منطقه‌ای و تحریم‌های جغرافیایی گوگل را **بدون نیاز به VPN و بدون نیاز به تغییر منطقه (Region) اکانت گوگل** دور می‌زند.
+پچر متن‌باز و قدرتمند برای اکوسیستم هوش مصنوعی گوگل: **Antigravity 2.0**، **Antigravity IDE**، **Antigravity CLI (ابزار `agy`)** و **افزونه Google Antigravity در VS Code**.
+
+این ابزار محدودیت‌های منطقه‌ای، قفل جغرافیایی و تحریم‌های گوگل را **بدون نیاز به VPN و بدون نیاز به تغییر منطقه (Region) اکانت گوگل** دور می‌زند.
 
 ![نمای برنامه](https://i.ibb.co/s9Vh80CM/python-w-TPlox-Po-G4.png)
 
 ---
 
-## ⚠️ خطای HTTP 500 Internal Server Error
-اگر هنگام ارسال درخواست در Antigravity IDE با خطای `HTTP 500 Internal Server Error` مواجه شدید، این مشکل سمت سرورهای گوگل است و پچر راهی برای حل آن ندارد. در این صورت اکانت گوگل خود را تغییر دهید (ترجیحاً اکانتی متعلق به منطقه‌ای که سرویس در آن فعال است یا اشتراک رسمی دارد).
+## 📑 فهرست مطالب
+1. [💾 راهنمای بک‌آپ، پاک‌سازی و مدیریت داده‌ها](#-۱-راهنمای-بکآپ-پاکسازی-و-مدیریت-دادهها-در-پلتفرمهای-مختلف)
+2. [🚀 آموزش نصب و اجرای پروژه (از صفر تا اجرا)](#-۲-آموزش-نصب-و-راهاندازی-پروژه-از-صفر-تا-اجرا)
+3. [⚠️ خطاهای متداول و راه‌حل‌ها](#-۳-خطاهای-متداول-و-راهحلها-troubleshooting)
+4. [❓ جزئیات فنی نحوه کارکرد پچ](#-۴-جزئیات-فنی-نحوه-کارکرد-پچ)
+5. [🛠️ ساخت نسخه اجرایی (Build)](#-۵-ساخت-نسخه-اجرایی-مستقل-build)
+6. [📁 ساختار فایل‌های پروژه](#-۶-ساختار-پوشهها-و-فایلهای-پروژه)
+7. [📜 مجوز و کپی‌رایت](#-۷-مجوز-و-کپیرایت)
+8. [💬 پشتیبانی و ارتباط](#-۸-پشتیبانی-و-ارتباط)
 
-**نمونه خطا:**
+---
+
+## 💾 ۱. راهنمای بک‌آپ، پاک‌سازی و مدیریت داده‌ها در پلتفرم‌های مختلف
+
+مدیریت پوشه داده‌ها و بک‌آپ‌گیری یکی از مهم‌ترین مراحل کار با ابزارهای Antigravity است؛ زیرا در مواردی همچون خطای ۴۲۹ (اتمام سهمیه سشن)، توکن‌های منقضی‌شده یا کرش کردن کَش، تنها راه بازنشانی کامل محیط، ریست کردن داده‌ها و ورود مجدد است. علاوه بر این، خود پچر قبل از اعمال هر تغییری به‌صورت خودکار از فایل‌ها بک‌آپ با پسوندهای `.bak`، `.agybak` و `.vscodebak` تهیه می‌کند.
+
+> **تفاوت نام پوشه در نسخه‌ها:**
+> - برای **Antigravity 2.0**: نام پوشه `Antigravity` است.
+> - برای **Antigravity IDE**: نام پوشه `Antigravity IDE` است.
+> *(در دستورات زیر پوشه پیش‌فرض `Antigravity` در نظر گرفته شده است؛ در صورت استفاده از IDE نام آن را تنظیم کنید).*
+
+---
+
+### 💻 ویندوز (Windows)
+
+#### مرحله ۱: بستن کامل برنامه
+ابتدا نرم‌افزار را ببندید و در Task Manager مطمئن شوید پردازشی از Antigravity باز نمانده باشد.
+
+#### مرحله ۲: جابجایی و بک‌آپ پوشه داده‌ها
+کلیدهای `Win + X` را زده و **PowerShell** یا **Terminal** را باز کنید:
+```powershell
+Move-Item "$env:APPDATA\Antigravity" "$env:USERPROFILE\Desktop\Antigravity-backup"
 ```
-Trajectory ID: 2669b09c-1d11-4620-9bfa-6ad1f0e26a88
-Error: HTTP 500 Internal Server Error
-Sherlog: 
-TraceID: 0xd9ada64bcca3260c
-Headers: {"Alt-Svc":["h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"],"Content-Length":["109"],"Content-Type":["text/event-stream"],"Date":["Sat, 14 Mar 2026 13:51:24 GMT"],"Server":["ESF"],"Server-Timing":["gfet4t7; dur=423"],"Vary":["Origin","X-Origin","Referer"],"X-Cloudaicompanion-Trace-Id":["d9ada64bcca3260c"],"X-Content-Type-Options":["nosniff"],"X-Frame-Options":["SAMEORIGIN"],"X-Xss-Protection":["0"]}
 
-{
-  "error": {
-    "code": 500,
-    "message": "Internal error encountered.",
-    "status": "INTERNAL"
-  }
-}
+#### مرحله ۳: باز کردن برنامه و بررسی
+برنامه Antigravity را اجرا کرده، وارد اکانت گوگل خود شوید و یک پیام آزمایشی ارسال کنید تا توکن‌ها و کانفیگ جدید ساخته شوند. سپس برنامه را مجدداً ببندید.
+
+#### مرحله ۴: بازگردانی تاریخچه گفتگوها (چت‌ها)
+برای اینکه تاریخچه پیام‌های قبلی را بدون بازگرداندن فایل‌های مشکل‌دار بازیابی کنید، فقط پوشه‌های ذخیره‌سازی چت را برگردانید:
+```powershell
+# حذف پوشه‌های خام فعلی
+Remove-Item -Recurse -Force "$env:APPDATA\Antigravity\User\globalStorage"
+Remove-Item -Recurse -Force "$env:APPDATA\Antigravity\User\workspaceStorage"
+
+# کپی تاریخچه پیام‌ها از بک‌آپ
+Copy-Item -Recurse "$env:USERPROFILE\Desktop\Antigravity-backup\User\globalStorage" "$env:APPDATA\Antigravity\User\"
+Copy-Item -Recurse "$env:USERPROFILE\Desktop\Antigravity-backup\User\workspaceStorage" "$env:APPDATA\Antigravity\User\"
+```
+> ⚠️ **توجه:** به هیچ عنوان فایل `settings.json` را از بک‌آپ برنگردانید؛ چرا که تنظیمات و توکن‌های خراب قبلی را مجدداً بارگذاری خواهد کرد.
+
+#### مرحله ۵: حذف بک‌آپ موقت
+پس از باز کردن برنامه و اطمینان از سلامت چت‌ها، بک‌آپ موقت روی دسکتاپ را حذف کنید:
+```powershell
+Remove-Item -Recurse -Force "$env:USERPROFILE\Desktop\Antigravity-backup"
 ```
 
 ---
 
-## ⚠️ خطای HTTP 403 Forbidden / SUBSCRIPTION_REQUIRED (#3501)
-اگر در Antigravity IDE یا خط فرمان `agy` با خطای `HTTP 403 Forbidden` با دلیل `SUBSCRIPTION_REQUIRED` یا پیام‌های زیر مواجه شدید:
-- `You do not have a valid license of this product`
-- `Agent execution terminated due to error`
+### 🍏 مک (macOS)
 
-این خطا مشکلی در پچ محلی یا صفحه `Eligibility Check` نیست، بلکه مستقیماً به **API گوگل و وضعیت اشتراک یا مجوز اکانت کاربری** برمی‌گردد. پچر فقط فایل‌های محلی سیستم را اصلاح می‌کند و دسترسی به لایسنس‌های سرور گوگل ندارد، بنابراین این خطا با پچ حل نمی‌شود.
+#### مرحله ۱: بستن کامل برنامه
+برنامه را با کلیدهای میانبر `Cmd + Q` به‌طور کامل ببندید (مطمئن شوید نقطه زیر آیکون در Dock محو شده باشد).
 
-**راه‌حل:**
-1. **ریجن اکانت گوگل خود را تغییر دهید** یا از اکانتی استفاده کنید که در کشوری پشتیبانی‌شده ثبت شده باشد.
-2. **در صورت برطرف نشدن**، باید اشتراک رسمی تهیه شود.
+#### مرحله ۲: بک‌آپ و انتقال پوشه داده‌ها
+ترمینال مک را باز کرده و دستور زیر را اجرا کنید:
+```bash
+mv ~/Library/Application\ Support/Antigravity ~/Desktop/Antigravity-backup
+```
 
-**پلن‌های رسمی هوش مصنوعی گوگل (Google AI Plans):**
-* **Google AI Plus**: فضای ۴۰۰ گیگابایت، دسترسی ۲ برابری به سهمیه جمینای
-* **Google AI Pro**: فضای ۵ ترابایت، دسترسی ۴ برابری به سهمیه جمینای
-* **Google AI Ultra**: فضای ۲۰+ ترابایت، دسترسی ۲۰ برابری به سهمیه جمینای
+#### مرحله ۳: اجرای موقت و ورود مجدد
+برنامه را باز کرده، مجدداً لاگین کنید و یک درخواست تستی ارسال نمایید. سپس برنامه را با `Cmd + Q` ببندید.
 
-**نمونه خطا:**
-```json
-{
-  "error": {
-    "code": 403,
-    "details": [
-      {
-        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
-        "domain": "cloudaicompanion.googleapis.com",
-        "metadata": {
-          "error_number": "1001",
-          "uiMessage": "true"
-        },
-        "reason": "SUBSCRIPTION_REQUIRED"
-      }
-    ],
-    "message": "You do not have a valid license of this product. Please contact your administrator to request a license. If you are not an enterprise user and believe you are receiving this message as an error, please try using the latest version and logging in again. (#3501)",
-    "status": "PERMISSION_DENIED"
-  }
-}
+#### مرحله ۴: بازگردانی چت‌ها از بک‌آپ
+```bash
+rm -rf ~/Library/Application\ Support/Antigravity/User/globalStorage
+rm -rf ~/Library/Application\ Support/Antigravity/User/workspaceStorage
+
+cp -a ~/Desktop/Antigravity-backup/User/globalStorage ~/Library/Application\ Support/Antigravity/User/
+cp -a ~/Desktop/Antigravity-backup/User/workspaceStorage ~/Library/Application\ Support/Antigravity/User/
+```
+
+#### مرحله ۵: حذف بک‌آپ
+پس از اطمینان از دسترسی به چت‌ها:
+```bash
+rm -rf ~/Desktop/Antigravity-backup
 ```
 
 ---
 
-## ⚠️ خطای HTTP 400 Bad Request
-اگر با خطای `HTTP 400 Bad Request` و پیام `User location is not supported for the API use` مواجه شدید، به این معنی است که گوگل موقعیت مکانی شما را تشخیص داده و مسدود کرده است.
+### 🐧 لینوکس (Linux)
 
-> **نکته:** استفاده از VPN یا پروکسی‌های نامناسب ممکن است توسط سیستم تشخیص گوگل شناسایی شود و باعث این خطا گردد.
+مسیر داده‌ها در لینوکس معمولاً `~/.config/Antigravity` (یا متغیر `$XDG_CONFIG_HOME`) است.
 
-**راه‌حل:**
-1. پچ را اعمال کنید (**گزینه `1` در منو: Antigravity IDE patch**). پچر بررسی `isGoogleInternal` را در کد برنامه دور می‌زند.
-2. اگر پچ قبلاً اعمال شده، اکانت گوگل خود را تغییر دهید یا از سرور/VPN دیگری استفاده نمایید.
-3. استفاده از DNSهای گذر از تحریم (مانند **[Xbox DNS](https://xbox-dns.ru/)**، **[dns.malw.link](https://info.dns.malw.link/)**، **[GeoHide](https://dns.geohide.ru:8443/)** یا DNSهای ضدتحریم فعال روی سیستم و مودم).
+#### مرحله ۱: بستن کامل پردازش‌ها
+```bash
+pkill -f -i antigravity; sleep 2; pgrep -a -i antigravity || echo "برنامه با موفقیت بسته شد"
+```
 
-**نمونه خطا:**
+#### مرحله ۲: انتقال به بک‌آپ
+```bash
+mv ~/.config/Antigravity ~/Antigravity-backup
+```
+
+#### مرحله ۳: لاگین و تست
+نرم‌افزار را باز کرده، وارد شوید، یک پرامپت تستی بفرستید و مجدداً با دستور مرحله ۱ آن را ببندید.
+
+#### مرحله ۴: بازگردانی تاریخچه چت‌ها
+```bash
+rm -rf ~/.config/Antigravity/User/globalStorage
+rm -rf ~/.config/Antigravity/User/workspaceStorage
+
+cp -a ~/Antigravity-backup/User/globalStorage ~/.config/Antigravity/User/
+cp -a ~/Antigravity-backup/User/workspaceStorage ~/.config/Antigravity/User/
+```
+
+#### مرحله ۵: حذف بک‌آپ
+```bash
+rm -rf ~/Antigravity-backup
+```
+
+---
+
+## 🚀 ۲. آموزش نصب و راه‌اندازی پروژه (از صفر تا اجرا)
+
+این راهنما مراحل گام‌به‌گام راه‌اندازی پچر را در کلیه سیستم‌عامل‌ها از نصب پایتون تا اعمال نهایی پچ پوشش می‌دهد.
+
+---
+
+### گام ۱: نصب پایتون و گیت
+
+#### در ویندوز (Windows):
+1. **دانلود پایتون:** پایتون نسخه 3.10 یا بالاتر را از سایت رسمی [python.org](https://www.python.org/downloads/) دانلود کنید.
+2. **نکته بسیار مهم هنگام نصب:** در اولین پنجره نصاب پایتون، حتماً تیک گزینه **`Add python.exe to PATH`** را در پایین پنجره فعال کنید و سپس روی `Install Now` بزنید.
+3. **نصب Git:** برنامه گیت را از [git-scm.com](https://git-scm.com/) دانلود و با تنظیمات پیش‌فرض نصب نمایید.
+
+#### در لینوکس (Ubuntu / Debian / Linux Mint):
+ترمینال را باز کرده و پکیج‌های پایتون و ابزارهای مرتبط را نصب کنید:
+```bash
+sudo apt update
+sudo apt install python3 python3-pip python3-venv git -y
+```
+
+*(در توزیع‌های مبتنی بر Arch: `sudo pacman -S python python-pip git` | در Fedora: `sudo dnf install python3 python3-pip git`)*
+
+#### در مک (macOS):
+ابزارهای خط فرمان اپل و Homebrew را نصب کرده و سپس پایتون را نصب کنید:
+```bash
+xcode-select --install
+brew install python git
+```
+
+---
+
+### گام ۲: دانلود و کلون کردن ریپازیتوری
+
+ترمینال (یا PowerShell) را باز کرده و پروژه را کلون کنید:
+
+```bash
+# از طریق HTTPS
+git clone https://github.com/DrAmir0240/Antigravity-Patcher.git
+
+# یا از طریق SSH
+git clone git@github.com:DrAmir0240/Antigravity-Patcher.git
+
+# ورود به پوشه پروژه
+cd Antigravity-Patcher
+```
+
+---
+
+### گام ۳: راه‌اندازی محیط مجازی و نصب وابستگی‌ها
+
+توصیه می‌شود وابستگی‌ها در محیط ایزوله مجازی پایتون (`venv`) نصب شوند:
+
+#### ویندوز:
+```powershell
+cd source
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+#### لینوکس و مک:
+```bash
+cd source
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+---
+
+### گام ۴: اجرای پچر (Run)
+
+> ⚠️ **قبل از اجرا:** حتماً نرم‌افزار Antigravity یا Antigravity IDE را کاملاً ببندید تا فایل‌ها توسط سیستم قفل نباشند.
+
+#### نحوه اجرا:
+* **در ویندوز:**
+  ```powershell
+  python main.py
+  ```
+  *(اسکریپت در صورت نیاز به‌طور خودکار درخواست دسترسی ادمین UAC را نمایش می‌دهد).*
+* **در لینوکس:**
+  ```bash
+  sudo python3 main.py
+  ```
+  *(استفاده از sudo به دلیل دسترسی به دایرکتوری‌های سیستمی مانند `/usr/share/antigravity-ide` الزامی است).*
+* **در مک:**
+  ```bash
+  sudo python3 main.py
+  ```
+
+---
+
+### جدول گزینه‌های منوی برنامه
+
+پس از اجرا، منوی تعاملی زیر را مشاهده خواهید کرد:
+
+| کلید | دسته‌بندی | عملیات | توضیحات |
+|:---:|:---:|:---|:---|
+| **`1`** | **PATCH** | **Antigravity IDE patch** | پچ فایل `main.js` در Antigravity IDE (دور زدن تحریم و قفل ریجن) |
+| **`2`** | **PATCH** | **Antigravity 2.0 patch** | پچ باینری `language_server` برای Antigravity 2.0 |
+| **`3`** | **PATCH** | **Antigravity CLI (agy) patch** | پچ باینری ترمینال `agy` (حذف صفحه Eligibility Check) |
+| **`4`** | **PATCH** | **Antigravity VS Code Patch** | پچ افزونه VS Code و باینری داخل `~/.gemini/bin/antigravity` |
+| **`5`** | **RESTORE** | **Antigravity IDE** | بازگردانی فایل اصلی `main.js` نرم‌افزار IDE از بک‌آپ |
+| **`6`** | **RESTORE** | **Antigravity 2.0** | بازگردانی باینری اصلی `language_server` از بک‌آپ |
+| **`7`** | **RESTORE** | **Antigravity CLI** | بازگردانی باینری `agy` از بک‌آپ |
+| **`8`** | **RESTORE** | **Antigravity VS Code** | بازگردانی `extension.js` و باینری VS Code از بک‌آپ |
+| **`9`** | **TOOLS** | **Check for updates** | بررسی وجود نسخه‌های جدیدتر در گیت‌هاب |
+| **`10`** | **TOOLS** | **Open GitHub repository** | باز کردن مخزن رسمی پروژه در مرورگر |
+| **`11`** | **TOOLS** | **Select custom path** | تعیین دستی مسیر فایل‌ها در صورت عدم شناسایی خودکار |
+| **`12`** | **TOOLS** | **About program** | اطلاعات برنامه، گیت‌هاب و راه ارتباطی |
+| **`0`** | **EXIT** | **Exit** | خروج ایمن از پچر |
+
+---
+
+### اجرا با تعیین مسیر دستی (Custom Path Arguments)
+اگر برنامه در مسیری غیرمعمول نصب شده باشد، می‌توانید مسیر را مستقیماً در دستور پاس دهید:
+
+```bash
+# ویندوز:
+python main.py "C:\Users\<username>\AppData\Local\Programs\Antigravity IDE"
+python main.py "C:\Users\<username>\AppData\Local\Programs\Antigravity\resources\bin\language_server.exe"
+
+# لینوکس:
+sudo python3 main.py /usr/share/antigravity-ide
+sudo python3 main.py /opt/Antigravity/resources/bin/language_server
+
+# مک:
+sudo python3 main.py "/Applications/Antigravity IDE.app"
+sudo python3 main.py "/Applications/Antigravity.app"
+```
+
+---
+
+## ⚠️ ۳. خطاهای متداول و راه‌حل‌ها (Troubleshooting)
+
+در این بخش رایج‌ترین خطاهای شبکه، سرور، مجوزها و شیوه برطرف کردن آنها توضیح داده شده است:
+
+---
+
+### ۱. خطای HTTP 400 Bad Request (`User location is not supported`)
 ```json
 {
   "error": {
@@ -94,12 +285,32 @@ Headers: {"Alt-Svc":["h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"],"Cont
   }
 }
 ```
+* **علت:** گوگل متوجه موقعیت جغرافیایی نامعتبر، IP مسدود یا اثر انگشت تحریم‌شده در نشست کاربری شما شده است.
+* **راه‌حل:**
+  1. پچ را اعمال کنید (**گزینه `1` در منو**). این پچ بررسی‌های داخلی موقعیت را خنثی می‌کند.
+  2. در صورت باقی ماندن مشکل، از DNSهای گذر از تحریم مانند **[Xbox DNS](https://xbox-dns.ru/)**، **[dns.malw.link](https://info.dns.malw.link/)** یا **[GeoHide](https://dns.geohide.ru:8443/)** روی سیستم یا روتر خود استفاده کنید.
+  3. از یک اکانت گوگل با سابقه در کشور مجاز استفاده کنید.
 
 ---
 
-## ⚠️ خطای HTTP 429 Too Many Requests / RESOURCE_EXHAUSTED
-هنگام ارسال دستور، با خطای اتمام سهمیه (Quota) مواجه می‌شوید:
+### ۲. خطای HTTP 403 Forbidden / SUBSCRIPTION_REQUIRED (#3501)
+```json
+{
+  "error": {
+    "code": 403,
+    "message": "You do not have a valid license of this product. Please contact your administrator to request a license. (#3501)",
+    "status": "PERMISSION_DENIED"
+  }
+}
+```
+* **علت:** این خطا مستقیماً به **لایسنس و اعتبارسنجی سمت سرورهای ابری گوگل** مربوط است. پچر فقط فایل‌های لوکال را دستکاری می‌کند و نمی‌تواند به اکانت شما اشتراک اختصاص دهد.
+* **راه‌حل:**
+  1. ریجن اکانت گوگل خود را به کشوری که دسترسی آزاد دارد تغییر دهید یا با یک اکانت خارجی وارد شوید.
+  2. در صورت نیاز به استفاده پایدار، یکی از پلن‌های رسمی Google AI (پلاس، پرو یا اولترا) را تهیه فرمایید.
 
+---
+
+### ۳. خطای HTTP 429 Too Many Requests / RESOURCE_EXHAUSTED
 ```
 Error: HTTP 429 Too Many Requests
 {
@@ -110,252 +321,139 @@ Error: HTTP 429 Too Many Requests
   }
 }
 ```
-
-**راه‌حل:** پاکسازی و ریست پوشه داده‌های Antigravity (کانفیگ تمیز و توکن‌های تازه) و سپس در صورت تمایل، بازگرداندن تاریخچه گفتگوها از نسخه بک‌آپ.
-
-> **تفاوت Antigravity با Antigravity IDE:** پوشه داده‌ها برای نسخه Antigravity 2.0 نامش `Antigravity` و برای Antigravity IDE نامش `Antigravity IDE` است. در دستورات زیر نام مناسب را جایگزین کنید.
-
-### ویندوز (راهنمای کامل)
-1. برنامه Antigravity را کاملاً ببندید (از Task Manager مطمئن شوید پردازشی باز نمانده است).
-2. پوشه `%appdata%` را باز کرده و پوشه داده‌ها را به مکانی موقت منتقل کنید:
-   ```powershell
-   Move-Item "$env:APPDATA\Antigravity" "$env:USERPROFILE\Desktop\Antigravity-backup"
-   ```
-3. برنامه Antigravity را اجرا کرده، وارد اکانت شوید و یک پیام آزمایشی بفرستید (خطای ۴۲۹ باید برطرف شده باشد).
-4. برنامه را مجدداً ببندید.
-5. *(اختیاری - بازگردانی چت‌ها)* برای حفظ پیام‌های قبلی، فقط این دو پوشه را برگردانید:
-   ```powershell
-   Remove-Item -Recurse -Force "$env:APPDATA\Antigravity\User\globalStorage"
-   Remove-Item -Recurse -Force "$env:APPDATA\Antigravity\User\workspaceStorage"
-
-   Copy-Item -Recurse "$env:USERPROFILE\Desktop\Antigravity-backup\User\globalStorage" "$env:APPDATA\Antigravity\User\"
-   Copy-Item -Recurse "$env:USERPROFILE\Desktop\Antigravity-backup\User\workspaceStorage" "$env:APPDATA\Antigravity\User\"
-   ```
-   > ⚠️ **توجه:** فایل `settings.json` را از بک‌آپ کپی نکنید، چون همان تنظیمات مشکل‌دار قبلی برمی‌گردد.
-6. برنامه را باز کرده و سلامت چت‌ها را چک کنید. در پایان بک‌آپ را حذف نمایید:
-   ```powershell
-   Remove-Item -Recurse -Force "$env:USERPROFILE\Desktop\Antigravity-backup"
-   ```
-
-### مک (macOS)
-1. برنامه را با `Cmd+Q` کامل ببندید.
-2. پوشه داده‌ها را جابجا کنید:
-   ```bash
-   mv ~/Library/Application\ Support/Antigravity ~/Desktop/Antigravity-backup
-   ```
-3. برنامه را اجرا کنید، لاگین کرده و تست کنید.
-4. برنامه را دوباره ببندید (`Cmd+Q`).
-5. *(اختیاری - بازگردانی تاریخچه)*:
-   ```bash
-   rm -rf ~/Library/Application\ Support/Antigravity/User/globalStorage
-   rm -rf ~/Library/Application\ Support/Antigravity/User/workspaceStorage
-
-   cp -a ~/Desktop/Antigravity-backup/User/globalStorage ~/Library/Application\ Support/Antigravity/User/
-   cp -a ~/Desktop/Antigravity-backup/User/workspaceStorage ~/Library/Application\ Support/Antigravity/User/
-   ```
-6. برنامه را تست کرده و بک‌آپ را حذف کنید:
-   ```bash
-   rm -rf ~/Desktop/Antigravity-backup
-   ```
-
-### لینوکس (Linux)
-مسیر پیش‌فرض داده‌ها: `~/.config/Antigravity`
-1. برنامه را کامل ببندید:
-   ```bash
-   pkill -f -i antigravity; sleep 2; pgrep -a -i antigravity || echo "بسته شد"
-   ```
-2. پوشه داده‌ها را جابجا کنید:
-   ```bash
-   mv ~/.config/Antigravity ~/Antigravity-backup
-   ```
-3. برنامه را باز کرده، وارد شوید و دستور تستی بفرستید.
-4. پس از اطمینان، برنامه را ببندید.
-5. *(اختیاری - بازگردانی تاریخچه)*:
-   ```bash
-   rm -rf ~/.config/Antigravity/User/globalStorage
-   rm -rf ~/.config/Antigravity/User/workspaceStorage
-
-   cp -a ~/Antigravity-backup/User/globalStorage ~/.config/Antigravity/User/
-   cp -a ~/Antigravity-backup/User/workspaceStorage ~/.config/Antigravity/User/
-   ```
-6. برنامه را اجرا و چک کنید.
-
-#### چرا این روش کار می‌کند؟
-با حذف و ایجاد مجدد پوشه داده‌ها، توکن‌های موقت و اتصال به سهمیه مصرف‌شده قبلی ریست می‌شوند و سهمیه جدید فعال می‌شود.
-
-> **نکته برای کاربران پچ‌شده:** فایل `main.js` پچ‌شده داخل پوشه نصب برنامه است و با حذف پوشه داده‌های کاربر تغییری نمی‌کند؛ بنابراین نیازی به پچ مجدد نیست.
+* **علت:** سهمیه توکن‌ها تمام شده یا نشست کاری در وضعیت نامعتبر قرار گرفته است.
+* **راه‌حل:**
+  پوشه داده‌ها را طبق دستورالعمل کامل [بخش ۱ (راهنمای بک‌آپ و پاک‌سازی داده‌ها)](#-۱-راهنمای-بکآپ-پاکسازی-و-مدیریت-دادهها-در-پلتفرمهای-مختلف) ریست کنید تا سهمیه تازه و توکن‌های نو تولید شوند.
 
 ---
 
-## ⚠️ خطای پچ: "✗ isGoogleInternal -> true (auth) — pattern not found"
-اگر هنگام پچ کردن Antigravity IDE (گزینه `1`) با این خطا روبرو شدید:
-```text
-✗ isGoogleInternal -> true (auth) — pattern not found
+### ۴. خطای HTTP 500 Internal Server Error
 ```
-این پیام نشان می‌دهد که پچر نتوانسته الگوی مورد نظر را در فایل `main.js` پیدا کند.
-**در تقریباً ۱۰۰٪ موارد، دلیل این است که پچر یک فایل `main.js` اشتباه (مربوط به یک برنامه الکترون دیگر یا فایل موجود در پوشه کاری جاری) را پیدا کرده است.**
-
-### راه‌حل:
-1. در منوی اصلی مسیر نمایش داده شده برای Antigravity IDE را بررسی کنید.
-2. مطمئن شوید مسیر دقیقاً به فایل Antigravity IDE اشاره دارد، مانند:
-   - **ویندوز:** `%LOCALAPPDATA%\Programs\Antigravity IDE\resources\app\out\main.js`
-   - **لینوکس:** `/usr/share/antigravity-ide/resources/app/out/main.js`
-   - **مک:** `/Applications/Antigravity IDE.app/Contents/Resources/app/out/main.js`
-3. با انتخاب گزینه **TOOLS → `11` (Select custom path)** مسیر دقیق پوشه یا فایل برنامه را دستی وارد کنید.
-4. یا مسیر را مستقیماً به دستور پایتون پاس بدهید:
-   ```bash
-   python main.py "/path/to/Antigravity IDE"
-   ```
-
----
-
-## 🌟 قابلیت‌ها و ویژگی‌های کلیدی
-- **شناسایی خودکار:** جستجوی هوشمند برای پیدا کردن مسیرهای نصب Antigravity 2.0، Antigravity IDE، ابزار CLI (`agy`) و افزونه VS Code در رجیستری ویندوز و مسیرهای استاندارد لینوکس و مک.
-- **بررسی خودکار آپدیت:** امکان بررسی انتشار نسخه‌های جدیدتر در گیت‌هاب (گزینه `9`).
-- **پچ Antigravity CLI:** حذف کامل صفحه «Eligibility Check» و دور زدن خطای عدم دسترسی در باینری کامپایل‌شده Go (`agy`/`agy.exe`) بر اساس امضای بایت‌های ماشین کد برای پردازنده‌های x86-64 و ARM64.
-- **پچ Antigravity Manager (`language_server`):** فعال‌سازی مقدار `hasValidAuth=true` در باینری اصلی بک‌اند.
-- **پچ افزونه VS Code (`google.google-antigravity`):** تزریق کد محافظ به `extension.js` برای جلوگیری از دانلود مجدد فایل‌های اجرایی از سرور و غیرفعال کردن تغییر کانال (`isChannelChanged -> false`).
-- **پشتیبانی کامل لینوکس و مک:**
-  - پشتیبانی از سیستم‌های مدیریت بسته لینوکس (`dpkg`, `rpm`, `package.json`).
-  - امضای مجدد خودکار در مک (Ad-hoc codesign با `codesign --force --deep --sign -`) تا سیستم‌عامل مک جلوی اجرای فایل دستکاری‌شده را نگیرد.
-- **جایگزینی اتمیک (Atomic) در لینوکس/مک:** نوشتن فایل‌ها با فایل‌های موقت امن و `os.replace` تا حتی اگر برنامه در پس‌زمینه باز بود خطای `ETXTBSY` یا دسترسی رد نشود و مجوز اجرای فایل (`+x`) و مالکیت فایل حفظ گردد.
-- **پشتیبان‌گیری خودکار (Backup):** گرفتن نسخه پشتیبان قبل از اعمال هر تغییر (`.bak`، `.agybak`، `.vscodebak`) با قابلیت بازگردانی ۱۰۰٪ با یک دکمه.
-
----
-
-## 🚀 راهنمای استفاده
-
-### مراحل سریع:
-1. برنامه‌های Antigravity IDE یا Antigravity 2.0 را کاملاً ببندید.
-2. پچر را با دسترسی ادمین (در ویندوز Run as administrator و در لینوکس/مک با `sudo`) اجرا کنید:
-   ```bash
-   python main.py
-   ```
-3. گزینه مورد نیاز را از منو انتخاب کنید:
-
-| گزینه | دسته‌بندی | توضیحات |
-|---|---|---|
-| **`1`** | **PATCH** | پچ فایل `main.js` در Antigravity IDE (دور زدن تحریم منطقه‌ای) |
-| **`2`** | **PATCH** | پچ فایل باینری `language_server` در Antigravity 2.0 |
-| **`3`** | **PATCH** | پچ باینری ابزار ترمینال Antigravity CLI (`agy`) |
-| **`4`** | **PATCH** | پچ افزونه VS Code و باینری داخل `~/.gemini/bin/antigravity` |
-| **`5`** | **RESTORE** | بازگردانی فایل اصلی `main.js` نرم‌افزار IDE از بک‌آپ |
-| **`6`** | **RESTORE** | بازگردانی فایل `language_server` از بک‌آپ |
-| **`7`** | **RESTORE** | بازگردانی فایل `agy` از بک‌آپ |
-| **`8`** | **RESTORE** | بازگردانی فایل `extension.js` و باینری VS Code از بک‌آپ |
-| **`9`** | **TOOLS** | بررسی نسخه‌های جدید در گیت‌هاب |
-| **`10`** | **TOOLS** | باز کردن مخزن گیت‌هاب در مرورگر |
-| **`11`** | **TOOLS** | انتخاب دستی مسیر فایل‌ها و پوشه‌ها |
-| **`12`** | **TOOLS** | درباره برنامه |
-| **`0`** | **خروج** | خروج از پچر |
-
----
-
-### اجرا با تعیین دستی مسیر برنامه:
-اگر پچر مسیر برنامه‌ها را خودکار پیدا نکرد، مسیر را در آرگومان ورودی بدهید:
-
-```bash
-# ویندوز:
-python main.py "C:\Users\<نام_کاربر>\AppData\Local\Programs\Antigravity IDE"
-python main.py "C:\Users\<نام_کاربر>\AppData\Local\Programs\Antigravity\resources\bin\language_server.exe"
-python main.py "C:\Users\<نام_کاربر>\AppData\Local\agy\bin\agy.exe"
-
-# لینوکس:
-python main.py /usr/share/antigravity-ide
-python main.py /opt/Antigravity/resources/bin/language_server
-python main.py /usr/local/bin/agy
-
-# مک:
-python3 main.py "/Applications/Antigravity IDE.app"
-python3 main.py "/Applications/Antigravity.app"
-python3 main.py /usr/local/bin/agy
+Error: HTTP 500 Internal Server Error
+{
+  "error": {
+    "code": 500,
+    "message": "Internal error encountered.",
+    "status": "INTERNAL"
+  }
+}
 ```
+* **علت:** خطای داخلی سرورهای پردازشی گوگل.
+* **راه‌حل:** پچر دخالتی در زیرساخت گوگل ندارد؛ دقایقی صبر کرده و در صورت تداوم، اکانت گوگل خود را تغییر دهید.
 
 ---
 
-## ❓ جزئیات فنی تغییرات
+### ۵. خطای پچ: `✗ isGoogleInternal -> true (auth) — pattern not found`
+* **علت:** پچر فایل `main.js` مربوط به برنامه دیگری از الکترون را پیدا کرده است یا در پوشه فعلی فایل اشتباهی وجود دارد.
+* **راه‌حل:**
+  1. در منوی اصلی گزینه **`11` (Select custom path)** را انتخاب کنید.
+  2. مسیر دقیق فایل `main.js` داخل پوشه `resources/app/out/main.js` نرم‌افزار را دستی وارد کنید.
+
+---
+
+### ۶. خطای مجوز `Operation not permitted` و اجرای مک (macOS)
+اگر در مک با خطای `[Errno 1] Operation not permitted` مواجه شدید یا برنامه پس از پچ باز نشد:
+1. در تنظیمات مک به مسیر زیر بروید و به نرم‌افزار Terminal دسترسی کامل به دیسک بدهید:
+   `System Settings → Privacy & Security → Full Disk Access`
+2. برچسب قرنطینه اپل را با دستور زیر از روی برنامه بردارید:
+   ```bash
+   sudo xattr -rd com.apple.quarantine "/Applications/Antigravity.app"
+   sudo xattr -rd com.apple.quarantine "/Applications/Antigravity IDE.app"
+   ```
+3. پچر به‌صورت خودکار امضای امنیتی برنامه را با فرمان زیر تمدید (Ad-hoc re-sign) می‌کند:
+   ```bash
+   codesign --force --deep --sign - "/Applications/Antigravity IDE.app"
+   ```
+
+---
+
+## ❓ ۴. جزئیات فنی نحوه کارکرد پچ
+
+این پچر از تکنیک‌های پیشرفته دستکاری حافظه و بایت‌های فایل کامپایل‌شده استفاده می‌کند:
 
 ### ۱. پچ Antigravity IDE
-عبارت زیر در `main.js` جستجو و تغییر می‌کند:
+عبارت زیر در فایل `main.js` جستجو شده و شرط احراز صلاحیت داخلی گوگل همیشه برقرار می‌شود:
 ```javascript
-// قبل:
+// قبل از پچ:
 resetIsTierGCPTos(),this.XXX.isGoogleInternal
 
-// بعد از پچ:
+// پس از پچ:
 resetIsTierGCPTos(),true
 ```
-سپس حافظه کش VS Code (`CachedData` و `Code Cache/js`) پاکسازی می‌شود تا محیط IDE کدهای جدید را لود کند.
+همچنین کَش‌های کامپایل‌شده جاوااسکریپت (`CachedData` و `Code Cache/js`) پاک می‌شوند تا IDE مجبور به اجرای کد اصلاح‌شده گردد.
 
-### ۲. پچ Antigravity Manager (`language_server`)
-این فایل به زبان Go کامپایل شده است. پچر با شناسایی امضای بایت‌های اسمبلی تغییرات زیر را اعمال می‌کند:
-- **در پردازنده‌های x86-64:** تغییر `cmp byte ptr [rax + 8], 0` به `mov byte ptr [rax + 8], 1` همراه با دستورهای `nop` (`\xc6\x40\x08\x01\x90\x90`).
-- **در پردازنده‌های ARM64:** تغییر دستورات خواندن فلگ به مقدار ثابت ۱ (`\x23\x00\x80\x52\x03\x20\x00\x39`).
-در نتیجه مقدار خروجی `hasValidAuth` همیشه `true` بازگردانده می‌شود.
+### ۲. پچ باینری Antigravity 2.0 (`language_server`)
+این سرویس به زبان Go کامپایل شده است. پچر با شناسایی امضای بایت‌های اسمبلی تغییرات زیر را ایجاد می‌کند:
+* **در x86-64:** دستور `cmp byte ptr [rax + 8], 0` به `mov byte ptr [rax + 8], 1` همراه با دستورهای `nop` تغییر می‌یابد.
+* **در ARM64:** دستور خواندن فلگ به مقدار ثابت ۱ (`mov w3, #1`) بازنویسی می‌شود.
+در نتیجه خروجی متد تایید صلاحیت (`hasValidAuth`) همواره مقدار `true` خواهد داشت.
 
-### ۳. پچ Antigravity CLI (`agy`)
-صفحه خطای اهلیت (Eligibility Check) در فایل باینری کامپایل‌شده دور زده می‌شود:
-- **در x86-64:** دستور `cmp byte ptr [rax+8], 0` با `test rax, rax` و `NOP` جایگزین می‌شود تا شاخه ارور غیرقابل دسترس شود.
-- **در ARM64:** دستور خواندن رجیستر فلگ `ldrb w1, [x0, #8]` به `mov w1, #1` تغییر می‌یابد تا اجرای برنامه همیشه در مسیر موفق قرار گیرد. در نسخه‌های جدیدتر ۱.۲.۷ گیت‌های `w2` و `w4` نیز پچ می‌شوند.
+### ۳. پچ ابزار ترمینال Antigravity CLI (`agy`)
+* **در x86-64:** با تغییر دستور شرطی، شاخه تولید خطای عدم صلاحیت (`failure_builder`) غیرقابل دسترس می‌شود.
+* **در ARM64:** رجیسترهای پرچم وضعیت با دستورات معادل مقدار ۱ پر می‌شوند (`mov w1, #1` و در نسخه‌های جدیدتر گیت‌های `w2` و `w4`).
 
-### ۴. پچ افزونه رسمی VS Code (`google.google-antigravity`)
-> **نکته مهم:** قبل از پچ افزونه، ابتدا باید Antigravity 2.0 را با گزینه `2` پچ کرده باشید.
-
-1. **جلوگیری از دانلود مجدد:** بلافاصله بعد از خط لاگ دانلود باینری‌ها، قطعه کدی تزریق می‌شود که بررسی می‌کند اگر باینری قبلاً دانلود شده (در `~/.gemini/bin`)، مستقیماً از همان استفاده کند و دانلود دوباره انجام نشود.
-2. **غیرفعال‌سازی تغییر کانال:** خط `isChannelChanged = manifestFetched && ...` به `isChannelChanged = false;` تغییر می‌یابد تا از رونویسی فایل‌ها جلوگیری شود.
+### ۴. پچ افزونه رسمی VS Code
+1. **جلوگیری از دانلود مجدد:** بعد از خط لاگ دانلود باینری‌ها در `extension.js`، کدی تزریق می‌شود که در صورت وجود باینری محلی در `~/.gemini/bin`، فوراً مسیر همان را برگردانده و مانع از دانلود مجدد فایل از گوگل شود.
+2. **ثابت کردن وضعیت کانال:** دستور `const isChannelChanged = ...` به `const isChannelChanged = false;` تغییر می‌یابد.
 
 ---
 
-## 🛠️ ساخت نسخه اجرایی (Build)
-برای کامپایل کردن پروژه به فایل اجرایی مستقل (بدون نیاز به پایتون در مقصد) با استفاده از PyInstaller:
+## 🛠️ ۵. ساخت نسخه اجرایی مستقل (Build)
 
-1. **محیط مجازی و نصب وابستگی‌ها:**
-   ```bash
-   cd source
-   python3 -m venv .venv
-   source .venv/bin/activate  # در ویندوز: .venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
+اگر مایلید پروژه را به یک فایل مستقل اجرایی بدون نیاز به نصب پایتون تبدیل کنید:
 
-2. **کامپایل با PyInstaller:**
-   - **ویندوز:**
-     ```bash
-     pyinstaller --onefile --uac-admin --icon=icon.ico --name="Open_AG_Patcher_Windows" --noupx --clean --version-file=version.txt main.py
-     ```
-   - **لینوکس:**
-     ```bash
-     pyinstaller --onefile --icon=icon.ico --name="Open_AG_Patcher_Linux" --hidden-import=packaging --hidden-import=packaging.version --hidden-import=packaging.specifiers --hidden-import=packaging.requirements main.py
-     ```
-   - **مک (Universal2):**
-     ```bash
-     pyinstaller --onefile --name="Open_AG_Patcher_macOS" --target-arch universal2 --hidden-import=packaging --hidden-import=packaging.version --hidden-import=packaging.specifiers --hidden-import=packaging.requirements main.py
-     ```
+```bash
+cd source
+pip install pyinstaller packaging
+```
+
+* **ویندوز (Windows):**
+  ```bash
+  pyinstaller --onefile --uac-admin --icon=icon.ico --name="Antigravity_Patcher_Windows" --noupx --clean --version-file=version.txt main.py
+  ```
+* **لینوکس (Linux):**
+  ```bash
+  pyinstaller --onefile --icon=icon.ico --name="Antigravity_Patcher_Linux" --hidden-import=packaging --hidden-import=packaging.version --hidden-import=packaging.specifiers --hidden-import=packaging.requirements main.py
+  ```
+* **مک (macOS Universal2):**
+  ```bash
+  pyinstaller --onefile --name="Antigravity_Patcher_macOS" --target-arch universal2 --hidden-import=packaging --hidden-import=packaging.version --hidden-import=packaging.specifiers --hidden-import=packaging.requirements main.py
+  ```
 
 ---
 
-## 📁 ساختار پوشه‌های پروژه
-- `source/main.py`: نقطه ورود اصلی برنامه، بررسی دسترسی ادمین/sudo و اجرای منو.
-- `source/patcher/`: کدهای اصلی پچر:
-  - `constants.py`: مقادیر ثابت، کدهای رنگی ترمینال و نسخه‌ها.
-  - `cli.py`: رابط کاربری تعاملی کنسول، دریافت دستورات و رسم منوها.
-  - `utils/`: ابزارهای کمکی سیستم، رنگ‌بندی، مجوزها و جایگزینی اتمیک فایل‌ها (`atomic.py`).
-  - `ide/`: لاجیک کشف و پچ فایل‌های `main.js` در Antigravity IDE.
-  - `agy/`: لاجیک پچ بایت‌های باینری ابزار ترمینال `agy`.
-  - `manager/`: لاجیک پچ بایت‌های سرور داخلی Antigravity 2.0 (`language_server`).
-  - `vscode/`: لاجیک پچ افزونه VS Code و باینری واقع در `~/.gemini/bin`.
-- `test-agy/`: تست‌های خودکار تطابق امضاهای باینری برای نسخه‌های جدید.
-- `source/requirements.txt`: نیازمندی‌های پایتون.
-- `source/icon.ico`: آیکون برنامه.
+## 📁 ۶. ساختار پوشه‌ها و فایل‌های پروژه
+```text
+Antigravity-Patcher/
+├── README.md               # راهنمای کامل و مستندات پروژه به زبان فارسی
+├── LICENSE                 # مجوز انتشار نرم‌افزار (GPL-3.0)
+├── test-agy/               # تست‌های خودکار بررسی امضای باینری‌ها
+│   ├── AGENTS.md           # راهنمای فنی تست‌های اسمبلی برای ایجنت‌ها
+│   └── test_cli_releases.py# تست تطابق کدهای ماشین با آخرین ریلیزهای رسمی
+└── source/                 # سورس‌کد اصلی به زبان پایتون
+    ├── main.py             # نقطه ورود برنامه و اعتبارسنجی مجوزهای سیستم
+    ├── requirements.txt    # کتابخانه‌های مورد نیاز پایتون
+    ├── version.txt         # متادیتا و مشخصات فایل کامپایل‌شده
+    └── patcher/
+        ├── constants.py    # تنظیمات مرکزی، نسخه‌ها و آدرس‌های پشتیبانی
+        ├── cli.py          # منوی تعاملی کنسول، گزینه‌ها و ورودی‌ها
+        ├── utils/          # توابع کمکی (جایگزینی اتمیک فایل‌ها، رنگ، کنسول)
+        ├── ide/            # ماژول پچ Antigravity IDE (فایل main.js)
+        ├── agy/            # ماژول پچ بایت‌های Antigravity CLI
+        ├── manager/        # ماژول پچ بایت‌های Antigravity 2.0 (language_server)
+        └── vscode/         # ماژول پچ افزونه و باینری VS Code
+```
 
 ---
 
-# 📜 مجوز و کپی‌رایت
-این پروژه تحت مجوز **GPL-3.0** منتشر شده است. متن کامل در فایل [`LICENSE`](LICENSE) موجود است.
+## 📜 ۷. مجوز و کپی‌رایت
+این پروژه تحت مجوز آزاد **GPL-3.0** منتشر شده است. متن کامل مجوز در فایل [`LICENSE`](LICENSE) قابل مشاهده است.
 
-بخشی از راه‌حل‌ها و تغییرات این پروژه بر اساس دستاوردهای مخزن [eligibility-antigravity-patcher](https://github.com/QNIX-Dev/eligibility-antigravity-patcher) تحت مجوز MIT پیاده‌سازی شده است.
+بخشی از راه‌حل‌ها و منطق فنی پروژه بر اساس دستاوردهای مخزن [eligibility-antigravity-patcher](https://github.com/QNIX-Dev/eligibility-antigravity-patcher) تحت مجوز MIT پیاده‌سازی شده است.
 
 ---
 
-## 💬 پشتیبانی و ارتباط
-برای ارتباط، پشتیبانی و گزارش مشکلات می‌توانید از طریق راه‌های زیر اقدام کنید:
-- **مخزن گیت‌هاب:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher)
-- **پشتیبانی تلگرام:** [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
+## 💬 ۸. پشتیبانی و ارتباط
+برای ارتباط، دریافت آخرین اخبار، گزارش باگ یا درخواست راهنمایی:
+* **مخزن رسمی گیت‌هاب:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher)
+* **پشتیبانی تلگرام:** [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
