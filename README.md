@@ -509,10 +509,11 @@ Antigravity-Patcher/
 
 ---
 
-## 📜 ۷. مجوز و کپی‌رایت
+## 📜 ۷. مجوز، منابع و کپی‌رایت
 این پروژه تحت مجوز آزاد **GPL-3.0** منتشر شده است. متن کامل مجوز در فایل [`LICENSE`](LICENSE) قابل مشاهده است.
 
-بخشی از راه‌حل‌ها و منطق فنی پروژه بر اساس دستاوردهای مخزن [eligibility-antigravity-patcher](https://github.com/QNIX-Dev/eligibility-antigravity-patcher) تحت مجوز MIT پیاده‌سازی شده است.
+* این پروژه با استفاده و اقتباس از مخزن [trustybird/AvenCores-open-antigravity-patcher](https://github.com/trustybird/AvenCores-open-antigravity-patcher) ساخته و توسعه داده شده است.
+* همچنین بخشی از راه‌حل‌ها و منطق فنی بر اساس دستاوردهای مخزن [eligibility-antigravity-patcher](https://github.com/QNIX-Dev/eligibility-antigravity-patcher) تحت مجوز MIT پیاده‌سازی شده است.
 
 ---
 
@@ -520,3 +521,4 @@ Antigravity-Patcher/
 برای ارتباط، دریافت آخرین اخبار، گزارش باگ یا درخواست راهنمایی:
 * **مخزن رسمی گیت‌هاب:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher)
 * **پشتیبانی تلگرام:** [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
+* **مخزن پایه مورد استفاده در ساخت پروژه:** [trustybird/AvenCores-open-antigravity-patcher](https://github.com/trustybird/AvenCores-open-antigravity-patcher)
