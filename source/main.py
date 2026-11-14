@@ -46,7 +46,7 @@ if __name__ == "__main__":
         if _sys.platform == "darwin":
             print("  [i] macOS blocked writing inside Antigravity.app.")
             print("  [i] Close Antigravity and re-run with sudo:")
-            print("        sudo python main.py   (or sudo ./Open_AG_Patcher)")
+            print("        sudo python3 main.py   (or sudo ./Antigravity_Patcher_macOS)")
             print("  [i] If it still says 'Operation not permitted', check flags:")
             print("        ls -lO /Applications/Antigravity.app/Contents/resources/bin/language_server")
         else:

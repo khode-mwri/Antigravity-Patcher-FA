@@ -377,7 +377,7 @@ def do_patch_agy(path):
             if sys.platform == "darwin":
                 hint("macOS blocked writing (Errno 1 Operation not permitted).")
                 hint("Close Antigravity, then re-run the patcher with sudo:")
-                hint("  sudo python main.py   (or sudo ./Open_AG_Patcher)")
+                hint("  sudo python3 main.py   (or sudo ./Antigravity_Patcher_macOS)")
             else:
                 hint("No write access — re-run as admin/root and close agy first.")
             handle_patch_failure()

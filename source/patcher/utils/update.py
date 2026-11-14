@@ -143,14 +143,14 @@ def handle_patch_failure():
 
     if has_update and isinstance(LAST_UPDATE_RESULT, tuple) and LAST_UPDATE_RESULT[0] == "update_available":
         _, tag, url = LAST_UPDATE_RESULT
-        info(f"An update for Open Antigravity Patcher is available: {color(tag, COLOR_GREEN, COLOR_BOLD)} (current: {color(VERSION, COLOR_YELLOW)})")
+        info(f"An update for Antigravity Patcher is available: {color(tag, COLOR_GREEN, COLOR_BOLD)} (current: {color(VERSION, COLOR_YELLOW)})")
         hint(f"Download: {color(url, COLOR_CYAN)}")
         if confirmed("A patcher update is available. Would you like to open the releases page to install it?"):
             webbrowser.open(url or RELEASES_URL)
             ok(f"Opening: {color(url or RELEASES_URL, COLOR_CYAN)}")
     else:
         if LAST_UPDATE_RESULT == "up_to_date":
-            ok(f"You are using the latest version of Open Antigravity Patcher (v{VERSION}).")
+            ok(f"You are using the latest version of Antigravity Patcher (v{VERSION}).")
 
         hint(f"Issue tracker: {color(ISSUES_URL, COLOR_CYAN)}")
         if confirmed("Would you like to open GitHub to create an issue?"):
