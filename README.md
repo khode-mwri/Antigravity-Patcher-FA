@@ -16,7 +16,7 @@
 
 این ابزار محدودیت‌های منطقه‌ای، قفل جغرافیایی و خطای `User location is not supported for the API use` و `Unable to verify account eligibility` گوگل را **بدون نیاز به VPN و بدون نیاز به تغییر منطقه (Region) اکانت گوگل** در ویندوز، مک و لینوکس (اوبونتو) دور می‌زند.
 
-![نمای برنامه](https://i.ibb.co/s9Vh80CM/python-w-TPlox-Po-G4.png)
+![نمای برنامه Antigravity Patcher](./assets/screenshot.png)
 
 ---
 
