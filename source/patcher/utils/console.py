@@ -152,6 +152,13 @@ def print_panel(title, rows, accent=COLOR_GREEN):
             print(f"  {label}: {value}")
         print("-" * (len(title) + 8))
     print()
+    if title == "PATCH COMPLETE" and GITHUB_URL:
+        star_link = link(GITHUB_URL, GITHUB_URL, COLOR_YELLOW, COLOR_BOLD, COLOR_UNDERLINE)
+        try:
+            print(f"  {color('★', COLOR_YELLOW, COLOR_BOLD)} If this tool helped you, please give us a {color('Star', COLOR_YELLOW, COLOR_BOLD)} on GitHub: {star_link}")
+        except UnicodeEncodeError:
+            print(f"  [*] If this tool helped you, please give us a Star on GitHub: {GITHUB_URL}")
+        print()
 
 
 # Shared marker helpers for all operation output.

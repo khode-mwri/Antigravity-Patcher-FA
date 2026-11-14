@@ -1,16 +1,47 @@
-# 🔑 Antigravity Patcher (پچر متن‌باز Antigravity)
+# 🔑 Antigravity Patcher | پچر و رفع تحریم Google Antigravity (IDE, 2.0, CLI `agy` & VS Code)
+
 <p align="center">
-  <a href="https://github.com/DrAmir0240/Antigravity-Patcher"><img src="https://img.shields.io/badge/GitHub-DrAmir0240-181717?style=for-the-badge&logo=github" alt="GitHub"></a>
+  <a href="https://github.com/DrAmir0240/Antigravity-Patcher/stargazers"><img src="https://img.shields.io/github/stars/DrAmir0240/Antigravity-Patcher?style=for-the-badge&logo=github&color=yellow" alt="GitHub Stars"></a>
+  <a href="https://github.com/DrAmir0240/Antigravity-Patcher/releases/latest"><img src="https://img.shields.io/github/v/release/DrAmir0240/Antigravity-Patcher?style=for-the-badge&logo=github&color=brightgreen" alt="Latest Release"></a>
+  <a href="https://github.com/DrAmir0240/Antigravity-Patcher/releases"><img src="https://img.shields.io/github/downloads/DrAmir0240/Antigravity-Patcher/total?style=for-the-badge&color=blue" alt="Total Downloads"></a>
   <a href="https://t.me/AmirOmidi_Dev"><img src="https://img.shields.io/badge/Telegram-@AmirOmidi__Dev-2CA5E0?style=for-the-badge&logo=telegram" alt="Telegram"></a>
-  <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge" alt="GPL-3.0 License"></a>
 </p>
 
+> ⭐ **حمایت از پروژه / Support the Project:**  
+> اگر این ابزار مشکل تحریم و خطای ریجن شما را برطرف کرد، لطفاً با زدن دکمه **⭐ Star** در بالای همین صفحه گیت‌هاب از پروژه حمایت کنید تا هم افراد بیشتری آن را پیدا کنند و هم در آپدیت‌های بعدی Antigravity سریعاً به نسخه جدید دسترسی داشته باشید!  
+> *If this tool helped you bypass Google Antigravity region locks, please click the **⭐ Star** button at the top-right of this repository!*
+
 پچر متن‌باز و قدرتمند برای اکوسیستم هوش مصنوعی گوگل: **Antigravity 2.0**، **Antigravity IDE**، **Antigravity CLI (ابزار `agy`)** و **افزونه Google Antigravity در VS Code**.
 
-این ابزار محدودیت‌های منطقه‌ای، قفل جغرافیایی و تحریم‌های گوگل را **بدون نیاز به VPN و بدون نیاز به تغییر منطقه (Region) اکانت گوگل** دور می‌زند.
+این ابزار محدودیت‌های منطقه‌ای، قفل جغرافیایی و خطای `User location is not supported for the API use` و `Unable to verify account eligibility` گوگل را **بدون نیاز به VPN و بدون نیاز به تغییر منطقه (Region) اکانت گوگل** در ویندوز، مک و لینوکس (اوبونتو) دور می‌زند.
 
 ![نمای برنامه](https://i.ibb.co/s9Vh80CM/python-w-TPlox-Po-G4.png)
+
+---
+
+<details>
+<summary><b>🌐 English Documentation & Quick Start (Click to Expand)</b></summary>
+
+### What is Antigravity Patcher?
+**Antigravity Patcher** is a free, open-source cross-platform tool (`Windows`, `macOS Universal2 Intel & Apple Silicon`, and `Ubuntu/Linux`) that bypasses regional restrictions, geo-blocks, and account eligibility checks in Google's Antigravity ecosystem **without requiring a VPN or changing your Google account region**:
+- **Google Antigravity IDE (`main.js`)**: Fixes `HTTP 400: User location is not supported for the API use. (FAILED_PRECONDITION)` by patching `isGoogleInternal` and clearing V8 compile caches.
+- **Google Antigravity 2.0 (`language_server` / `language_server.exe`)**: Patches the Go binary (`x64` & `arm64`) to enforce `hasValidAuth = true`.
+- **Google Antigravity CLI (`agy` / `antigravity`)**: Bypasses the `Unable to verify account eligibility.` / `Eligibility check failed:` terminal lock screen on `x64` and `arm64`.
+- **Google Antigravity VS Code Extension (`google.google-antigravity`)**: Patches `extension.js` (prevents binary overwrite/re-download) and unlocks the `~/.gemini/bin/antigravity` binary.
+
+### 📥 One-Click Download & Install (No Python Required)
+Download the latest pre-built installer for your OS from [**GitHub Releases**](https://github.com/DrAmir0240/Antigravity-Patcher/releases/latest):
+
+| OS / Platform | Format | File Name | How to Run |
+|:---|:---:|:---|:---|
+| **Windows (x64)** | `.exe` | `Antigravity_Patcher_Windows.exe` | Double-click to run (auto-elevates to Administrator via UAC) |
+| **Ubuntu / Debian** | `.deb` | `Antigravity_Patcher_Ubuntu.deb` | Double-click to install (or `sudo apt install ./Antigravity_Patcher_Ubuntu.deb`), then launch **Antigravity Patcher** from your Apps menu |
+| **Linux (Portable)** | `.run` | `Antigravity_Patcher_Linux.run` | `chmod +x Antigravity_Patcher_Linux.run && sudo ./Antigravity_Patcher_Linux.run` |
+| **macOS (Installer)** | `.pkg` | `Antigravity_Patcher_macOS.pkg` | Double-click to install into `/Applications` (auto-clears Gatekeeper quarantine), then open **Antigravity Patcher** |
+| **macOS (Disk Image)** | `.dmg` | `Antigravity_Patcher_macOS.dmg` | Open DMG, drag **Antigravity Patcher.app** to `Applications`, and launch |
+
+</details>
 
 ---
 
@@ -522,3 +553,18 @@ Antigravity-Patcher/
 * **مخزن رسمی گیت‌هاب:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher)
 * **پشتیبانی تلگرام:** [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
 * **مخزن پایه مورد استفاده در ساخت پروژه:** [trustybird/AvenCores-open-antigravity-patcher](https://github.com/trustybird/AvenCores-open-antigravity-patcher)
+
+---
+
+## ⭐ نمودار رشد پروژه (Star History)
+
+[![Star History Chart](https://api.star-history.com/svg?repos=DrAmir0240/Antigravity-Patcher&type=Date)](https://star-history.com/#DrAmir0240/Antigravity-Patcher&Date)
+
+---
+
+<details>
+<summary><b>🔎 کلمات کلیدی و عبارات مرتبط (Search Keywords & Tags)</b></summary>
+
+`Antigravity Patcher` • `Google Antigravity` • `Antigravity IDE` • `Antigravity 2.0` • `Antigravity CLI` • `agy cli patch` • `google.google-antigravity` • `User location is not supported for the API use` • `FAILED_PRECONDITION 400 Antigravity` • `Unable to verify account eligibility` • `Eligibility check failed agy` • `isGoogleInternal bypass` • `language_server patch` • `Google Antigravity region lock bypass` • `پچ آنتی گراویتی` • `پچر Antigravity` • `رفع تحریم Antigravity` • `دور زدن تحریم گوگل Antigravity` • `رفع ارور ریجن Antigravity IDE` • `خطای User location is not supported در Antigravity` • `آموزش نصب و فعالسازی Antigravity در ایران بدون تحریم`
+
+</details>
