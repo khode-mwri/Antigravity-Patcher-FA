@@ -37,20 +37,20 @@ jobs:
         include:
           - os_name: Windows (x64)
             runner: windows-latest
-            artifact_name: Antigravity_Patcher_Windows.exe
+            artifact_name: windows-dist
           - os_name: Ubuntu Linux (x64)
-            runner: ubuntu-latest
-            artifact_name: Antigravity_Patcher_Linux
+            runner: ubuntu-24.04
+            artifact_name: ubuntu-dist
           - os_name: macOS (Universal2)
             runner: macos-latest
-            artifact_name: Antigravity_Patcher_macOS
+            artifact_name: macos-dist
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: "pip"
@@ -78,7 +78,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Build Windows executable
+      - name: Build Windows (.exe)
         if: runner.os == 'Windows'
         working-directory: source
         shell: bash
@@ -90,11 +90,13 @@ jobs:
             --hidden-import=packaging.requirements \
             main.py
 
-      - name: Build Ubuntu Linux executable
+      - name: Build Ubuntu Linux (.deb & .run)
         if: runner.os == 'Linux'
         working-directory: source
         shell: bash
         run: |
+          VERSION=$(python -c "import re; print(re.search(r'VERSION\s*=\s*[\"\']([^\"\']+)[\"\']', open('patcher/constants.py').read()).group(1))")
+
           python -m PyInstaller --onefile --clean --icon=icon.ico --name="Antigravity_Patcher_Linux" \
             --hidden-import=packaging \
             --hidden-import=packaging.version \
@@ -103,39 +105,186 @@ jobs:
             main.py
           chmod +x dist/Antigravity_Patcher_Linux
 
-      - name: Build macOS Universal2 executable
+          # 1. Portable executable with .run extension
+          cp dist/Antigravity_Patcher_Linux dist/Antigravity_Patcher_Linux.run
+          chmod +x dist/Antigravity_Patcher_Linux.run
+
+          # 2. Extract 256x256 PNG icon from icon.ico
+          python -c '
+          data = open("icon.ico", "rb").read()
+          idx = data.find(b"\x89PNG\r\n\x1a\n")
+          open("dist/antigravity-patcher.png", "wb").write(data[idx:])
+          '
+
+          # 3. Build 1-click Ubuntu .deb installer package
+          DEB_ROOT="dist/deb_pkg"
+          mkdir -p "$DEB_ROOT/DEBIAN"
+          mkdir -p "$DEB_ROOT/usr/bin"
+          mkdir -p "$DEB_ROOT/usr/share/applications"
+          mkdir -p "$DEB_ROOT/usr/share/pixmaps"
+          mkdir -p "$DEB_ROOT/usr/share/icons/hicolor/256x256/apps"
+
+          cp dist/Antigravity_Patcher_Linux "$DEB_ROOT/usr/bin/antigravity-patcher"
+          chmod 0755 "$DEB_ROOT/usr/bin/antigravity-patcher"
+
+          cp dist/antigravity-patcher.png "$DEB_ROOT/usr/share/pixmaps/antigravity-patcher.png"
+          cp dist/antigravity-patcher.png "$DEB_ROOT/usr/share/icons/hicolor/256x256/apps/antigravity-patcher.png"
+
+          cat > "$DEB_ROOT/usr/share/applications/antigravity-patcher.desktop" << 'EOF'
+          [Desktop Entry]
+          Version=1.0
+          Type=Application
+          Name=Antigravity Patcher
+          Comment=Region lock bypass for Antigravity IDE, 2.0, CLI & VS Code
+          Exec=sudo /usr/bin/antigravity-patcher
+          Icon=antigravity-patcher
+          Terminal=true
+          Categories=Development;Utility;
+          Keywords=antigravity;patcher;google;agy;
+          EOF
+
+          cat > "$DEB_ROOT/DEBIAN/control" << EOF
+          Package: antigravity-patcher
+          Version: ${VERSION}
+          Section: utils
+          Priority: optional
+          Architecture: amd64
+          Maintainer: DrAmir0240 <https://github.com/DrAmir0240/Antigravity-Patcher>
+          Description: Antigravity Patcher
+           Open-source region lock bypass tool for Google Antigravity IDE,
+           Antigravity 2.0, Antigravity CLI (agy), and VS Code extension.
+          EOF
+
+          chmod -R 0755 "$DEB_ROOT/DEBIAN"
+          dpkg-deb --root-owner-group --build "$DEB_ROOT" dist/Antigravity_Patcher_Ubuntu.deb
+          rm -rf "$DEB_ROOT" dist/Antigravity_Patcher_Linux dist/antigravity-patcher.png
+
+      - name: Build macOS Universal2 (.pkg & .dmg)
         if: runner.os == 'macOS'
         working-directory: source
         shell: bash
         run: |
-          python -m PyInstaller --onefile --clean --name="Antigravity_Patcher_macOS" --target-arch universal2 \
+          VERSION=$(python -c "import re; print(re.search(r'VERSION\s*=\s*[\"\']([^\"\']+)[\"\']', open('patcher/constants.py').read()).group(1))")
+
+          python -m PyInstaller --onefile --clean --name="Antigravity_Patcher_macOS_bin" --target-arch universal2 \
             --hidden-import=packaging \
             --hidden-import=packaging.version \
             --hidden-import=packaging.specifiers \
             --hidden-import=packaging.requirements \
             main.py
-          chmod +x dist/Antigravity_Patcher_macOS
-          codesign --force --sign - dist/Antigravity_Patcher_macOS
+          chmod +x dist/Antigravity_Patcher_macOS_bin
           echo "Verifying Universal2 binary architectures:"
-          lipo -archs dist/Antigravity_Patcher_macOS
+          lipo -archs dist/Antigravity_Patcher_macOS_bin
 
-      - name: Upload compiled binary artifact
-        uses: actions/upload-artifact@v4
+          # 1. Extract PNG from icon.ico and convert to macOS .icns
+          python -c '
+          data = open("icon.ico", "rb").read()
+          idx = data.find(b"\x89PNG\r\n\x1a\n")
+          open("dist/icon.png", "wb").write(data[idx:])
+          '
+          mkdir -p dist/icon.iconset
+          sips -z 16 16     dist/icon.png --out dist/icon.iconset/icon_16x16.png >/dev/null
+          sips -z 32 32     dist/icon.png --out dist/icon.iconset/icon_16x16@2x.png >/dev/null
+          sips -z 32 32     dist/icon.png --out dist/icon.iconset/icon_32x32.png >/dev/null
+          sips -z 64 64     dist/icon.png --out dist/icon.iconset/icon_32x32@2x.png >/dev/null
+          sips -z 128 128   dist/icon.png --out dist/icon.iconset/icon_128x128.png >/dev/null
+          sips -z 256 256   dist/icon.png --out dist/icon.iconset/icon_128x128@2x.png >/dev/null
+          sips -z 256 256   dist/icon.png --out dist/icon.iconset/icon_256x256.png >/dev/null
+          iconutil -c icns dist/icon.iconset -o dist/icon.icns
+
+          # 2. Assemble "Antigravity Patcher.app" bundle
+          APP_DIR="dist/Antigravity Patcher.app"
+          mkdir -p "$APP_DIR/Contents/MacOS"
+          mkdir -p "$APP_DIR/Contents/Resources"
+
+          cp dist/Antigravity_Patcher_macOS_bin "$APP_DIR/Contents/MacOS/antigravity-patcher-bin"
+          chmod +x "$APP_DIR/Contents/MacOS/antigravity-patcher-bin"
+          cp dist/icon.icns "$APP_DIR/Contents/Resources/icon.icns"
+
+          cat > "$APP_DIR/Contents/MacOS/Antigravity_Patcher" << 'EOF'
+          #!/bin/bash
+          DIR="$(cd "$(dirname "$0")" && pwd)"
+          BIN="$DIR/antigravity-patcher-bin"
+          /usr/bin/osascript \
+            -e 'tell application "Terminal" to activate' \
+            -e "tell application \"Terminal\" to do script \"clear; AG_PATCHER_TERMINAL=1 sudo '$BIN'\""
+          EOF
+          chmod +x "$APP_DIR/Contents/MacOS/Antigravity_Patcher"
+
+          cat > "$APP_DIR/Contents/Info.plist" << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleExecutable</key>
+              <string>Antigravity_Patcher</string>
+              <key>CFBundleIconFile</key>
+              <string>icon.icns</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.dramir0240.antigravity-patcher</string>
+              <key>CFBundleName</key>
+              <string>Antigravity Patcher</string>
+              <key>CFBundleDisplayName</key>
+              <string>Antigravity Patcher</string>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>CFBundleShortVersionString</key>
+              <string>${VERSION}</string>
+              <key>CFBundleVersion</key>
+              <string>${VERSION}</string>
+              <key>LSMinimumSystemVersion</key>
+              <string>11.0</string>
+              <key>NSHighResolutionCapable</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+
+          codesign --force --deep --sign - "$APP_DIR"
+
+          # 3. Build 1-click macOS .pkg installer
+          mkdir -p dist/pkg_scripts
+          cat > dist/pkg_scripts/postinstall << 'EOF'
+          #!/bin/bash
+          xattr -cr "/Applications/Antigravity Patcher.app" 2>/dev/null || true
+          codesign --force --deep --sign - "/Applications/Antigravity Patcher.app" 2>/dev/null || true
+          exit 0
+          EOF
+          chmod +x dist/pkg_scripts/postinstall
+
+          pkgbuild \
+            --component "$APP_DIR" \
+            --install-location "/Applications" \
+            --scripts dist/pkg_scripts \
+            --identifier "com.dramir0240.antigravity-patcher" \
+            --version "${VERSION}" \
+            dist/Antigravity_Patcher_macOS.pkg
+
+          # 4. Build macOS .dmg disk image
+          mkdir -p dist/dmg_root
+          cp -R "$APP_DIR" dist/dmg_root/
+          ln -s /Applications dist/dmg_root/Applications
+          hdiutil create -volname "Antigravity Patcher" -srcfolder dist/dmg_root -ov -format UDZO dist/Antigravity_Patcher_macOS.dmg
+
+          rm -rf "$APP_DIR" dist/Antigravity_Patcher_macOS_bin dist/icon.png dist/icon.iconset dist/icon.icns dist/pkg_scripts dist/dmg_root
+
+      - name: Upload compiled packages
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.artifact_name }}
-          path: source/dist/${{ matrix.artifact_name }}
+          path: source/dist/*
           if-no-files-found: error
 
   release:
     name: Publish to GitHub Releases
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Download all compiled binaries
-        uses: actions/download-artifact@v4
+      - name: Download all compiled packages
+        uses: actions/download-artifact@v8
         with:
           path: release-assets
           merge-multiple: true
@@ -145,8 +294,13 @@ jobs:
         working-directory: release-assets
         shell: bash
         run: |
-          chmod +x Antigravity_Patcher_Linux Antigravity_Patcher_macOS || true
-          sha256sum Antigravity_Patcher_Windows.exe Antigravity_Patcher_Linux Antigravity_Patcher_macOS > SHA256SUMS.txt
+          chmod +x Antigravity_Patcher_Linux.run || true
+          sha256sum \
+            Antigravity_Patcher_Windows.exe \
+            Antigravity_Patcher_Ubuntu.deb \
+            Antigravity_Patcher_Linux.run \
+            Antigravity_Patcher_macOS.pkg \
+            Antigravity_Patcher_macOS.dmg > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
           VERSION=$(python3 -c "import re; content = open('../source/patcher/constants.py').read(); print(re.search(r'VERSION\s*=\s*[\"\']([^\"\']+)[\"\']', content).group(1))")
@@ -162,8 +316,19 @@ jobs:
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
+      - name: Clean up old extensionless assets (if present)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          for REL_TAG in "${{ steps.meta.outputs.tag }}" "python"; do
+            for OLD_ASSET in "Antigravity_Patcher_Linux" "Antigravity_Patcher_macOS"; do
+              gh release delete-asset "$REL_TAG" "$OLD_ASSET" --yes >/dev/null 2>&1 || true
+            done
+          done
+
       - name: Create or Update GitHub Release (${{ steps.meta.outputs.tag }})
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.meta.outputs.tag }}
           name: Antigravity Patcher ${{ steps.meta.outputs.tag }}
@@ -172,34 +337,39 @@ jobs:
           generate_release_notes: true
           files: |
             release-assets/Antigravity_Patcher_Windows.exe
-            release-assets/Antigravity_Patcher_Linux
-            release-assets/Antigravity_Patcher_macOS
+            release-assets/Antigravity_Patcher_Ubuntu.deb
+            release-assets/Antigravity_Patcher_Linux.run
+            release-assets/Antigravity_Patcher_macOS.pkg
+            release-assets/Antigravity_Patcher_macOS.dmg
             release-assets/SHA256SUMS.txt
           body: |
             ## 🚀 Antigravity Patcher ${{ steps.meta.outputs.tag }}
 
-            ### 📦 دانلود نسخه‌های اجرایی مستقل (بدون نیاز به نصب پایتون)
+            ### 📦 دانلود نصاب‌ها و نسخه‌های اجرایی یک‌کلیکی (بدون نیاز به نصب پایتون)
 
-            | سیستم‌عامل | معماری | فایل اجرایی | نحوه اجرا |
+            | سیستم‌عامل | فرمت فایل | نام فایل دانلود | نحوه نصب و اجرا با یک کلیک |
             |:---|:---:|:---|:---|
-            | **Windows** | `x64` | `Antigravity_Patcher_Windows.exe` | اجرا با کلیک راست و `Run as administrator` (دارای UAC خودکار) |
-            | **Ubuntu / Linux** | `x64` | `Antigravity_Patcher_Linux` | `chmod +x Antigravity_Patcher_Linux && sudo ./Antigravity_Patcher_Linux` |
-            | **macOS** | `Universal2 (Intel + Apple Silicon)` | `Antigravity_Patcher_macOS` | `chmod +x Antigravity_Patcher_macOS && sudo ./Antigravity_Patcher_macOS` |
+            | **Windows (x64)** | `.exe` | `Antigravity_Patcher_Windows.exe` | دو بار کلیک کنید (درخواست دسترسی Admin به‌صورت خودکار انجام می‌شود) |
+            | **Ubuntu / Debian** | `.deb` | `Antigravity_Patcher_Ubuntu.deb` | با دو بار کلیک نصب کنید و از منوی برنامه‌ها **Antigravity Patcher** را باز کنید |
+            | **Linux (Portable)** | `.run` | `Antigravity_Patcher_Linux.run` | نسخه پرتابل برای سایر توزیع‌های لینوکس (`chmod +x` و دبل‌کلیک) |
+            | **macOS (Installer)** | `.pkg` | `Antigravity_Patcher_macOS.pkg` | با دو بار کلیک نصب کنید و برنامه **Antigravity Patcher** را از پوشه `Applications` اجرا کنید |
+            | **macOS (Disk Image)** | `.dmg` | `Antigravity_Patcher_macOS.dmg` | فایل DMG را باز کرده و روی **Antigravity Patcher.app** کلیک کنید |
 
             ---
-            🔐 فایل `SHA256SUMS.txt` جهت بررسی اصالت و سلامت باینری‌ها پیوست شده است.
+            🔐 فایل `SHA256SUMS.txt` جهت بررسی اصالت و سلامت فایل‌ها پیوست شده است.
 
-      - name: Attach binaries to existing 'python' release (if present)
+      - name: Sync packages to existing 'python' release (if present)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           if gh release view python >/dev/null 2>&1; then
-            echo "Uploading compiled binaries to existing 'python' release as well..."
             gh release upload python \
               release-assets/Antigravity_Patcher_Windows.exe \
-              release-assets/Antigravity_Patcher_Linux \
-              release-assets/Antigravity_Patcher_macOS \
+              release-assets/Antigravity_Patcher_Ubuntu.deb \
+              release-assets/Antigravity_Patcher_Linux.run \
+              release-assets/Antigravity_Patcher_macOS.pkg \
+              release-assets/Antigravity_Patcher_macOS.dmg \
               release-assets/SHA256SUMS.txt \
               --clobber
           fi

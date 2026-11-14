@@ -138,9 +138,72 @@ rm -rf ~/Antigravity-backup
 
 ## 🚀 ۲. آموزش نصب و راه‌اندازی پروژه (از صفر تا اجرا)
 
-این راهنما مراحل گام‌به‌گام راه‌اندازی پچر را در کلیه سیستم‌عامل‌ها از نصب پایتون تا اعمال نهایی پچ پوشش می‌دهد.
+شما می‌توانید از **نصاب‌ها و برنامه‌های آماده یک‌کلیکی** (بدون نیاز به نصب پایتون یا پیش‌نیاز) از بخش [**Releases گیت‌هاب**](https://github.com/DrAmir0240/Antigravity-Patcher/releases/latest) استفاده کنید، و یا پروژه را از طریق سورس‌کد پایتون اجرا نمایید.
+
+> ⚠️ **نکته مهم قبل از اجرا:** حتماً نرم‌افزارهای Antigravity، Antigravity IDE و VS Code را کاملاً ببندید تا فایل‌ها هنگام پچ شدن درگیر نباشند.
 
 ---
+
+### ✨ روش اول (پیشنهادی): نصب و اجرای یک‌کلیکی با اپ اختصاصی هر پلتفرم
+
+ابتدا وارد صفحه [**آخرین نسخه در بخش Releases**](https://github.com/DrAmir0240/Antigravity-Patcher/releases/latest) شوید و فایل متناسب با سیستم‌عامل خود را دانلود کنید:
+
+| سیستم‌عامل | فرمت فایل | نام فایل در بخش Releases | توضیح |
+|:---|:---:|:---|:---|
+| **Windows (x64)** | `.exe` | `Antigravity_Patcher_Windows.exe` | فایل اجرایی مستقل ویندوز با دسترسی خودکار Administrator |
+| **Ubuntu / Debian** | `.deb` | `Antigravity_Patcher_Ubuntu.deb` | پکیج نصبی استاندارد اوبونتو، دبیان و مینت همراه با آیکون در منوی برنامه‌ها |
+| **Linux (Portable)** | `.run` | `Antigravity_Patcher_Linux.run` | نسخه پرتابل و بدون نیاز به نصب برای تمامی توزیع‌های لینوکس |
+| **macOS (Installer)** | `.pkg` | `Antigravity_Patcher_macOS.pkg` | نصاب یک‌کلیکی مک (سازگار با تراشه‌های Intel و Apple Silicon M1/M2/M3/M4) |
+| **macOS (Disk Image)** | `.dmg` | `Antigravity_Patcher_macOS.dmg` | ایمیج استاندارد مک حاوی برنامه گرافیکی `Antigravity Patcher.app` |
+
+---
+
+#### 💻 ۱. آموزش اجرا با اپ ویندوز (`.exe`)
+1. فایل **`Antigravity_Patcher_Windows.exe`** را از بخش Releases دانلود کنید.
+2. روی فایل **دو بار کلیک (Double-Click)** کنید.
+3. در پنجره UAC ویندوز گزینه **Yes** را بزنید تا برنامه با دسترسی Administrator باز شود.
+4. شماره گزینه مورد نظر (مثلاً `1` برای IDE یا `2` برای Antigravity 2.0) را وارد کرده و کلید `Enter` را بزنید.
+
+---
+
+#### 🐧 ۲. آموزش نصب و اجرا با اپ اوبونتو و لینوکس (`.deb` و `.run`)
+
+##### الف) نصب یک‌کلیکی در اوبونتو، دبیان و لینوکس مینت (`Antigravity_Patcher_Ubuntu.deb`):
+1. فایل **`Antigravity_Patcher_Ubuntu.deb`** را دانلود کنید.
+2. **روش گرافیکی:** روی فایل `.deb` دو بار کلیک کنید تا در **App Center / Software Install** باز شود و دکمه **Install** را بزنید.  
+   *(یا در ترمینال دستور زیر را در پوشه دانلود اجرا کنید)*:
+   ```bash
+   sudo apt install ./Antigravity_Patcher_Ubuntu.deb
+   ```
+3. پس از نصب، وارد منوی برنامه‌های اوبونتو (**Show Apps**) شوید و روی آیکون **Antigravity Patcher** کلیک کنید (یا در ترمینال دستور `sudo antigravity-patcher` را بزنید).
+
+##### ب) اجرای نسخه پرتابل در کلیه توزیع‌های لینوکس (`Antigravity_Patcher_Linux.run`):
+1. فایل **`Antigravity_Patcher_Linux.run`** را دانلود کنید.
+2. روی فایل راست‌کلیک کرده، وارد **Properties → Permissions** شوید و تیک **Allow executing file as program** را فعال کنید، سپس روی فایل دو بار کلیک کنید.  
+   *(یا با یک دستور در ترمینال اجرا نمایید)*:
+   ```bash
+   chmod +x Antigravity_Patcher_Linux.run && sudo ./Antigravity_Patcher_Linux.run
+   ```
+
+---
+
+#### 🍏 ۳. آموزش نصب و اجرا با اپ مک (`.pkg` و `.dmg`)
+
+##### الف) نصب یک‌کلیکی با پکیج نصاب مک (`Antigravity_Patcher_macOS.pkg` - پیشنهادی):
+1. فایل **`Antigravity_Patcher_macOS.pkg`** را دانلود کرده و روی آن دو بار کلیک کنید.
+2. مراحل نصب (**Continue → Install**) را طی کرده و رمز مک خود را وارد نمایید (این نصاب به‌طور خودکار برنامه را در پوشه `Applications` نصب کرده و محدودیت قرنطینه Gatekeeper اپل را نیز برمی‌دارد).
+3. از داخل **Launchpad** یا پوشه **Applications** روی برنامه **Antigravity Patcher** کلیک کنید؛ برنامه به‌صورت خودکار پنجره Terminal را باز کرده و منوی پچر را اجرا می‌کند.
+
+##### ب) استفاده از دیسک ایمیج مک (`Antigravity_Patcher_macOS.dmg`):
+1. فایل **`Antigravity_Patcher_macOS.dmg`** را باز کنید.
+2. برنامه **Antigravity Patcher** را به داخل پوشه **Applications** بکشید (Drag & Drop) و سپس آن را اجرا کنید.
+   > 💡 *نکته:* اگر هنگام باز کردن فایل `.pkg` یا `.dmg` پیام امنیتی اپل (`unidentified developer`) نمایش داده شد، روی فایل **راست‌کلیک (Control + Click)** کرده و گزینه **Open** را بزنید، یا در `System Settings → Privacy & Security` روی **Open Anyway** کلیک کنید.
+
+---
+
+### 🐍 روش دوم: نصب و اجرا از طریق سورس‌کد پایتون
+
+اگر تمایل دارید اسکریپت را مستقیماً با پایتون از روی سورس‌کد اجرا کنید، مراحل زیر را دنبال نمایید:
 
 ### گام ۱: نصب پایتون و گیت
 
