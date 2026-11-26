@@ -1,4 +1,6 @@
 ﻿pyinstaller
 packaging
 arabic-reshaper>=3.0.0
-python-bidi>=0.4.2
+# python-bidi >= 0.5 ships a compiled extension that breaks macOS universal2
+# builds; the 0.4.x line is pure Python and does the same bidi reordering.
+python-bidi>=0.4.2,<0.5
