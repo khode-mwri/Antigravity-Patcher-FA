@@ -5,7 +5,7 @@ import shutil
 import subprocess
 
 from patcher.utils.admin import is_admin, run_as_admin
-from patcher.utils.console import setup_console
+from patcher.utils.console import setup_console, emit
 from patcher.cli import run_cli, confirmed
 
 
@@ -66,9 +66,9 @@ if __name__ == "__main__":
         if run_as_admin():
             sys.exit(0)
         else:
-            print("  [!] دسترسی مدیریتی دریافت نشد. ممکن است اسکریپت در تغییر فایل‌ها ناموفق بماند.")
+            emit("  [!] دسترسی مدیریتی دریافت نشد. ممکن است اسکریپت در تغییر فایل‌ها ناموفق بماند.")
     elif os.name == "posix" and not is_admin():
-        print("  [!] دسترسی root برای پچ کردن فایل‌ها در پوشهٔ ریشه لازم است.")
+        emit("  [!] دسترسی root برای پچ کردن فایل‌ها در پوشهٔ ریشه لازم است.")
         if confirmed("با sudo دوباره اجرا شود؟"):
             try:
                 if getattr(sys, "frozen", False):
@@ -77,37 +77,37 @@ if __name__ == "__main__":
                     args = ["sudo", sys.executable] + sys.argv
                 os.execvp("sudo", args)
             except Exception as e:
-                print(f"  [!] اجرای دوباره با sudo ناموفق بود: {e}")
+                emit(f"  [!] اجرای دوباره با sudo ناموفق بود: {e}")
                 sys.exit(1)
         else:
             from patcher.constants import COLOR_YELLOW
             from patcher.utils.console import color
-            print(color("  [!] بدون root ادامه می‌دهیم. احتمال خطای نوشتن وجود دارد.", COLOR_YELLOW))
-            print()
+            emit(color("  [!] بدون root ادامه می‌دهیم. احتمال خطای نوشتن وجود دارد.", COLOR_YELLOW))
+            emit()
 
     try:
         run_cli()
     except KeyboardInterrupt:
-        print("\n  [i] در حال خروج...")
+        emit("\n  [i] در حال خروج...")
         sys.exit(0)
     except (PermissionError, OSError) as e:
         # Страховка от необработанного traceback как на скриншоте
         # (бэкап language_server.agybak -> Errno 1 Operation not permitted):
         # вместо "Failed to execute script 'main'" показываем понятную подсказку.
-        print(f"\n  [!] خطای فایل‌سیستم: {e}")
+        emit(f"\n  [!] خطای فایل‌سیستم: {e}")
         import sys as _sys
 
         if _sys.platform == "darwin":
-            print("  [i] macOS نوشتن داخل Antigravity.app را مسدود کرد.")
-            print("  [i] Antigravity را ببندید و دوباره با sudo اجرا کنید:")
-            print("        sudo python3 main.py   (یا sudo ./Antigravity_Patcher_macOS)")
-            print("  [i] اگر همچنان «Operation not permitted» می‌گوید، فلگ‌ها را بررسی کنید:")
-            print("        ls -lO /Applications/Antigravity.app/Contents/resources/bin/language_server")
+            emit("  [i] macOS نوشتن داخل Antigravity.app را مسدود کرد.")
+            emit("  [i] Antigravity را ببندید و دوباره با sudo اجرا کنید:")
+            emit("        sudo python3 main.py   (یا sudo ./Antigravity_Patcher_macOS)")
+            emit("  [i] اگر همچنان «Operation not permitted» می‌گوید، فلگ‌ها را بررسی کنید:")
+            emit("        ls -lO /Applications/Antigravity.app/Contents/resources/bin/language_server")
         else:
-            print("  [i] دسترسی نوشتن وجود ندارد — با دسترسی admin/root دوباره اجرا کنید و ابتدا Antigravity را ببندید.")
+            emit("  [i] دسترسی نوشتن وجود ندارد — با دسترسی admin/root دوباره اجرا کنید و ابتدا Antigravity را ببندید.")
         sys.exit(1)
     except Exception as e:
-        print(f"\n  [!] خطای پیش‌بینی‌نشده: {e}")
+        emit(f"\n  [!] خطای پیش‌بینی‌نشده: {e}")
         from patcher.constants import GITHUB_REPO
-        print(f"  [i] لطفاً آن را گزارش کنید: https://github.com/{GITHUB_REPO}/issues")
+        emit(f"  [i] لطفاً آن را گزارش کنید: https://github.com/{GITHUB_REPO}/issues")
         sys.exit(1)

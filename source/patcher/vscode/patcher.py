@@ -21,6 +21,7 @@ from patcher.utils.file import (
     fix_posix_permissions,
 )
 from patcher.utils.update import handle_patch_failure
+from patcher.utils.console import emit
 
 BAK_EXT = ".vscodebak"
 
@@ -125,7 +126,7 @@ def do_patch_vscode(extension_js_path):
     path = extension_js_path
     info(f"هدف: {color(path, COLOR_CYAN)}")
     hint(f"حجم: {color(format_bytes(file_size(path)), COLOR_CYAN)}")
-    print()
+    emit()
 
     try:
         with open(path, "r", encoding="utf-8") as f:
@@ -184,10 +185,10 @@ def do_patch_vscode(extension_js_path):
             return False
 
     applied_parts = sum(1 for s in statuses if s in ("applied", "already"))
-    print()
+    emit()
     step("پچ افزونهٔ Antigravity VS Code", bool(changed or already),
          f"{applied_parts} از 2 بخش")
-    print()
+    emit()
     panel_rows = [
         ("هدف", os.path.basename(os.path.dirname(path))),
         ("فایل", os.path.basename(path)),
@@ -252,7 +253,7 @@ def do_restore_vscode(extension_js_path):
         return
 
     hash_after = file_hash(path)
-    print()
+    emit()
     panel_rows = [("هدف", os.path.basename(path))]
     if hash_before and hash_after and hash_before != hash_after:
         panel_rows.append(("قبل", f"{hash_before[:8]}...{hash_before[56:]}"))
@@ -266,7 +267,7 @@ def do_restore_vscode(extension_js_path):
 
     gemini_bin = find_gemini_antigravity_binary()
     if gemini_bin and os.path.exists(gemini_bin + ".agybak"):
-        print()
+        emit()
         info(f"بکاپ فایل اجرایی (باینری) پچ‌شده پیدا شد: {color(gemini_bin, COLOR_CYAN)}")
         do_restore_agy(gemini_bin)
     elif gemini_bin:

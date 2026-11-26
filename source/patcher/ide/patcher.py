@@ -8,6 +8,7 @@ from patcher.constants import (
     MIN_AG_VERSION,
 )
 from patcher.utils.console import (
+    emit,
     info,
     hint,
     ok,
@@ -208,7 +209,7 @@ def do_patch(main_js_path, show_search_line=False):
     hash_before = file_hash(main_js_path)
 
     info("در حال اعمال پچ‌ها...")
-    print()
+    emit()
 
     new_content, results = apply_patches(content, ag_version=parsed_version)
 
@@ -217,7 +218,7 @@ def do_patch(main_js_path, show_search_line=False):
         if r.get("Applied"):
             applied += 1
         step(r["Name"], r.get("Applied", False), r.get("Detail", ""))
-    print()
+    emit()
 
     if new_content == content and current_is_patched:
         ok("فایل قبلاً پچ شده است — تغییری لازم نیست.")

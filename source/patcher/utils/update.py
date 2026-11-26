@@ -8,7 +8,7 @@ from patcher.constants import (
     VERSION, COLOR_CYAN, COLOR_GREEN, COLOR_YELLOW, COLOR_RED, COLOR_BOLD, COLOR_UNDERLINE,
     GITHUB_REPO
 )
-from patcher.utils.console import color, link, info, ok, warn, err, hint, _frame_border, _frame_row
+from patcher.utils.console import color, link, info, ok, warn, err, hint, _frame_border, _frame_row, emit
 
 
 RELEASES_URL = f"https://github.com/{GITHUB_REPO}/releases"
@@ -45,11 +45,11 @@ def print_network_error_banner(reason="network_error"):
     else:
         title = "بررسی به‌روزرسانی ناموفق (خطای شبکه)"
         subtitle = "اتصال یا VPN را برای GitHub بررسی کنید"
-    print(f"  {_frame_border('╔', '═', '╗', COLOR_YELLOW)}")
-    print(f"  {_frame_row(color(title, COLOR_YELLOW, COLOR_BOLD), accent=COLOR_YELLOW)}")
-    print(f"  {_frame_row(color(subtitle, COLOR_CYAN, COLOR_BOLD), accent=COLOR_YELLOW)}")
-    print(f"  {_frame_border('╚', '═', '╝', COLOR_YELLOW)}")
-    print()
+    emit(f"  {_frame_border('╔', '═', '╗', COLOR_YELLOW)}")
+    emit(f"  {_frame_row(color(title, COLOR_YELLOW, COLOR_BOLD), accent=COLOR_YELLOW)}")
+    emit(f"  {_frame_row(color(subtitle, COLOR_CYAN, COLOR_BOLD), accent=COLOR_YELLOW)}")
+    emit(f"  {_frame_border('╚', '═', '╝', COLOR_YELLOW)}")
+    emit()
 
 
 
@@ -61,10 +61,10 @@ def print_update_status_notice():
         _, tag, url = LAST_UPDATE_RESULT
         info(f"نسخهٔ جدید موجود است: {color(tag, COLOR_GREEN, COLOR_BOLD)} (نسخهٔ فعلی: {color(VERSION, COLOR_YELLOW)})")
         hint(f"دانلود: {color(url, COLOR_CYAN)}")
-        print()
+        emit()
     elif LAST_UPDATE_RESULT == "up_to_date":
         ok(f"پچر به‌روز است (v{VERSION})")
-        print()
+        emit()
 
 
 def _parse_version(v):
@@ -155,7 +155,7 @@ def handle_patch_failure():
     """
     from patcher.cli import confirmed
 
-    print()
+    emit()
     info("در حال بررسی به‌روزرسانی پچر...")
     has_update = check_for_updates(silent=True)
 

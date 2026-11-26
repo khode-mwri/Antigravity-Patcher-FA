@@ -7,7 +7,7 @@ from enum import Enum
 from packaging.version import Version
 from patcher.constants import AG_REGISTRY_SUBKEY, MIN_AG_VERSION
 from patcher.utils.file import get_posix_invoking_user_home
-from patcher.utils.console import ok
+from patcher.utils.console import ok, emit
 
 
 class VersionStatus(Enum):
@@ -144,7 +144,7 @@ def find_portable_candidates(search_type="ide"):
                                 try:
                                     ok(f"نسخه قابل حمل {label} پیدا شد در: {dirpath}")
                                 except Exception:
-                                    print(f"  [+] نسخه قابل حمل {label} پیدا شد در: {dirpath}")
+                                    emit(f"  [+] نسخه قابل حمل {label} پیدا شد در: {dirpath}")
                                 break
                 elif search_type == "antigravity":
                     # Ищем признаки Antigravity
@@ -156,7 +156,7 @@ def find_portable_candidates(search_type="ide"):
                             try:
                                 ok(f"نسخه قابل حمل {label} پیدا شد در: {dirpath}")
                             except Exception:
-                                print(f"  [+] نسخه قابل حمل {label} پیدا شد در: {dirpath}")
+                                emit(f"  [+] نسخه قابل حمل {label} پیدا شد در: {dirpath}")
 
     return candidates
 

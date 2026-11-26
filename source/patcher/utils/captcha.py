@@ -1,6 +1,6 @@
 import random
 
-from patcher.utils.console import warn, hint, color, COLOR_CYAN
+from patcher.utils.console import warn, hint, color, COLOR_CYAN, emit
 
 
 def generate_math_captcha():
@@ -38,7 +38,7 @@ def confirm_with_captcha(message):
 
     while True:
         question, expected = generate_math_captcha()
-        print(f"  [?] {message}")
+        emit(f"  [?] {message}")
         prompt = f"        {question} ({color('پاسخ', COLOR_CYAN)}): "
 
         try:

@@ -30,6 +30,7 @@ from patcher.utils.file import (
 from patcher.utils.update import handle_patch_failure
 from patcher.utils.admin import terminate_processes
 from patcher.utils.atomic import atomic_replace_posix, apply_patches_to_data
+from patcher.utils.console import emit
 
 BAK_EXT = ".agybak"
 
@@ -320,7 +321,7 @@ def do_patch_agy(path):
     hash_before = file_hash(path)
     info(f"هدف: {color(path, COLOR_CYAN)}")
     hint(f"حجم: {color(format_bytes(file_size(path)), COLOR_CYAN)}")
-    print()
+    emit()
 
     write_success = False
     patches = []  # [(offset, gate), ...] — гейты, требующие записи
@@ -450,9 +451,9 @@ def do_patch_agy(path):
     resign_macos_binary(path)
     if os.name == "posix":
         _copy_to_user_bin(path)
-    print()
+    emit()
     step("پچ فایل اجرایی (باینری) agy", True, f"{len(patches)} دروازه")
-    print()
+    emit()
     panel_rows = [
         ("هدف", os.path.basename(path)),
     ]
@@ -514,7 +515,7 @@ def do_restore_agy(path):
     resign_macos_binary(path)
     if os.name == "posix":
         _copy_to_user_bin(path)
-    print()
+    emit()
     panel_rows = [("هدف", os.path.basename(path))]
     if hash_before and hash_after and hash_before != hash_after:
         panel_rows.append(("قبل", f"{hash_before[:8]}...{hash_before[56:]}"))

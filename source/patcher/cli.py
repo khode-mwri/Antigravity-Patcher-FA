@@ -20,6 +20,8 @@ from patcher.constants import (
     TELEGRAM_HANDLE,
 )
 from patcher.utils.console import (
+    ask,
+    emit,
     color,
     link,
     clear_screen,
@@ -66,7 +68,7 @@ from patcher.vscode.patcher import (
 
 
 def pause(prompt="  برای بازگشت به منو Enter را بزنید..."):
-    print(color(prompt, COLOR_DIM), end="", flush=True)
+    emit(color(prompt, COLOR_DIM), end="", flush=True)
     if os.name == "nt":
         import msvcrt
         try:
@@ -77,7 +79,7 @@ def pause(prompt="  برای بازگشت به منو Enter را بزنید...")
                 if ch in (b"\r", b"\n"):
                     break
         except Exception:
-            input()
+            ask()
     else:
         try:
             import tty
@@ -93,8 +95,8 @@ def pause(prompt="  برای بازگشت به منو Enter را بزنید...")
             finally:
                 termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         except Exception:
-            input()
-    print()
+            ask()
+    emit()
 
 
 
@@ -106,9 +108,9 @@ def print_launch_examples():
     linux_example = f'{cmd} "/usr/share/antigravity-ide"'
 
     hint("نمونهٔ اجرا با مسیر دستی:")
-    print(f"      Windows: {color(windows_example, COLOR_YELLOW)}")
-    print(f"      macOS:   {color(macos_example, COLOR_YELLOW)}")
-    print(f"      Linux:   {color(linux_example, COLOR_YELLOW)}")
+    emit(f"      Windows: {color(windows_example, COLOR_YELLOW)}")
+    emit(f"      macOS:   {color(macos_example, COLOR_YELLOW)}")
+    emit(f"      Linux:   {color(linux_example, COLOR_YELLOW)}")
 
 
 def print_path_examples():
@@ -117,13 +119,13 @@ def print_path_examples():
     linux_path = "/usr/share/antigravity-ide"
 
     hint("نمونهٔ مسیرها:")
-    print(f"      Windows: {color(windows_path, COLOR_YELLOW)}")
-    print(f"      macOS:   {color(macos_path, COLOR_YELLOW)}")
-    print(f"      Linux:   {color(linux_path, COLOR_YELLOW)}")
+    emit(f"      Windows: {color(windows_path, COLOR_YELLOW)}")
+    emit(f"      macOS:   {color(macos_path, COLOR_YELLOW)}")
+    emit(f"      Linux:   {color(linux_path, COLOR_YELLOW)}")
 
 
 def _read_console_line(prompt):
-    print(prompt, end="", flush=True)
+    emit(prompt, end="", flush=True)
 
     stdin_buffer = getattr(sys.stdin, "buffer", None)
     if stdin_buffer is None:
@@ -164,22 +166,22 @@ def offer_download_and_block(software_name="Antigravity", target_type=None):
     err(f"مسیر {software_name} تنظیم نشده یا نرم‌افزار نصب نیست.")
     err("تلاش برای پچ کردن مسدود شد.")
     hint(f"لینک دانلود: {color(DOWNLOAD_URL, COLOR_CYAN)}")
-    print()
+    emit()
     print_menu_row("1", "باز کردن صفحهٔ دانلود", "در مرورگر", COLOR_GREEN)
     print_menu_row("2", f"تعیین مسیر {software_name} نصب‌شده", "انتخاب دستی", COLOR_CYAN)
     print_menu_row("0", "بازگشت به منوی اصلی", "", COLOR_RED)
-    print()
+    emit()
 
-    action = input(color("  گزینه را انتخاب کنید > ", COLOR_CYAN, COLOR_BOLD)).strip()
+    action = ask(color("  گزینه را انتخاب کنید: ", COLOR_CYAN, COLOR_BOLD)).strip()
     if action == "1":
         webbrowser.open(DOWNLOAD_URL)
         ok(f"در حال باز کردن: {color(DOWNLOAD_URL, COLOR_CYAN)}")
         return None
     elif action == "2":
-        print()
+        emit()
         hint(f"مسیر {software_name} را وارد کنید.")
         print_path_examples()
-        raw = input(color(f"\n  مسیر {software_name} > ", COLOR_CYAN, COLOR_BOLD)).strip()
+        raw = ask(color(f"\n  مسیر {software_name}: ", COLOR_CYAN, COLOR_BOLD)).strip()
         if raw:
             if target_type == "ide":
                 new_path = resolve_target_path(raw)
@@ -218,8 +220,13 @@ def offer_download_and_block(software_name="Antigravity", target_type=None):
 
 
 def _kv(label, value_text, value_color):
-    """Отформатированная пара ключ/значение с выравниванием меток."""
-    print(f"      {label:<9}{color(value_text, value_color)}")
+    """RTL key/value row: the value on the left, its Persian label on the right."""
+    from patcher.utils.rtl import visual
+
+    label_v = visual(str(label))
+    value_v = visual(str(value_text))
+    gap = max(2, 45 - len(label_v) - len(value_v))
+    print("      " + value_v + " " * gap + label_v)
 
 
 def print_target_info(main_js_path, manager_path="", agy_path="", vscode_path="", vscode_agy_path="", show_search_line=False):
@@ -250,7 +257,7 @@ def print_target_info(main_js_path, manager_path="", agy_path="", vscode_path=""
     else:
         _kv("وضعیت:", "پیدا نشد", COLOR_RED)
 
-    print()
+    emit()
 
     # 2. Antigravity 2.0 Info
     print_menu_section("اطلاعات ANTIGRAVITY 2.0")
@@ -270,7 +277,7 @@ def print_target_info(main_js_path, manager_path="", agy_path="", vscode_path=""
     else:
         _kv("وضعیت:", "پیدا نشد", COLOR_YELLOW)
 
-    print()
+    emit()
 
     # 3. Antigravity CLI Info
     print_menu_section("اطلاعات ANTIGRAVITY CLI")
@@ -285,7 +292,7 @@ def print_target_info(main_js_path, manager_path="", agy_path="", vscode_path=""
     else:
         _kv("وضعیت:", "پیدا نشد", COLOR_YELLOW)
 
-    print()
+    emit()
 
     # 4. Antigravity VS Code Extension Info (extension.js + бинарь agy)
     print_menu_section("اطلاعات افزونه ANTIGRAVITY VS CODE")
@@ -305,7 +312,7 @@ def print_target_info(main_js_path, manager_path="", agy_path="", vscode_path=""
     else:
         _kv("وضعیت:", "پیدا نشد", COLOR_YELLOW)
 
-    print()
+    emit()
 
     _kv("باینری:", vscode_agy_path if vscode_agy_path else "پیدا نشد", COLOR_CYAN)
     if vscode_agy_path and os.path.isfile(vscode_agy_path):
@@ -323,28 +330,28 @@ def show_about():
     clear_screen()
     print_banner()
     print_menu_section("درباره برنامه")
-    print()
-    print(f"  {color('Antigravity Patcher', COLOR_BOLD, COLOR_CYAN)} v{VERSION}")
-    print("  ابزار متن‌باز دور زدن قفل منطقه‌ای برای محصولات Antigravity:")
-    print("  Antigravity IDE، Antigravity 2.0 (language_server) و Antigravity CLI (agy).")
-    print("  امکان استفاده از Antigravity بدون VPN و بدون تغییر منطقه حساب Google را فراهم می‌کند.")
-    print()
+    emit()
+    emit(f"  {color('Antigravity Patcher', COLOR_BOLD, COLOR_CYAN)} v{VERSION}")
+    emit("  ابزار متن‌باز دور زدن قفل منطقه‌ای برای محصولات Antigravity:")
+    emit("  Antigravity IDE، Antigravity 2.0 (language_server) و Antigravity CLI (agy).")
+    emit("  امکان استفاده از Antigravity بدون VPN و بدون تغییر منطقه حساب Google را فراهم می‌کند.")
+    emit()
     hint("قابلیت‌ها:")
-    print(f"   • {color('پچ Antigravity IDE', COLOR_GREEN)}        — دور زدن isGoogleInternal در main.js")
-    print(f"   • {color('پچ Antigravity 2.0', COLOR_GREEN)}        — پچ باینری language_server")
-    print(f"   • {color('پچ Antigravity CLI', COLOR_GREEN)}        — دور زدن بررسی واجد شرایط بودن حساب در agy")
-    print(f"   • {color('پچ افزونهٔ VS Code', COLOR_GREEN)}        — دور زدن extension.js + ~/.gemini/bin/agy")
-    print(f"   • {color('بکاپ و بازگردانی', COLOR_GREEN)}         — تغییرات ایمن و کاملاً قابل بازگشت")
-    print()
+    emit(f"   • {color('پچ Antigravity IDE', COLOR_GREEN)}        — دور زدن isGoogleInternal در main.js")
+    emit(f"   • {color('پچ Antigravity 2.0', COLOR_GREEN)}        — پچ باینری language_server")
+    emit(f"   • {color('پچ Antigravity CLI', COLOR_GREEN)}        — دور زدن بررسی واجد شرایط بودن حساب در agy")
+    emit(f"   • {color('پچ افزونهٔ VS Code', COLOR_GREEN)}        — دور زدن extension.js + ~/.gemini/bin/agy")
+    emit(f"   • {color('بکاپ و بازگردانی', COLOR_GREEN)}         — تغییرات ایمن و کاملاً قابل بازگشت")
+    emit()
     hint("مخزن و پشتیبانی:")
     repo_link = link(GITHUB_URL, GITHUB_REPO, COLOR_CYAN, COLOR_UNDERLINE)
     tg_link = link(TELEGRAM_URL, TELEGRAM_HANDLE, COLOR_CYAN, COLOR_UNDERLINE)
-    print(f"   • GitHub:   {repo_link}  {color('(★ به ما ستاره بدهید!)', COLOR_YELLOW, COLOR_BOLD)}")
-    print(f"   • Telegram: {tg_link}")
-    print()
+    emit(f"   • GitHub:   {repo_link}  {color('(★ به ما ستاره بدهید!)', COLOR_YELLOW, COLOR_BOLD)}")
+    emit(f"   • Telegram: {tg_link}")
+    emit()
     hint("مجوز:")
     attr_link = link("https://github.com/QNIX-Dev/eligibility-antigravity-patcher", "eligibility-antigravity-patcher", COLOR_CYAN, COLOR_UNDERLINE)
-    print(f"   • مجوز GPL-3.0 (ارجاع: {attr_link} / MIT)")
+    emit(f"   • مجوز GPL-3.0 (ارجاع: {attr_link} / MIT)")
 
 
 
@@ -354,7 +361,7 @@ def redraw_main_screen(main_js_path, manager_path="", agy_path="", vscode_path="
     print_banner()
     print_target_info(main_js_path, manager_path, agy_path, vscode_path=vscode_path,
                       vscode_agy_path=vscode_agy_path, show_search_line=show_search_line)
-    print()
+    emit()
     print_update_status_notice()
 
 
@@ -411,7 +418,7 @@ def do_patch_vscode_flow(vscode_path, vscode_agy_path, set_js_cb=None, set_agy_c
     do_patch_vscode(vscode_path)
 
     # --- 2. Патчим бинарь ~/.gemini/bin/antigravity (agy-патчем) ---
-    print()
+    emit()
     info(f"باینری دانلودشده پیدا شد: {color(vscode_agy_path, COLOR_CYAN)}")
     do_patch_agy(vscode_agy_path)
     return True
@@ -483,22 +490,22 @@ def run_cli():
     if not main_js_path and not manager_path and not agy_path:
         warn("هیچ نصبی به‌طور خودکار پیدا نشد.")
         hint(f"لینک دانلود: {color(DOWNLOAD_URL, COLOR_CYAN)}")
-        print()
+        emit()
         print_menu_row("1", "باز کردن صفحهٔ دانلود", "در مرورگر", COLOR_GREEN)
         print_menu_row("2", "تعیین مسیر نرم‌افزار نصب‌شده", "انتخاب دستی", COLOR_CYAN)
         print_menu_row("0", "فعلاً رد شود (منوی اصلی)", "", COLOR_YELLOW)
-        print()
+        emit()
 
-        act = input(color("  گزینه را انتخاب کنید > ", COLOR_CYAN, COLOR_BOLD)).strip()
+        act = ask(color("  گزینه را انتخاب کنید: ", COLOR_CYAN, COLOR_BOLD)).strip()
         if act == "1":
             webbrowser.open(DOWNLOAD_URL)
             ok(f"در حال باز کردن: {color(DOWNLOAD_URL, COLOR_CYAN)}")
-            print()
+            emit()
         elif act == "2":
-            print()
+            emit()
             hint("مسیر Antigravity IDE، Antigravity 2.0 یا agy را وارد کنید.")
             print_path_examples()
-            raw = input(color("\n  مسیر > ", COLOR_CYAN, COLOR_BOLD)).strip()
+            raw = ask(color("\n  مسیر: ", COLOR_CYAN, COLOR_BOLD)).strip()
             if raw:
                 ide_path = resolve_target_path(raw)
                 if ide_path and os.path.isdir(ide_path):
@@ -540,12 +547,12 @@ def run_cli():
         print_menu_row("11", "انتخاب مسیر دستی", "بازنویسی هدف", COLOR_CYAN)
         print_menu_row("12", "درباره برنامه", "نسخه و نویسنده", COLOR_CYAN)
 
-        print()
+        emit()
         print_menu_row("0", "خروج", "خروج از پچر", COLOR_RED)
         print_menu_footer("نکته: اگر این ابزار به کارتان آمد، لطفاً در GitHub به ما ★ بدهید (گزینه ۱۰)!")
 
-        choice = input(color("\n  گزینه را انتخاب کنید > ", COLOR_CYAN, COLOR_BOLD)).strip()
-        print()
+        choice = ask(color("\n  گزینه را انتخاب کنید: ", COLOR_CYAN, COLOR_BOLD)).strip()
+        emit()
 
         if choice == "0":
             return
@@ -559,7 +566,7 @@ def run_cli():
         valid_choices = {str(i) for i in range(1, 13)}
         if choice not in valid_choices:
             err("گزینه نامعتبر")
-            print()
+            emit()
             pause()
             redraw_main_screen(main_js_path, manager_path, agy_path, vscode_path,
                                vscode_agy_path, show_search_line=searched)
@@ -624,7 +631,7 @@ def run_cli():
         elif choice == "10":
             print_target_info(main_js_path, manager_path, agy_path, vscode_path=vscode_path,
                               vscode_agy_path=vscode_agy_path, show_search_line=searched)
-            print()
+            emit()
             if confirmed("مخزن GitHub در مرورگر باز شود؟"):
                 url = GITHUB_URL
                 webbrowser.open(url)
@@ -641,20 +648,20 @@ def run_cli():
                 print_menu_row("3", "مسیر Antigravity CLI", "agy.exe یا پوشه", COLOR_GREEN)
                 print_menu_row("4", "مسیر افزونهٔ VS Code", "extension.js یا پوشه", COLOR_GREEN)
                 print_menu_row("5", "مسیر باینری agy", "در ~/.gemini/bin", COLOR_GREEN)
-                print()
+                emit()
                 print_menu_row("0", "بازگشت", "بازگشت به منو", COLOR_RED)
                 print_menu_footer("نتایج شناسایی خودکار سایر هدف‌ها دست‌نخورده می‌ماند.")
 
-                sub_choice = input(color("\n  گزینه را انتخاب کنید > ", COLOR_CYAN, COLOR_BOLD)).strip()
+                sub_choice = ask(color("\n  گزینه را انتخاب کنید: ", COLOR_CYAN, COLOR_BOLD)).strip()
                 if sub_choice == "0":
                     handled = False
                     break
 
                 if sub_choice == "1":
-                     print()
+                     emit()
                      hint("مسیر پوشهٔ Antigravity IDE یا فایل main.js را وارد کنید.")
                      print_path_examples()
-                     raw = input(color("\n  مسیر IDE > ", COLOR_CYAN, COLOR_BOLD)).strip()
+                     raw = ask(color("\n  مسیر IDE: ", COLOR_CYAN, COLOR_BOLD)).strip()
                      if raw:
                          new_path = resolve_target_path(raw)
                          if new_path and os.path.exists(new_path):
@@ -668,13 +675,13 @@ def run_cli():
                                  err("هدف معتبری برای Antigravity IDE پیدا نشد (main.js پیدا نشد).")
                          else:
                              err("مسیر وجود ندارد.")
-                     print()
+                     emit()
                      pause()
                 elif sub_choice == "2":
-                     print()
+                     emit()
                      hint("مسیر پوشهٔ برنامه Antigravity 2.0 یا باینری language_server را وارد کنید.")
                      print_path_examples()
-                     raw = input(color("\n  مسیر Antigravity 2.0 > ", COLOR_CYAN, COLOR_BOLD)).strip()
+                     raw = ask(color("\n  مسیر Antigravity 2.0: ", COLOR_CYAN, COLOR_BOLD)).strip()
                      if raw:
                          new_path = resolve_manager_path(raw)
                          if new_path and os.path.isfile(new_path):
@@ -683,13 +690,13 @@ def run_cli():
                              ok("مسیر Antigravity 2.0 به‌روزرسانی شد!")
                          else:
                              err("هدف معتبری برای Antigravity 2.0 پیدا نشد (language_server پیدا نشد).")
-                     print()
+                     emit()
                      pause()
                 elif sub_choice == "3":
-                     print()
+                     emit()
                      hint("مسیر باینری agy (agy.exe) یا پوشهٔ آن را وارد کنید.")
                      print_path_examples()
-                     raw = input(color("\n  مسیر AGY > ", COLOR_CYAN, COLOR_BOLD)).strip()
+                     raw = ask(color("\n  مسیر AGY: ", COLOR_CYAN, COLOR_BOLD)).strip()
                      if raw:
                          new_path = resolve_agy_path(raw)
                          if new_path and os.path.isfile(new_path):
@@ -698,13 +705,13 @@ def run_cli():
                              ok("مسیر Antigravity CLI به‌روزرسانی شد!")
                          else:
                              err("هدف معتبری برای Antigravity CLI پیدا نشد.")
-                     print()
+                     emit()
                      pause()
                 elif sub_choice == "4":
-                     print()
+                     emit()
                      hint("مسیر فایل extension.js، پوشهٔ افزونهٔ google.google-antigravity-*")
                      hint("یا ریشهٔ پوشهٔ .vscode/extensions را وارد کنید.")
-                     raw = input(color("\n  مسیر افزونهٔ VS Code (JS) > ", COLOR_CYAN, COLOR_BOLD)).strip()
+                     raw = ask(color("\n  مسیر افزونهٔ VS Code (JS): ", COLOR_CYAN, COLOR_BOLD)).strip()
                      if raw:
                          new_path = resolve_extension_path(raw)
                          if new_path and os.path.isfile(new_path):
@@ -713,13 +720,13 @@ def run_cli():
                              ok("مسیر افزونهٔ Antigravity VS Code به‌روزرسانی شد!")
                          else:
                              err("هدف معتبری برای افزونهٔ VS Code پیدا نشد (extension.js پیدا نشد).")
-                     print()
+                     emit()
                      pause()
                 elif sub_choice == "5":
-                     print()
+                     emit()
                      hint(f"مسیر باینری agy/antigravity دانلودشده")
                      hint(f"توسط افزونه ({describe_gemini_binary_path()}) یا هر فایلی به نام agy را وارد کنید.")
-                     raw = input(color("\n  مسیر باینری VS Code (agy) > ", COLOR_CYAN, COLOR_BOLD)).strip()
+                     raw = ask(color("\n  مسیر باینری VS Code (agy): ", COLOR_CYAN, COLOR_BOLD)).strip()
                      if raw:
                          new_path = resolve_agy_path(raw)
                          if new_path and os.path.isfile(new_path):
@@ -728,13 +735,13 @@ def run_cli():
                              ok("مسیر باینری agy در VS Code به‌روزرسانی شد!")
                          else:
                              err("هدف معتبری برای باینری agy در VS Code پیدا نشد.")
-                     print()
+                     emit()
                      pause()
             handled = True
         elif choice == "12":
             show_about()
 
-        print()
+        emit()
 
         if handled:
             pause()

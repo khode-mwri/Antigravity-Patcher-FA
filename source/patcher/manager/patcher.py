@@ -32,6 +32,7 @@ from patcher.utils.file import (
 from patcher.utils.update import handle_patch_failure
 from patcher.utils.admin import terminate_processes
 from patcher.utils.atomic import atomic_replace_posix, apply_patches_to_data
+from patcher.utils.console import emit
 
 BAK_EXT = ".agybak"
 
@@ -267,7 +268,7 @@ def do_patch_manager(path):
             warn(f"رشته نسخه تجزیه نشد: {ver_str}")
             if not confirmed("به هر حال ادامه می‌دهید؟"):
                 return
-    print()
+    emit()
 
     write_success = False
     off = 0
@@ -385,9 +386,9 @@ def do_patch_manager(path):
     hash_after = file_hash(path)
     resign_macos_bundle(path)
     resign_macos_binary(path)
-    print()
+    emit()
     step("پچ فایل اجرایی language_server", True, matched_gate.desc)
-    print()
+    emit()
     panel_rows = [
         ("هدف", os.path.basename(path)),
         ("دروازه", f"{matched_gate.desc} @ 0x{off:x}"),
@@ -446,7 +447,7 @@ def do_restore_manager(path):
     hash_after = file_hash(path)
     resign_macos_bundle(path)
     resign_macos_binary(path)
-    print()
+    emit()
     panel_rows = [("هدف", os.path.basename(path))]
     if hash_before and hash_after and hash_before != hash_after:
         panel_rows.append(("قبل", f"{hash_before[:8]}...{hash_before[56:]}"))
