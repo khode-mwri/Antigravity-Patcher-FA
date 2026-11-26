@@ -1,45 +1,53 @@
-# 🔑 پچر آنتی‌گراویتی — نسخهٔ فارسی | Google Antigravity Patcher (FA)
+# 🔑 Antigravity Patcher — Persian Edition | Google Antigravity (IDE, 2.0, CLI `agy` & VS Code)
+
+<p align="center">
+  <b>English</b> · <a href="README.fa.md">فارسی</a> · <a href="README.ru.md">Русский</a>
+</p>
 
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge" alt="GPL-3.0"></a>
   <a href="https://github.com/khode-mwri/Antigravity-Patcher-FA/stargazers"><img src="https://img.shields.io/github/stars/khode-mwri/Antigravity-Patcher-FA?style=for-the-badge&logo=github&color=yellow" alt="Stars"></a>
-  <img src="https://img.shields.io/badge/زبان-فارسی-success?style=for-the-badge" alt="فارسی">
+  <img src="https://img.shields.io/badge/UI-Persian%20(RTL)-success?style=for-the-badge" alt="Persian UI">
 </p>
 
-> **این مخزن، نسخهٔ فارسی‌شدهٔ پروژهٔ متن‌باز [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) است.**
-> تمام متن‌های رابط کاربری (بنر، منوها، پیام‌های وضعیت، خطاها و راهنماها) به فارسی روان برگردانده شده‌اند.
-> تاریخچهٔ کامل توسعه، نویسندگی و مجوز اصلی حفظ شده است و فهرست تغییرات در [`NOTICE.md`](NOTICE.md) آمده است.
+> **This repository is a Persian-localized derivative of the open-source project [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher).**
+> The whole terminal UI (banner, menus, status/warning/error messages, prompts) is translated to Persian and
+> rendered **right-to-left** in the terminal. Full upstream git history, authorship and the GPL-3.0 license are
+> preserved; the exact list of changes is in [`NOTICE.md`](NOTICE.md).
 
-پچر متن‌باز برای رفع **قفل منطقه‌ای و تحریم** در محصولات هوش مصنوعی گوگل:
+An open-source patcher that removes the **region lock / geoblocking** from Google's Antigravity products:
 
-- **Antigravity IDE** (فایل `main.js`)
-- **Antigravity 2.0** (باینری `language_server`)
-- **Antigravity CLI** (ابزار `agy`)
-- **افزونهٔ Google Antigravity** در VS Code
+- **Antigravity IDE** (`main.js`)
+- **Antigravity 2.0** (`language_server` binary)
+- **Antigravity CLI** (`agy` tool)
+- **Google Antigravity** extension for VS Code
 
-این ابزار خطاهای `User location is not supported for the API use` و `Unable to verify account eligibility` را **بدون نیاز به VPN و بدون تغییر ریجن اکانت گوگل** در ویندوز، مک و لینوکس دور می‌زند.
+It works around the `User location is not supported for the API use` and `Unable to verify account eligibility`
+errors **without a VPN and without changing your Google account region** on Windows, macOS and Linux.
 
-> این پچر فقط فایل‌های **محلی** را تغییر می‌دهد و هیچ ارتباطی با سرورهای گوگل برقرار نمی‌کند؛ نه کلید، نه توکن، نه ردگیری. هر تغییر با بکاپ خودکار (`.bak` / `.agybak` / `.vscodebak`) قابل بازگردانی است و نسخهٔ بازگردانی‌شده بایت‌به‌بایت با فایل اصلی یکسان است.
-
----
-
-## 📋 فهرست
-
-1. [نمای برنامه](#-نمای-برنامه)
-2. [پیش‌نیاز و آماده‌سازی](#-پیشنیاز-و-آمادهسازی)
-3. [نصب و اجرا](#-نصب-و-اجرا)
-4. [گزینه‌های منو](#-گزینههای-منو)
-5. [اجرا با مسیر دستی](#-اجرا-با-مسیر-دستی)
-6. [بکاپ و مدیریت داده‌ها](#-بکاپ-و-مدیریت-دادهها)
-7. [خطاهای متداول](#-خطاهای-متداول)
-8. [جزئیات فنی پچ](#-جزئیات-فنی-پچ)
-9. [ساخت نسخهٔ اجرایی](#-ساخت-نسخهٔ-اجرایی)
-10. [ساختار پروژه](#-ساختار-پروژه)
-11. [مجوز و انتساب](#-مجوز-و-انتساب)
+> The patcher only touches **local files**. It never talks to Google servers — no keys, no tokens, no telemetry.
+> Every change is backed up automatically (`.bak` / `.agybak` / `.vscodebak`) and can be reverted; the restored
+> binary is byte-identical to the original.
 
 ---
 
-## 🖥 نمای برنامه
+## 📋 Contents
+
+1. [Screenshot](#-screenshot)
+2. [Requirements](#-requirements)
+3. [Install & run](#-install--run)
+4. [Menu reference](#-menu-reference)
+5. [Custom path](#-custom-path)
+6. [Backup & data management](#-backup--data-management)
+7. [Troubleshooting](#-troubleshooting)
+8. [Technical details](#-technical-details)
+9. [Building binaries](#-building-binaries)
+10. [Project layout](#-project-layout)
+11. [License & attribution](#-license--attribution)
+
+---
+
+## 🖥 Screenshot
 
 ```text
   ╔═══════════════════════════════════════════════╗
@@ -51,137 +59,140 @@
   ║  Telegram  @AmirOmidi_Dev                     ║
   ╚═══════════════════════════════════════════════╝
 
-  ─ پچ ────────────────────────────────────────────
-  [1]  پچ Antigravity IDE       دور زدن قفل منطقه
-  [2]  پچ Antigravity 2.0       پچ language_server
-  [3]  پچ Antigravity CLI       رفع قفل ابزار agy
-  [4]  پچ افزونهٔ VS Code       extension.js و باینری agy
-  ─ بازگردانی ─────────────────────────────────────
-  [5]  Antigravity IDE                      از بکاپ
+  ───────────────────────────────────────────── پچ
+  [1]  پچ Antigravity IDE        دور زدن قفل منطقه
+  [2]  پچ Antigravity 2.0        پچ language_server
   ...
 ```
 
 ---
 
-## ✅ پیش‌نیاز و آماده‌سازی
+## ✅ Requirements
 
-1. **نصب نسخهٔ رسمی محصول:** بستهٔ Antigravity مورد نظر را از [سایت رسمی گوگل](https://antigravity.google/download) دانلود و نصب کنید. اگر نصب نباشد، خود پچر هنگام اجرا لینک دانلود را نشان می‌دهد.
-2. **بستن کامل برنامه:** پیش از پچ، Antigravity / Antigravity IDE / VS Code را کامل ببندید تا فایل‌ها قفل نباشند.
-3. **دسترسی مدیر:** پچ فایل‌های نصب‌شده در مسیرهای سیستمی را تغییر می‌دهد؛ روی ویندوز به تأیید UAC و روی لینوکس و مک به `sudo` نیاز دارید.
+1. **Install the official product** from [antigravity.google/download](https://antigravity.google/download).
+   If it is missing, the patcher offers the download link when it starts.
+2. **Close the app** (Antigravity / Antigravity IDE / VS Code) before patching so files are not locked.
+3. **Administrator rights** — the patcher modifies files under system paths (UAC on Windows, `sudo` on Linux/macOS).
 
 ---
 
-## 🚀 نصب و اجرا
+## 🚀 Install & run
 
-### روش اول (پیشنهادی): اجرا از سورس‌کد
+### Option 1 (recommended): run from source
 
-پیش‌نیاز: **پایتون ۳.۱۰ یا بالاتر** و **Git**.
+Requires **Python 3.10+** and **Git**.
+
+> The Persian UI needs `arabic-reshaper` and `python-bidi` (installed with `requirements.txt`). Without them the
+> tool still works, but Persian text is shown unreadable (reversed) in the terminal.
 
 ```bash
-# ۱) دریافت پروژه
+# 1) clone
 git clone https://github.com/khode-mwri/Antigravity-Patcher-FA.git
 cd Antigravity-Patcher-FA/source
 
-# ۲) محیط مجازی و نصب وابستگی‌ها
+# 2) virtualenv + dependencies
 python -m venv .venv
-# ویندوز:
+# Windows:
 .venv\Scripts\activate
-# لینوکس و مک:
+# Linux / macOS:
 source .venv/bin/activate
 
 pip install -r requirements.txt
 ```
 
 ```bash
-# ۳) اجرا
-# ویندوز:
+# 3) run
+# Windows:
 python main.py
-# لینوکس و مک:
+# Linux / macOS:
 sudo python3 main.py
 ```
 
-> روی ویندوز اسکریپت خودش درخواست دسترسی مدیر (UAC) می‌دهد.
+> On Windows the script re-launches itself elevated (UAC prompt).
 
-### روش دوم: نسخهٔ اجرایی آماده (`.exe` / `.deb` / `.run` / `.pkg` / `.dmg`)
+### Option 2: prebuilt binaries (`.exe` / `.deb` / `.run` / `.pkg` / `.dmg`)
 
-نسخه‌های بیلدشده پس از انتشار تگ در بخش [**Releases همین مخزن**](https://github.com/khode-mwri/Antigravity-Patcher-FA/releases) قرار می‌گیرند. تا آن زمان می‌توانید با [دستورهای بیلد](#-ساخت-نسخهٔ-اجرایی) خودتان فایل اجرایی بسازید.
+Built artifacts are published in [**Releases**](https://github.com/khode-mwri/Antigravity-Patcher-FA/releases)
+after every release tag, or you can [build them yourself](#-building-binaries).
 
 ---
 
-## 🧭 گزینه‌های منو
+## 🧭 Menu reference
 
-| کلید | دسته | عملیات | توضیح |
+| Key | Group | Action | Description |
 |:---:|:---:|:---|:---|
-| **`1`** | **پچ** | پچ Antigravity IDE | پچ `main.js` و دور زدن قفل منطقه‌ای (`isGoogleInternal`) |
-| **`2`** | **پچ** | پچ Antigravity 2.0 | پچ باینری `language_server` (فلگ `hasValidAuth`) |
-| **`3`** | **پچ** | پچ Antigravity CLI | رفع قفل ابزار `agy` و بررسی واجد شرایط بودن حساب |
-| **`4`** | **پچ** | پچ افزونهٔ VS Code | پچ `extension.js` و باینری `~/.gemini/bin/antigravity` |
-| **`5`** | **بازگردانی** | Antigravity IDE | بازگردانی `main.js` از بکاپ |
-| **`6`** | **بازگردانی** | Antigravity 2.0 | بازگردانی `language_server` از بکاپ |
-| **`7`** | **بازگردانی** | Antigravity CLI | بازگردانی باینری `agy` از بکاپ |
-| **`8`** | **بازگردانی** | افزونهٔ Antigravity VS Code | بازگردانی `extension.js` و باینری از بکاپ |
-| **`9`** | **ابزارها** | بررسی به‌روزرسانی | بررسی نسخه‌های جدید در GitHub |
-| **`10`** | **ابزارها** | ستاره در GitHub | باز کردن مخزن پروژه و حمایت از آن |
-| **`11`** | **ابزارها** | انتخاب مسیر دستی | بازنویسی هدف شناسایی‌شده به‌صورت خودکار |
-| **`12`** | **ابزارها** | درباره برنامه | اطلاعات نسخه، نویسنده و لینک‌ها |
-| **`0`** | **خروج** | خروج | خروج از پچر |
+| **`1`** | **Patch** | Patch Antigravity IDE | Patches `main.js` (bypasses `isGoogleInternal` region check) |
+| **`2`** | **Patch** | Patch Antigravity 2.0 | Patches the `language_server` binary (`hasValidAuth`) |
+| **`3`** | **Patch** | Patch Antigravity CLI | Unlocks `agy` and skips the account-eligibility check |
+| **`4`** | **Patch** | Patch VS Code extension | Patches `extension.js` and the `~/.gemini/bin/antigravity` binary |
+| **`5`** | **Restore** | Antigravity IDE | Restores `main.js` from backup |
+| **`6`** | **Restore** | Antigravity 2.0 | Restores `language_server` from backup |
+| **`7`** | **Restore** | Antigravity CLI | Restores the `agy` binary from backup |
+| **`8`** | **Restore** | VS Code extension | Restores `extension.js` and the binary from backup |
+| **`9`** | **Tools** | Check for updates | Checks GitHub releases |
+| **`10`** | **Tools** | Star on GitHub | Opens the project repository |
+| **`11`** | **Tools** | Select custom path | Overrides auto-detected targets |
+| **`12`** | **Tools** | About | Version, author and links |
+| **`0`** | **Exit** | Exit | Quits the patcher |
 
 ---
 
-## 📌 اجرا با مسیر دستی
+## 📌 Custom path
 
-اگر برنامه در مسیر غیرمعمولی نصب شده است، مسیر را مستقیم به اسکریپت بدهید:
+If the product is installed in an unusual location, pass the path directly:
 
 ```bash
-# ویندوز
+# Windows
 python main.py "C:\Users\<username>\AppData\Local\Programs\Antigravity IDE"
 python main.py "C:\Users\<username>\AppData\Local\Programs\Antigravity\resources\bin\language_server.exe"
 
-# لینوکس
+# Linux
 sudo python3 main.py /usr/share/antigravity-ide
 sudo python3 main.py /opt/Antigravity/resources/bin/language_server
 
-# مک
+# macOS
 sudo python3 main.py "/Applications/Antigravity IDE.app"
 sudo python3 main.py "/Applications/Antigravity.app"
 ```
 
-برای بازگردانی از بکاپ هم می‌توانید `--rollback` (یا `-r`) را به همان مسیر اضافه کنید.
+Add `--rollback` (or `-r`) to restore from backup instead of patching.
 
 ---
 
-## 💾 بکاپ و مدیریت داده‌ها
+## 💾 Backup & data management
 
-در مواردی مثل خطای **۴۲۹** (اتمام سهمیهٔ نشست)، توکن منقضی یا کَش خراب، تنها راه بازنشانی کامل محیط، ریست داده‌ها و ورود مجدد است. پچر پیش از هر تغییر خودش بکاپ می‌سازد، اما ریست دستی داده‌ها گاهی لازم است.
+On errors such as **HTTP 429** (quota exhausted), expired tokens or a corrupted cache, resetting the data
+directory and signing in again is often the only fix. The patcher always creates a backup before modifying
+files, but a manual reset is sometimes needed.
 
-> نام پوشه: برای **Antigravity 2.0** پوشهٔ `Antigravity` و برای **Antigravity IDE** پوشهٔ `Antigravity IDE` است.
+> Directory names: `Antigravity` for **Antigravity 2.0**, `Antigravity IDE` for **Antigravity IDE**.
 
-### ویندوز
+### Windows
 
 ```powershell
-# ۱) بستن کامل برنامه، سپس بکاپ پوشهٔ داده
+# 1) close the app, then back up the data folder
 Move-Item "$env:APPDATA\Antigravity" "$env:USERPROFILE\Desktop\Antigravity-backup"
 
-# ۲) اجرای برنامه، ورود مجدد و ارسال یک پیام آزمایشی، سپس بستن برنامه
+# 2) start the app, sign in, send one test message, close it again
 
-# ۳) بازگردانی فقط تاریخچهٔ گفتگوها
+# 3) restore only the chat history
 Remove-Item -Recurse -Force "$env:APPDATA\Antigravity\User\globalStorage"
 Remove-Item -Recurse -Force "$env:APPDATA\Antigravity\User\workspaceStorage"
 Copy-Item -Recurse "$env:USERPROFILE\Desktop\Antigravity-backup\User\globalStorage" "$env:APPDATA\Antigravity\User\"
 Copy-Item -Recurse "$env:USERPROFILE\Desktop\Antigravity-backup\User\workspaceStorage" "$env:APPDATA\Antigravity\User\"
 
-# ۴) حذف بکاپ موقت
+# 4) remove the temporary backup
 Remove-Item -Recurse -Force "$env:USERPROFILE\Desktop\Antigravity-backup"
 ```
 
-> ⚠️ فایل `settings.json` را از بکاپ برنگردانید؛ تنظیمات و توکن‌های خراب قبلی را دوباره بارگذاری می‌کند.
+> ⚠️ Do not restore `settings.json`; it brings back the broken settings and tokens.
 
-### مک
+### macOS
 
 ```bash
 mv ~/Library/Application\ Support/Antigravity ~/Desktop/Antigravity-backup
 
-# پس از اجرا، ورود مجدد، یک پیام آزمایشی و بستن برنامه:
+# after a fresh launch, sign-in and one test message:
 rm -rf ~/Library/Application\ Support/Antigravity/User/globalStorage
 rm -rf ~/Library/Application\ Support/Antigravity/User/workspaceStorage
 cp -a ~/Desktop/Antigravity-backup/User/globalStorage ~/Library/Application\ Support/Antigravity/User/
@@ -190,13 +201,13 @@ cp -a ~/Desktop/Antigravity-backup/User/workspaceStorage ~/Library/Application\ 
 rm -rf ~/Desktop/Antigravity-backup
 ```
 
-### لینوکس
+### Linux
 
 ```bash
 pkill -f -i antigravity; sleep 2
 mv ~/.config/Antigravity ~/Antigravity-backup
 
-# پس از اجرا، ورود مجدد، یک پیام آزمایشی و بستن برنامه:
+# after a fresh launch, sign-in and one test message:
 rm -rf ~/.config/Antigravity/User/globalStorage
 rm -rf ~/.config/Antigravity/User/workspaceStorage
 cp -a ~/Antigravity-backup/User/globalStorage ~/.config/Antigravity/User/
@@ -207,91 +218,99 @@ rm -rf ~/Antigravity-backup
 
 ---
 
-## ⚠️ خطاهای متداول
+## ⚠️ Troubleshooting
 
-### ۱. خطای HTTP 400 — `User location is not supported`
+### 1. HTTP 400 — `User location is not supported`
 
 ```json
 { "error": { "code": 400, "message": "User location is not supported for the API use.", "status": "FAILED_PRECONDITION" } }
 ```
 
-- **علت:** گوگل موقعیت جغرافیایی، IP مسدود یا اثر انگشت تحریم‌شده را تشخیص داده است.
-- **راه‌حل:** پچ را اعمال کنید (**گزینهٔ `1`**). اگر مشکل باقی ماند، از DNSهای عبور از تحریم روی سیستم یا روتر استفاده کنید و با اکانتی وارد شوید که سابقهٔ کشور مجاز دارد.
+- **Cause:** Google detected a restricted location, blocked IP or a flagged session fingerprint.
+- **Fix:** apply the patch (**menu option `1`**). If it persists, use an anti-sanction DNS on the machine or
+  router and sign in with an account that has a supported-country history.
 
-### ۲. خطای HTTP 403 — `SUBSCRIPTION_REQUIRED` (#3501)
+### 2. HTTP 403 — `SUBSCRIPTION_REQUIRED` (#3501)
 
-- **علت:** این خطا به لایسنس و اعتبارسنجی **سمت سرور گوگل** مربوط است. پچر فقط فایل‌های محلی را تغییر می‌دهد و نمی‌تواند اشتراک اختصاص دهد.
-- **راه‌حل:** ریجن اکانت را تغییر دهید یا از اکانت مجاز استفاده کنید؛ برای استفادهٔ پایدار پلن رسمی Google AI را تهیه کنید.
+- **Cause:** license validation on **Google's servers**. The patcher only changes local files and cannot grant
+  a subscription.
+- **Fix:** change the account region or use an eligible account; for stable use, buy an official Google AI plan.
 
-### ۳. خطای HTTP 429 — `RESOURCE_EXHAUSTED`
+### 3. HTTP 429 — `RESOURCE_EXHAUSTED`
 
-- **علت:** سهمیهٔ توکن تمام شده یا نشست نامعتبر است.
-- **راه‌حل:** داده‌ها را طبق بخش [بکاپ و مدیریت داده‌ها](#-بکاپ-و-مدیریت-دادهها) ریست کنید.
+- **Cause:** token quota exhausted or invalid session.
+- **Fix:** reset the data directory (see [Backup & data management](#-backup--data-management)).
 
-### ۴. خطای HTTP 500
+### 4. HTTP 500
 
-- **علت:** خطای داخلی سرورهای گوگل. پچر دخالتی در زیرساخت گوگل ندارد؛ چند دقیقه صبر کنید یا اکانت را عوض کنید.
+- **Cause:** internal Google server error. The patcher is not involved; wait a few minutes or switch accounts.
 
-### ۵. `pattern not found` هنگام پچ
+### 5. `pattern not found` while patching
 
-- **علت:** نسخهٔ نصب‌شدهٔ Antigravity با امضاهای شناخته‌شدهٔ این نسخه از پچر نمی‌خواند (نسخهٔ جدیدتر یا فایل اشتباه).
-- **راه‌حل:** از **گزینهٔ `11` (انتخاب مسیر دستی)** مسیر دقیق را بدهید، یا نسخهٔ به‌روز پچر / نسخهٔ سازگار Antigravity را نصب کنید.
+- **Cause:** the installed Antigravity build does not match the signatures known to this patcher version.
+- **Fix:** use **option `11` (custom path)** to point at the exact file, or update the patcher / install a
+  compatible Antigravity build.
 
-### ۶. `Operation not permitted` در مک
+### 6. `Operation not permitted` on macOS
 
-1. در `System Settings → Privacy & Security → Full Disk Access` به Terminal دسترسی کامل بدهید.
-2. برچسب قرنطینه را بردارید:
+1. Grant Terminal **Full Disk Access** in `System Settings → Privacy & Security`.
+2. Remove the quarantine flag:
    ```bash
    sudo xattr -rd com.apple.quarantine "/Applications/Antigravity.app"
    sudo xattr -rd com.apple.quarantine "/Applications/Antigravity IDE.app"
    ```
-3. پچر خودش امضای موقت (ad-hoc) را تمدید می‌کند:
+3. The patcher re-signs the app ad-hoc automatically:
    ```bash
    codesign --force --deep --sign - "/Applications/Antigravity IDE.app"
    ```
 
-### ۷. بررسی به‌روزرسانی ناموفق
+### 7. Update check failed
 
-- **محدودیت GitHub:** GitHub برای درخواست‌های بدون توکن سهمیهٔ ساعتی دارد. پیام «بررسی به‌روزرسانی ناموفق — محدودیت GitHub» دقیقاً همین است؛ چند دقیقه بعد دوباره تلاش کنید.
-- **خطای شبکه:** اتصال اینترنت یا VPN خود را برای دسترسی به `api.github.com` بررسی کنید.
+- **GitHub rate limit:** unauthenticated GitHub API requests are limited per hour. The message
+  “update check failed — GitHub rate limit” means exactly that; retry in a few minutes.
+- **Network error:** check your connection or VPN access to `api.github.com`.
 
 ---
 
-## 🔬 جزئیات فنی پچ
+## 🔬 Technical details
 
-### ۱. پچ Antigravity IDE
+### 1. Antigravity IDE patch
 
-یک عبارت شرطی در `main.js` پیدا و مقدارش ثابت `true` می‌شود؛ سپس کَش‌های کامپایل‌شده (`CachedData` و `Code Cache/js`) پاک می‌شوند تا کد اصلاح‌شده دوباره اجرا شود.
+A conditional expression in `main.js` is located and its value is pinned to `true`; the compiled caches
+(`CachedData` and `Code Cache/js`) are then cleared so the modified code is executed again.
 
 ```javascript
-// قبل از پچ
+// before
 resetIsTierGCPTos(), this.XXX.isGoogleInternal
-// پس از پچ
+// after
 resetIsTierGCPTos(), true
 ```
 
-### ۲. پچ باینری Antigravity 2.0 (`language_server`)
+### 2. Antigravity 2.0 binary patch (`language_server`)
 
-این سرویس با Go کامپایل شده است؛ پچر با شناسایی امضای بایت‌های اسمبلی، مقدار `hasValidAuth` را همیشه `true` می‌کند:
+The service is written in Go. The patcher matches the assembly byte signature and forces `hasValidAuth` to
+`true`:
 
-- **x86-64:** `cmp byte ptr [rax + 8], 0` به `mov byte ptr [rax + 8], 1` به‌همراه `nop`ها.
-- **ARM64:** خواندن فلگ با `mov w3, #1` و نوشتن آن بازنویسی می‌شود.
+- **x86-64:** `cmp byte ptr [rax + 8], 0` → `mov byte ptr [rax + 8], 1` plus `nop`s.
+- **ARM64:** the flag load/store pair is rewritten with `mov w3, #1`.
 
-### ۳. پچ Antigravity CLI (`agy`)
+### 3. Antigravity CLI patch (`agy`)
 
-- **x86-64:** شاخهٔ تولید خطای عدم واجد شرایط بودن (`failure_builder`) غیرقابل دسترس می‌شود.
-- **ARM64:** رجیسترهای پرچم با معادل‌های `mov w1, #1` (و در نسخه‌های جدیدتر `w2` و `w4`) پر می‌شوند.
+- **x86-64:** the failure branch (`failure_builder`) that emits the eligibility error becomes unreachable.
+- **ARM64:** the flag registers are set with `mov w1, #1` (and `w2` / `w4` on newer builds).
 
-### ۴. پچ افزونهٔ VS Code
+### 4. VS Code extension patch
 
-1. **جلوگیری از دانلود مجدد:** پس از خط لاگ دانلود باینری در `extension.js`، کدی تزریق می‌شود که اگر باینری محلی در `~/.gemini/bin` باشد، مسیر همان را برگرداند.
-2. **ثابت کردن کانال:** `const isChannelChanged = ...` به `const isChannelChanged = false;` تغییر می‌یابد.
+1. **Prevent re-download:** after the binary download log line in `extension.js`, code is injected so the
+   local binary in `~/.gemini/bin` is reused.
+2. **Pin the channel:** `const isChannelChanged = ...` becomes `const isChannelChanged = false;`.
 
-> همهٔ پچ‌ها با بررسی **یگانگی امضا** اعمال می‌شوند؛ اگر امضا یکتا نباشد، پچر عمداً از حدس زدن خودداری می‌کند تا فایل سالم بماند.
+> Every patch verifies signature **uniqueness**; when a signature is ambiguous or missing the patcher refuses
+> to guess instead of corrupting the file.
 
 ---
 
-## 🛠 ساخت نسخهٔ اجرایی
+## 🛠 Building binaries
 
 ```bash
 cd source
@@ -299,66 +318,73 @@ pip install pyinstaller packaging
 ```
 
 ```bash
-# ویندوز
+# Windows
 pyinstaller --onefile --uac-admin --icon=icon.ico --name="Antigravity_Patcher_Windows" --noupx --clean --version-file=version.txt --hidden-import=packaging --hidden-import=packaging.version --hidden-import=packaging.specifiers --hidden-import=packaging.requirements main.py
 
-# لینوکس
+# Linux
 pyinstaller --onefile --icon=icon.ico --name="Antigravity_Patcher_Linux" --hidden-import=packaging --hidden-import=packaging.version --hidden-import=packaging.specifiers --hidden-import=packaging.requirements main.py
 
-# مک (Universal2)
+# macOS (Universal2)
 pyinstaller --onefile --name="Antigravity_Patcher_macOS" --target-arch universal2 --hidden-import=packaging --hidden-import=packaging.version --hidden-import=packaging.specifiers --hidden-import=packaging.requirements main.py
 ```
 
 ---
 
-## 📁 ساختار پروژه
+## 📁 Project layout
 
 ```text
 Antigravity-Patcher-FA/
-├── README.md                  # همین راهنما (فارسی)
-├── NOTICE.md                  # انتساب و فهرست تغییرات نسخهٔ فارسی
-├── LICENSE                    # مجوز GPL-3.0
-├── test-agy/                  # تست‌های خودکار تطابق امضای باینری‌ها
+├── README.md                  # English (this file)
+├── README.fa.md               # Persian
+├── README.ru.md               # Russian
+├── NOTICE.md                  # attribution and list of changes
+├── LICENSE                    # GPL-3.0
+├── test-agy/                  # automated binary-signature tests
 │   ├── AGENTS.md
 │   └── test_cli_releases.py
-└── source/                    # سورس‌کد پایتون
-    ├── main.py                # نقطهٔ ورود برنامه
-    ├── requirements.txt       # وابستگی‌ها
-    ├── version.txt            # متادیتای فایل اجرایی
+└── source/                    # Python source
+    ├── main.py                # entry point
+    ├── requirements.txt       # dependencies
+    ├── version.txt            # executable metadata
     └── patcher/
-        ├── constants.py       # نسخه‌ها، رنگ‌ها و لینک‌ها
-        ├── cli.py             # منوی تعاملی و جریان‌های کاربری (فارسی)
-        ├── utils/             # رنگ کنسول، جایگزینی اتمیک، بکاپ، به‌روزرسانی
-        ├── ide/               # پچ Antigravity IDE (main.js)
-        ├── agy/               # پچ Antigravity CLI
-        ├── manager/           # پچ Antigravity 2.0 (language_server)
-        └── vscode/            # پچ افزونهٔ VS Code
+        ├── constants.py       # versions, colors, links
+        ├── cli.py             # interactive menu and flows
+        ├── utils/             # console/rtl rendering, atomic replace, backup, updates
+        ├── ide/               # Antigravity IDE patch (main.js)
+        ├── agy/               # Antigravity CLI patch
+        ├── manager/           # Antigravity 2.0 patch (language_server)
+        └── vscode/            # VS Code extension patch
 ```
 
 ---
 
-## 📜 مجوز و انتساب
+## 📜 License & attribution
 
-این پروژه تحت مجوز **GPL-3.0** منتشر شده است؛ متن کامل در [`LICENSE`](LICENSE). این نسخهٔ فارسی نیز **ذیل همان مجوز** توزیع می‌شود و متن مجوز، اعلان کپی‌رایت نویسندگان اصلی و فهرست تغییرات حفظ شده است.
+Licensed under **GPL-3.0**; the full text is in [`LICENSE`](LICENSE). This Persian edition is distributed under
+the same license, keeping the license text, the upstream copyright notices and the list of changes.
 
-- پروژهٔ اصلی و نویسنده: **[DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher)** — تمام اعتبار منطق پچ و طراحی اصلی از آن ایشان است.
-- پایهٔ اولیه: [trustybird/AvenCores-open-antigravity-patcher](https://github.com/trustybird/AvenCores-open-antigravity-patcher)
-- بخشی از راه‌حل‌ها به‌همراه [QNIX-Dev/eligibility-antigravity-patcher](https://github.com/QNIX-Dev/eligibility-antigravity-patcher) (MIT)
+- Original project & author: **[DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher)** —
+  all credit for the patch logic and the original design is theirs.
+- Initial base: [trustybird/AvenCores-open-antigravity-patcher](https://github.com/trustybird/AvenCores-open-antigravity-patcher)
+- Parts of the approach follow [QNIX-Dev/eligibility-antigravity-patcher](https://github.com/QNIX-Dev/eligibility-antigravity-patcher) (MIT)
 
-نسخهٔ فارسی و تغییرات آن: [khode-mwri](https://github.com/khode-mwri) — فهرست کامل تغییرات در [`NOTICE.md`](NOTICE.md).
+Persian edition and its changes: [khode-mwri](https://github.com/khode-mwri) — see [`NOTICE.md`](NOTICE.md).
 
 ---
 
-## 💬 پشتیبانی
+## 💬 Support
 
-- **این فورک فارسی:** [Issues در همین مخزن](https://github.com/khode-mwri/Antigravity-Patcher-FA/issues)
-- **پروژهٔ اصلی:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — تلگرام: [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
+- **This fork:** [Issues](https://github.com/khode-mwri/Antigravity-Patcher-FA/issues)
+- **Upstream project:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — Telegram: [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
 
 ---
 
 <details>
-<summary><b>🔎 کلیدواژه‌ها</b></summary>
+<summary><b>🔎 Keywords</b></summary>
 
-`Antigravity Patcher` • `پچ آنتی‌گراویتی` • `رفع تحریم Antigravity` • `دور زدن قفل منطقه‌ای گوگل` • `Google Antigravity region lock bypass` • `User location is not supported` • `FAILED_PRECONDITION 400` • `Unable to verify account eligibility` • `Eligibility check failed agy` • `isGoogleInternal bypass` • `language_server patch` • `Antigravity CLI agy` • `google.google-antigravity` • `نسخهٔ فارسی Antigravity Patcher`
+`Antigravity Patcher` · `Google Antigravity region lock bypass` · `User location is not supported` ·
+`FAILED_PRECONDITION 400` · `Unable to verify account eligibility` · `Eligibility check failed agy` ·
+`isGoogleInternal bypass` · `language_server patch` · `Antigravity CLI agy` · `google.google-antigravity` ·
+`Persian Antigravity Patcher` · `پچ آنتی‌گراویتی` · `رفع تحریم Antigravity` · `Russian Antigravity Patcher`
 
 </details>
