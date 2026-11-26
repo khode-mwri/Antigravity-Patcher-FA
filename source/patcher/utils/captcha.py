@@ -31,15 +31,15 @@ def confirm_with_captcha(message):
     # patcher modules, while cli.py imports those same modules.
     from patcher.cli import _read_console_line
 
-    warn("Warning: this file appears to be already patched.")
-    warn("Re-patching is most likely unnecessary and may cause issues.")
-    warn("If you are sure, solve the CAPTCHA below to proceed.")
-    hint("Leave the answer empty and press Enter to return to the main menu.")
+    warn("هشدار: این فایل به نظر می‌رسد قبلاً پچ شده است.")
+    warn("پچ کردن دوباره احتمالاً لازم نیست و ممکن است مشکل ایجاد کند.")
+    warn("اگر مطمئن هستید، برای ادامه کپچای زیر را حل کنید.")
+    hint("پاسخ را خالی بگذارید و برای بازگشت به منوی اصلی Enter را بزنید.")
 
     while True:
         question, expected = generate_math_captcha()
         print(f"  [?] {message}")
-        prompt = f"        {question} ({color('answer', COLOR_CYAN)}): "
+        prompt = f"        {question} ({color('پاسخ', COLOR_CYAN)}): "
 
         try:
             raw = _read_console_line(prompt).strip()
@@ -52,4 +52,4 @@ def confirm_with_captcha(message):
         if raw == expected:
             return True
 
-        warn("Incorrect answer. Try again with a new CAPTCHA.")
+        warn("پاسخ نادرست است. با کپچای جدید دوباره تلاش کنید.")

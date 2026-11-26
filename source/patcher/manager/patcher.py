@@ -57,9 +57,9 @@ class Gate:
             return ("patched", m.start() + self.offset)
         m = self.sig.search(data)
         if not m:
-            raise LookupError("gate signature not found (unsupported version?)")
+            raise LookupError("امضای دروازه پیدا نشد (نسخه پشتیبانی‌نشده؟)")
         if self.sig.search(data, m.end()):
-            raise LookupError("gate signature is not unique — refusing to guess")
+            raise LookupError("امضای دروازه یکتا نیست — از حدس زدن خودداری می‌شود")
         return ("unpatched", m.start() + self.offset)
 
     def resolve(self, data):
@@ -86,7 +86,7 @@ class MultiGate:
                 return g.resolve(data)
             except LookupError as e:
                 err = e
-        raise err or LookupError("no gate signature matched")
+        raise err or LookupError("هیچ امضای دروازه‌ای مطابقت نکرد")
 
 
 # language_server.exe / language_server (Go binary) auth validator gate:
@@ -208,9 +208,9 @@ def _make_backup(path):
     if os.path.exists(bak):
         if filecmp.cmp(path, bak, shallow=False):
             return
-        info(f"Backup is stale (app updated) — refreshing {os.path.basename(path)}{BAK_EXT}")
+        info(f"بکاپ قدیمی است (برنامه به‌روزرسانی شده) — در حال تازه‌سازی {os.path.basename(path)}{BAK_EXT}")
     else:
-        info(f"Creating backup -> {os.path.basename(path)}{BAK_EXT}")
+        info(f"در حال ایجاد بکاپ: {os.path.basename(path)}{BAK_EXT}")
     if sys.platform == "darwin":
         # Файлы внутри .app часто несут uchg-флаг: даже root получает
         # Errno 1 Operation not permitted при copy2 без предварительного chflags.
@@ -227,13 +227,13 @@ def _make_backup(path):
             and e.errno in (errno.EPERM, errno.EACCES)
         )
         if need_retry:
-            warn("Backup blocked by macOS flags, retrying after removing flags...")
+            warn("بکاپ توسط فلگ‌های macOS مسدود شد، پس از حذف فلگ‌ها دوباره تلاش می‌شود...")
             ensure_macos_writable(path)
             shutil.copy2(path, bak)
         else:
             raise
     fix_posix_permissions(bak)
-    ok(f"Backup: {os.path.basename(bak)} ({format_bytes(file_size(bak))})")
+    ok(f"بکاپ: {os.path.basename(bak)} ({format_bytes(file_size(bak))})")
 
 
 def do_patch_manager(path):
@@ -242,30 +242,30 @@ def do_patch_manager(path):
 
     if not path or not os.path.isfile(path):
         from patcher.cli import offer_download_and_block
-        offer_download_and_block("Antigravity 2.0")
+        offer_download_and_block("آنتی‌گراویتی 2.0", target_type="manager")
         return
 
     hash_before = file_hash(path)
-    info(f"Target: {color(path, COLOR_CYAN)}")
-    hint(f"Size: {color(format_bytes(file_size(path)), COLOR_CYAN)}")
+    info(f"هدف: {color(path, COLOR_CYAN)}")
+    hint(f"حجم: {color(format_bytes(file_size(path)), COLOR_CYAN)}")
 
     # Проверка версии Antigravity (считывается из package.json в app.asar)
     asar_path = find_asar_relative_to_manager(path)
     if asar_path:
         ver_status, ver_str = check_antigravity_version(asar_path)
         if ver_status == VersionStatus.TOO_OLD:
-            err(f"Unsupported version: {ver_str}")
-            err(f"Minimum required: {MIN_ANTIGRAVITY_VERSION}")
-            hint("Please update Antigravity and try again.")
-            if not confirmed("Proceed anyway?"):
+            err(f"نسخه پشتیبانی‌نشده: {ver_str}")
+            err(f"حداقل نسخه لازم: {MIN_ANTIGRAVITY_VERSION}")
+            hint("لطفاً Antigravity را به‌روزرسانی کنید و دوباره تلاش کنید.")
+            if not confirmed("به هر حال ادامه می‌دهید؟"):
                 return
         elif ver_status == VersionStatus.NOT_FOUND:
-            warn("Could not detect Antigravity version (package.json not found in ASAR).")
-            if not confirmed("Proceed without version check?"):
+            warn("نسخه Antigravity تشخیص داده نشد (package.json در ASAR پیدا نشد).")
+            if not confirmed("بدون بررسی نسخه ادامه می‌دهید؟"):
                 return
         elif ver_status == VersionStatus.PARSE_ERROR:
-            warn(f"Could not parse version string: {ver_str}")
-            if not confirmed("Proceed anyway?"):
+            warn(f"رشته نسخه تجزیه نشد: {ver_str}")
+            if not confirmed("به هر حال ادامه می‌دهید؟"):
                 return
     print()
 
@@ -274,13 +274,13 @@ def do_patch_manager(path):
     for attempt in range(2):
         if is_locked(path):
             if attempt == 0:
-                warn("Binary is locked (Antigravity Manager is running).")
-                if confirmed("Would you like to automatically close running Antigravity processes and retry?"):
+                warn("فایل اجرایی (باینری) قفل است (Antigravity در حال اجراست).")
+                if confirmed("می‌خواهید فرایندهای در حال اجرای Antigravity را خودکار ببندم و دوباره تلاش کنم؟"):
                     terminate_processes(["Antigravity", "Antigravity IDE", "antigravity", "antigravity-ide", "language_server"])
                     import time
                     time.sleep(1.5)
                     continue
-            err("File is locked — close the app first.")
+            err("فایل قفل است — ابتدا برنامه را ببندید.")
             return
 
         matched_gate = None
@@ -293,24 +293,24 @@ def do_patch_manager(path):
                     handle_patch_failure()
                     return
                 if kind == "patched":
-                    hint("Antigravity Manager already patched.")
-                    if not confirm_with_captcha("Apply patch anyway?"):
+                    hint("Antigravity 2.0 قبلاً پچ شده است.")
+                    if not confirm_with_captcha("به هر حال پچ اعمال شود؟"):
                         return
         except OSError as e:
-            err(f"Read error: {e}")
+            err(f"خطای خواندن: {e}")
             return
 
         try:
             _make_backup(path)
         except (PermissionError, OSError) as e:
-            err(f"Backup error: {e}")
+            err(f"خطای بکاپ: {e}")
             if sys.platform == "darwin":
-                hint("macOS blocked writing inside Antigravity.app (Errno 1 Operation not permitted).")
-                hint("Close Antigravity, then re-run the patcher with sudo:")
-                hint("  sudo python3 main.py   (or sudo ./Antigravity_Patcher_macOS)")
-                hint("If it still fails: ls -lO shows 'uchg' flag -> patcher already tried 'chflags nouchg'.")
+                hint("macOS نوشتن در Antigravity.app را مسدود کرد (Errno 1 Operation not permitted).")
+                hint("Antigravity را ببندید، سپس پچر را با sudo دوباره اجرا کنید:")
+                hint("  sudo python3 main.py   (یا sudo ./Antigravity_Patcher_macOS)")
+                hint("اگر باز هم ناموفق بود: ls -lO فلگ 'uchg' را نشان می‌دهد؛ پچر قبلاً 'chflags nouchg' را امتحان کرده است.")
             else:
-                hint("No write access — re-run as admin/root and close Antigravity first.")
+                hint("دسترسی نوشتن وجود ندارد — با دسترسی مدیر/root دوباره اجرا کنید و ابتدا Antigravity را ببندید.")
             handle_patch_failure()
             return
 
@@ -346,35 +346,35 @@ def do_patch_manager(path):
         except PermissionError as e:
             if attempt == 0:
                 if sys.platform == "darwin":
-                    warn(f"Write blocked by macOS (flags/owner): {e}")
+                    warn(f"نوشتن توسط macOS مسدود شد (فلگ‌ها/مالک): {e}")
                     ensure_macos_writable(path)
                     import time
                     time.sleep(0.5)
                     continue
-                warn(f"Permission denied (file locked): {e}")
-                if confirmed("Would you like to automatically close running processes and retry?"):
+                warn(f"دسترسی رد شد (فایل قفل است): {e}")
+                if confirmed("می‌خواهید فرایندهای در حال اجرا را خودکار ببندم و دوباره تلاش کنم؟"):
                     terminate_processes(["Antigravity", "Antigravity IDE", "antigravity", "antigravity-ide", "language_server"])
                     import time
                     time.sleep(1.5)
                     continue
-            err(f"Write error (Permission denied): {e}")
+            err(f"خطای نوشتن (دسترسی رد شد): {e}")
             if sys.platform == "darwin":
-                hint("Close Antigravity and re-run with sudo: sudo python main.py")
+                hint("Antigravity را ببندید و با sudo دوباره اجرا کنید: sudo python main.py")
             handle_patch_failure()
             return
         except OSError as e:
             # EPERM вне PermissionError (на всякий случай) — та же подсказка про sudo/флаги
             if e.errno in (errno.EPERM, errno.EACCES) and attempt == 0 and sys.platform == "darwin":
-                warn(f"Write blocked by macOS (flags/owner): {e}")
+                warn(f"نوشتن توسط macOS مسدود شد (فلگ‌ها/مالک): {e}")
                 ensure_macos_writable(path)
                 import time
                 time.sleep(0.5)
                 continue
-            err(f"Write error: {e}")
+            err(f"خطای نوشتن: {e}")
             handle_patch_failure()
             return
         except Exception as e:
-            err(f"Write error: {e}")
+            err(f"خطای نوشتن: {e}")
             handle_patch_failure()
             return
 
@@ -386,44 +386,44 @@ def do_patch_manager(path):
     resign_macos_bundle(path)
     resign_macos_binary(path)
     print()
-    step("Patch manager binary", True, matched_gate.desc)
+    step("پچ فایل اجرایی language_server", True, matched_gate.desc)
     print()
     panel_rows = [
-        ("Target", os.path.basename(path)),
-        ("Gate", f"{matched_gate.desc} @ 0x{off:x}"),
+        ("هدف", os.path.basename(path)),
+        ("دروازه", f"{matched_gate.desc} @ 0x{off:x}"),
     ]
     if hash_before and hash_after:
-        panel_rows.append(("Before", f"{hash_before[:8]}...{hash_before[56:]}"))
-        panel_rows.append(("After", f"{hash_after[:8]}...{hash_after[56:]}"))
-    print_panel("PATCH COMPLETE", panel_rows)
-    hint("Restart Antigravity/Antigravity IDE for the changes to take effect.")
+        panel_rows.append(("قبل", f"{hash_before[:8]}...{hash_before[56:]}"))
+        panel_rows.append(("بعد", f"{hash_after[:8]}...{hash_after[56:]}"))
+    print_panel("پچ با موفقیت انجام شد", panel_rows, show_star=True)
+    hint("برای اعمال تغییرات، Antigravity/Antigravity IDE را دوباره اجرا کنید.")
 
 
 def do_restore_manager(path):
     from patcher.cli import confirmed
 
     if not os.path.isfile(path):
-        err(f"Target is not a file: {path}")
+        err(f"هدف یک فایل نیست: {path}")
         return
 
     bak = path + BAK_EXT
     if not os.path.exists(bak):
-        warn(f"No backup for {os.path.basename(path)} (nothing to restore).")
+        warn(f"بکاپی برای {os.path.basename(path)} وجود ندارد (چیزی برای بازگردانی نیست).")
         return
 
     status, _ = get_status(path)
     if status != "patched":
-        warn("Manager is not patched — skipping restore (backup may be a different build).")
-        if not confirmed("Restore from backup anyway?"):
-            hint("Restore cancelled.")
+        warn("Antigravity 2.0 پچ نشده است — بازگردانی رد شد (ممکن است بکاپ مربوط به بیلد دیگری باشد).")
+        if not confirmed("به هر حال از بکاپ بازگردانی شود؟"):
+            hint("بازگردانی لغو شد.")
             return
 
     if is_locked(path):
-        err("Binary is locked — close the app first.")
+        err("فایل اجرایی (باینری) قفل است — ابتدا برنامه را ببندید.")
         return
 
-    if not confirmed("Restore Manager from backup?"):
-        hint("Restore cancelled.")
+    if not confirmed("Antigravity 2.0 از بکاپ بازگردانی شود؟"):
+        hint("بازگردانی لغو شد.")
         return
 
     hash_before = file_hash(path)
@@ -440,15 +440,15 @@ def do_restore_manager(path):
 
         fix_posix_permissions(path)
     except Exception as e:
-        err(f"Restore error: {e}")
+        err(f"خطای بازگردانی: {e}")
         return
 
     hash_after = file_hash(path)
     resign_macos_bundle(path)
     resign_macos_binary(path)
     print()
-    panel_rows = [("Target", os.path.basename(path))]
+    panel_rows = [("هدف", os.path.basename(path))]
     if hash_before and hash_after and hash_before != hash_after:
-        panel_rows.append(("Before", f"{hash_before[:8]}...{hash_before[56:]}"))
-        panel_rows.append(("After", f"{hash_after[:8]}...{hash_after[56:]}"))
-    print_panel("RESTORE COMPLETE", panel_rows)
+        panel_rows.append(("قبل", f"{hash_before[:8]}...{hash_before[56:]}"))
+        panel_rows.append(("بعد", f"{hash_after[:8]}...{hash_after[56:]}"))
+    print_panel("بازگردانی با موفقیت انجام شد", panel_rows)

@@ -68,14 +68,14 @@ def apply_patches(content, ag_version=None):
     applied = new_content != content
 
     if applied:
-        detail = f"replaced {len(matches)} occurrences"
+        detail = f"{len(matches)} مورد جایگزین شد"
     elif already:
-        detail = "already patched"
+        detail = "قبلاً پچ شده"
     else:
-        detail = "pattern not found"
+        detail = "الگو پیدا نشد"
 
     results.append({
-        "Name": "isGoogleInternal -> true (auth)",
+        "Name": "isGoogleInternal -> true (احراز هویت)",
         "Applied": True if (applied or already) else False,
         "Detail": detail,
     })
@@ -101,24 +101,24 @@ def warn_about_unsafe_backup(main_js_path, installed_version_str=None, current_c
                 backup_content = f.read()
             if len(backup_content.strip()) <= 512:
                 warnings.append(
-                    f"backup size is only {format_bytes(backup_size)} and it looks almost empty"
+                    f"حجم بکاپ فقط {format_bytes(backup_size)} است و تقریباً خالی به نظر می‌رسد"
                 )
         except Exception as e:
-            warn(f"Backup check error: {e}")
+            warn(f"خطای بررسی بکاپ: {e}")
             return False, False
     elif backup_size < 4096 or (current_size > 0 and backup_size < current_size // 10):
         warnings.append(
-            f"backup is much smaller than expected "
-            f"({format_bytes(backup_size)} vs {format_bytes(current_size)})"
+            f"حجم بکاپ بسیار کمتر از حد انتظار است "
+            f"({format_bytes(backup_size)} در برابر {format_bytes(current_size)})"
         )
 
     if not warnings:
         return True, False
 
     for warning in warnings:
-        warn(f"Backup warning: {warning}")
-    warn("Restoring this backup may break Antigravity IDE.")
-    warn(f"Backup kept: {os.path.basename(backup_path)}")
+        warn(f"هشدار بکاپ: {warning}")
+    warn("بازگردانی این بکاپ ممکن است Antigravity IDE را خراب کند.")
+    warn(f"بکاپ نگه داشته شد: {os.path.basename(backup_path)}")
     return True, True
 
 
@@ -128,25 +128,25 @@ def do_patch(main_js_path, show_search_line=False):
 
     if not main_js_path or not os.path.isfile(main_js_path):
         from patcher.cli import offer_download_and_block
-        offer_download_and_block("Antigravity IDE")
+        offer_download_and_block("آنتی‌گراویتی IDE", target_type="ide")
         return
 
     ver_status, ver_str = check_ag_version(main_js_path)
     parsed_version = parse_version_safe(ver_str)
 
     if ver_status == VersionStatus.TOO_OLD:
-        err(f"Unsupported version: {ver_str}")
-        err(f"Minimum required: {MIN_AG_VERSION}")
-        hint("Please update Antigravity IDE and try again.")
-        if not confirmed("Proceed anyway?"):
+        err(f"نسخه پشتیبانی‌نشده: {ver_str}")
+        err(f"حداقل نسخه لازم: {MIN_AG_VERSION}")
+        hint("لطفاً Antigravity IDE را به‌روزرسانی کنید و دوباره تلاش کنید.")
+        if not confirmed("به هر حال ادامه می‌دهید؟"):
             return
     elif ver_status == VersionStatus.NOT_FOUND:
-        warn("Could not detect Antigravity IDE version (registry key not found).")
-        if not confirmed("Proceed without version check?"):
+        warn("نسخه Antigravity IDE تشخیص داده نشد (کلید رجیستری پیدا نشد).")
+        if not confirmed("بدون بررسی نسخه ادامه می‌دهید؟"):
             return
     elif ver_status == VersionStatus.PARSE_ERROR:
-        warn(f"Could not parse version string: {ver_str}")
-        if not confirmed("Proceed anyway?"):
+        warn(f"رشته نسخه تجزیه نشد: {ver_str}")
+        if not confirmed("به هر حال ادامه می‌دهید؟"):
             return
     # VersionStatus.OK — продолжаем без вопросов
 
@@ -154,21 +154,21 @@ def do_patch(main_js_path, show_search_line=False):
         with open(main_js_path, "r", encoding="utf-8") as f:
             content = f.read()
     except Exception as e:
-        err(f"Read error: {e}")
+        err(f"خطای خواندن: {e}")
         return
 
     current_is_patched = is_already_patched(content)
 
     if current_is_patched:
-        hint("File appears already patched.")
-        if not confirm_with_captcha("Apply main.js patches anyway?"):
+        hint("به نظر می‌رسد فایل قبلاً پچ شده است.")
+        if not confirm_with_captcha("به هر حال پچ‌های main.js اعمال شود؟"):
             return
 
     # --- БЭКАП ---
     backup_path = main_js_path + ".bak"
 
     if not os.path.exists(backup_path) and not current_is_patched:
-        info("Creating backup...")
+        info("در حال ایجاد بکاپ...")
         if sys.platform == "darwin":
             app_path = find_app_bundle(main_js_path)
             if app_path:
@@ -177,11 +177,11 @@ def do_patch(main_js_path, show_search_line=False):
         try:
             shutil.copy2(main_js_path, backup_path)
             fix_posix_permissions(backup_path)
-            ok(f"Backup: {os.path.basename(backup_path)} "
+            ok(f"بکاپ: {os.path.basename(backup_path)} "
                f"({format_bytes(file_size(backup_path))})")
         except PermissionError as e:
             if sys.platform == "darwin":
-                warn(f"Permission denied, retrying after removing flags...")
+                warn(f"دسترسی رد شد، پس از حذف فلگ‌ها دوباره تلاش می‌شود...")
                 app_path = find_app_bundle(main_js_path)
                 if app_path:
                     remove_macos_immutable_flags(app_path)
@@ -189,25 +189,25 @@ def do_patch(main_js_path, show_search_line=False):
                 try:
                     shutil.copy2(main_js_path, backup_path)
                     fix_posix_permissions(backup_path)
-                    ok(f"Backup: {os.path.basename(backup_path)} "
+                    ok(f"بکاپ: {os.path.basename(backup_path)} "
                        f"({format_bytes(file_size(backup_path))})")
                 except Exception as e2:
-                    err(f"Backup error: {e2}")
+                    err(f"خطای بکاپ: {e2}")
                     return
             else:
-                err(f"Backup error: {e}")
+                err(f"خطای بکاپ: {e}")
                 return
         except Exception as e:
-            err(f"Backup error: {e}")
+            err(f"خطای بکاپ: {e}")
             return
     elif os.path.exists(backup_path):
-        hint("Backup already exists — skipping")
+        hint("بکاپ از قبل وجود دارد — رد شد")
     elif current_is_patched:
-        warn("main.js is already patched — no backup needed")
+        warn("main.js قبلاً پچ شده است — نیازی به بکاپ نیست")
 
     hash_before = file_hash(main_js_path)
 
-    info("Applying patches...")
+    info("در حال اعمال پچ‌ها...")
     print()
 
     new_content, results = apply_patches(content, ag_version=parsed_version)
@@ -220,11 +220,11 @@ def do_patch(main_js_path, show_search_line=False):
     print()
 
     if new_content == content and current_is_patched:
-        ok("File is already patched — no changes needed.")
+        ok("فایل قبلاً پچ شده است — تغییری لازم نیست.")
         return
 
     if applied == 0:
-        err("No patches applied.")
+        err("هیچ پچی اعمال نشد.")
         handle_patch_failure()
         return
 
@@ -239,23 +239,23 @@ def do_patch(main_js_path, show_search_line=False):
         except PermissionError as e:
             if attempt == 0:
                 if sys.platform == "darwin":
-                    warn(f"Permission denied, retrying after removing flags...")
+                    warn(f"دسترسی رد شد، پس از حذف فلگ‌ها دوباره تلاش می‌شود...")
                     app_path = find_app_bundle(main_js_path)
                     if app_path:
                         remove_macos_immutable_flags(app_path)
                         remove_macos_quarantine(app_path)
                     time.sleep(0.5)
                     continue
-                warn(f"Permission denied (file locked): {e}")
-                if confirmed("Would you like to automatically close running Antigravity processes and retry?"):
+                warn(f"دسترسی رد شد (فایل قفل است): {e}")
+                if confirmed("می‌خواهید فرایندهای در حال اجرای Antigravity را خودکار ببندم و دوباره تلاش کنم؟"):
                     terminate_processes(["Antigravity", "Antigravity IDE", "antigravity", "antigravity-ide"])
                     time.sleep(1.5)
                     continue
-            err(f"Write error (Permission denied): {e}")
+            err(f"خطای نوشتن (دسترسی رد شد): {e}")
             handle_patch_failure()
             return
         except Exception as e:
-            err(f"Write error: {e}")
+            err(f"خطای نوشتن: {e}")
             handle_patch_failure()
             return
 
@@ -264,7 +264,7 @@ def do_patch(main_js_path, show_search_line=False):
         return
 
     # Очистка кэша скомпилированных JS файлов VS Code (CachedData / Code Cache)
-    info("Clearing IDE compile caches...")
+    info("در حال پاک کردن کش‌های کامپایل IDE...")
     for c in _ide_cache_dirs():
         try:
             if os.path.isdir(c):
@@ -276,19 +276,19 @@ def do_patch(main_js_path, show_search_line=False):
     resign_macos_bundle(main_js_path)
 
     panel_rows = [
-        ("Target", os.path.basename(main_js_path)),
-        ("Patches", f"{applied}/{len(results)} applied"),
+        ("هدف", os.path.basename(main_js_path)),
+        ("پچ‌ها", f"{applied}/{len(results)} اعمال شد"),
     ]
     if os.path.exists(backup_path):
         panel_rows.append(
-            ("Backup", f"{os.path.basename(backup_path)} ({format_bytes(file_size(backup_path))})")
+            ("بکاپ", f"{os.path.basename(backup_path)} ({format_bytes(file_size(backup_path))})")
         )
     if hash_before and hash_after:
-        panel_rows.append(("Before", f"{hash_before[:8]}...{hash_before[56:]}"))
-        panel_rows.append(("After", f"{hash_after[:8]}...{hash_after[56:]}"))
-    panel_rows.append(("Done", time.strftime('%H:%M:%S')))
-    print_panel("PATCH COMPLETE", panel_rows)
-    hint("Restart Antigravity IDE and sign in.")
+        panel_rows.append(("قبل", f"{hash_before[:8]}...{hash_before[56:]}"))
+        panel_rows.append(("بعد", f"{hash_after[:8]}...{hash_after[56:]}"))
+    panel_rows.append(("پایان", time.strftime('%H:%M:%S')))
+    print_panel("پچ با موفقیت انجام شد", panel_rows, show_star=True)
+    hint("Antigravity IDE را دوباره اجرا کنید و وارد حساب شوید.")
 
 
 def do_restore(main_js_path, show_search_line=False):
@@ -310,31 +310,31 @@ def do_restore(main_js_path, show_search_line=False):
     backup_path = main_js_path + ".bak"
 
     if not os.path.exists(backup_path):
-        err(f"Backup file not found: {backup_path}")
+        err(f"فایل بکاپ پیدا نشد: {backup_path}")
         return
     try:
         with open(backup_path, "r", encoding="utf-8") as f:
             data = f.read()
     except Exception as e:
-        err(f"Could not read backup: {e}")
+        err(f"بکاپ خوانده نشد: {e}")
         return
 
     backup_size = file_size(backup_path)
     if backup_size <= 2048:
-        err("Backup looks too small — may be corrupted!")
-        if not confirmed("Restore anyway?"):
-            hint("Restore cancelled.")
+        err("بکاپ بسیار کوچک است — ممکن است خراب باشد!")
+        if not confirmed("به هر حال بازگردانی شود؟"):
+            hint("بازگردانی لغو شد.")
             return
 
     if is_already_patched(data):
-        warn("Backup itself appears to be patched!")
-        if not confirmed("Restore this patched backup?"):
-            hint("Restore cancelled.")
+        warn("به نظر می‌رسد خود بکاپ هم پچ شده است!")
+        if not confirmed("این بکاپ پچ‌شده بازگردانی شود؟"):
+            hint("بازگردانی لغو شد.")
             return
 
-    restore_question = "Restore this backup anyway?" if backup_has_warnings else "Restore backup?"
+    restore_question = "این بکاپ به هر حال بازگردانی شود؟" if backup_has_warnings else "بکاپ بازگردانی شود؟"
     if not confirmed(restore_question):
-        hint("Restore cancelled.")
+        hint("بازگردانی لغو شد.")
         return
 
     hash_before = file_hash(main_js_path)
@@ -352,7 +352,7 @@ def do_restore(main_js_path, show_search_line=False):
         fix_posix_permissions(main_js_path)
     except Exception as e:
         if sys.platform == "darwin":
-            warn(f"Restore failed, retrying after removing flags...")
+            warn(f"بازگردانی ناموفق بود، پس از حذف فلگ‌ها دوباره تلاش می‌شود...")
             app_path = find_app_bundle(main_js_path)
             if app_path:
                 remove_macos_immutable_flags(app_path)
@@ -364,7 +364,7 @@ def do_restore(main_js_path, show_search_line=False):
                 os.replace(tmp_path, main_js_path)
                 fix_posix_permissions(main_js_path)
             except Exception as e2:
-                err(f"Restore error: {e2}")
+                err(f"خطای بازگردانی: {e2}")
                 if os.path.exists(tmp_path):
                     try:
                         os.remove(tmp_path)
@@ -372,7 +372,7 @@ def do_restore(main_js_path, show_search_line=False):
                         pass
                 return
         else:
-            err(f"Restore error: {e}")
+            err(f"خطای بازگردانی: {e}")
             if os.path.exists(tmp_path):
                 try:
                     os.remove(tmp_path)
@@ -383,9 +383,9 @@ def do_restore(main_js_path, show_search_line=False):
     hash_after = file_hash(main_js_path)
     resign_macos_bundle(main_js_path)
 
-    panel_rows = [("Target", os.path.basename(main_js_path))]
+    panel_rows = [("هدف", os.path.basename(main_js_path))]
     if hash_before and hash_after and hash_before != hash_after:
-        panel_rows.append(("Before", f"{hash_before[:8]}...{hash_before[56:]}"))
-        panel_rows.append(("After", f"{hash_after[:8]}...{hash_after[56:]}"))
-    panel_rows.append(("Done", time.strftime('%H:%M:%S')))
-    print_panel("RESTORE COMPLETE", panel_rows)
+        panel_rows.append(("قبل", f"{hash_before[:8]}...{hash_before[56:]}"))
+        panel_rows.append(("بعد", f"{hash_after[:8]}...{hash_after[56:]}"))
+    panel_rows.append(("پایان", time.strftime('%H:%M:%S')))
+    print_panel("بازگردانی با موفقیت انجام شد", panel_rows)

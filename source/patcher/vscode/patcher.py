@@ -105,12 +105,12 @@ def _make_backup(path):
     if os.path.exists(bak):
         if filecmp.cmp(path, bak, shallow=False):
             return
-        info(f"Backup is stale (extension updated) — refreshing {os.path.basename(path)}{BAK_EXT}")
+        info(f"بکاپ قدیمی است (افزونه به‌روزرسانی شده) — در حال تازه‌سازی {os.path.basename(path)}{BAK_EXT}")
     else:
-        info(f"Creating backup -> {os.path.basename(path)}{BAK_EXT}")
+        info(f"در حال ایجاد بکاپ: {os.path.basename(path)}{BAK_EXT}")
     shutil.copy2(path, bak)
     fix_posix_permissions(bak)
-    ok(f"Backup: {os.path.basename(bak)} ({format_bytes(file_size(bak))})")
+    ok(f"بکاپ: {os.path.basename(bak)} ({format_bytes(file_size(bak))})")
 
 
 def do_patch_vscode(extension_js_path):
@@ -118,20 +118,20 @@ def do_patch_vscode(extension_js_path):
     from patcher.cli import confirmed
 
     if not extension_js_path or not os.path.isfile(extension_js_path):
-        err("Antigravity VS Code extension.js not found.")
-        hint("Install the 'Google Antigravity' extension in VS Code and run it once.")
+        err("extension.js افزونهٔ Antigravity VS Code پیدا نشد.")
+        hint("افزونهٔ «Google Antigravity» را در VS Code نصب کنید و یک بار اجرا کنید.")
         return False
 
     path = extension_js_path
-    info(f"Target: {color(path, COLOR_CYAN)}")
-    hint(f"Size: {color(format_bytes(file_size(path)), COLOR_CYAN)}")
+    info(f"هدف: {color(path, COLOR_CYAN)}")
+    hint(f"حجم: {color(format_bytes(file_size(path)), COLOR_CYAN)}")
     print()
 
     try:
         with open(path, "r", encoding="utf-8") as f:
             content = f.read()
     except Exception as e:
-        err(f"Read error: {e}")
+        err(f"خطای خواندن: {e}")
         handle_patch_failure()
         return False
 
@@ -142,13 +142,13 @@ def do_patch_vscode(extension_js_path):
 
     statuses = [s1, s2]
     if all(s == "not-found" for s in statuses):
-        err("Patch patterns not found in extension.js (unsupported extension version?).")
+        err("الگوهای پچ در extension.js پیدا نشد (نسخهٔ افزونه پشتیبانی نمی‌شود؟).")
         handle_patch_failure()
         return False
 
     if all(s in ("already", "not-found") for s in statuses) and already:
-        hint("extension.js already patched (both parts).")
-        if not confirmed("Apply patch anyway?"):
+        hint("extension.js قبلاً پچ شده است (هر دو بخش).")
+        if not confirmed("به هر حال پچ اعمال شود؟"):
             return True
         # re-patch: пересобираем из бэкапа, если он есть, иначе просто продолжаем
         bak = path + BAK_EXT
@@ -157,7 +157,7 @@ def do_patch_vscode(extension_js_path):
                 with open(bak, "r", encoding="utf-8") as f:
                     new_content = f.read()
             except Exception as e:
-                warn(f"Could not read backup for re-patch: {e}")
+                warn(f"خواندن بکاپ برای پچ دوباره ممکن نشد: {e}")
         new_content, s1 = _apply_part1(new_content)
         new_content, s2 = _apply_part2(new_content)
 
@@ -166,43 +166,43 @@ def do_patch_vscode(extension_js_path):
         try:
             _make_backup(path)
         except (PermissionError, OSError) as e:
-            err(f"Backup error: {e}")
-            hint("Close VS Code windows and retry. If installed as root, re-run with sudo.")
+            err(f"خطای بکاپ: {e}")
+            hint("پنجره‌های VS Code را ببندید و دوباره تلاش کنید. اگر با root نصب شده، با sudo دوباره اجرا کنید.")
             handle_patch_failure()
             return False
         try:
             with open(path, "w", encoding="utf-8", newline="") as f:
                 f.write(new_content)
         except PermissionError as e:
-            err(f"Write error (file locked?): {e}")
-            hint("Close VS Code windows and retry.")
+            err(f"خطای نوشتن (فایل قفل است؟): {e}")
+            hint("پنجره‌های VS Code را ببندید و دوباره تلاش کنید.")
             handle_patch_failure()
             return False
         except Exception as e:
-            err(f"Write error: {e}")
+            err(f"خطای نوشتن: {e}")
             handle_patch_failure()
             return False
 
     applied_parts = sum(1 for s in statuses if s in ("applied", "already"))
     print()
-    step("Patch Antigravity VS Code extension", bool(changed or already),
-         f"{applied_parts}/2 part(s)")
+    step("پچ افزونهٔ Antigravity VS Code", bool(changed or already),
+         f"{applied_parts} از 2 بخش")
     print()
     panel_rows = [
-        ("Target", os.path.basename(os.path.dirname(path))),
-        ("File", os.path.basename(path)),
-        ("Part 1", {"applied": "injected skip-download guard",
-                    "already": "already patched",
-                    "not-found": "pattern not found"}[s1]),
-        ("Part 2", {"applied": "isChannelChanged -> false",
-                    "already": "already patched",
-                    "not-found": "pattern not found"}[s2]),
+        ("هدف", os.path.basename(os.path.dirname(path))),
+        ("فایل", os.path.basename(path)),
+        ("بخش ۱", {"applied": "تزریق محافظ رد کردن دانلود",
+                    "already": "قبلاً پچ شده",
+                    "not-found": "الگو پیدا نشد"}[s1]),
+        ("بخش ۲", {"applied": "isChannelChanged -> false",
+                    "already": "قبلاً پچ شده",
+                    "not-found": "الگو پیدا نشد"}[s2]),
     ]
     hash_before = file_hash(path)
-    panel_rows.append(("Hash", f"{hash_before[:8]}...{hash_before[56:]}" if hash_before else "n/a"))
-    print_panel("PATCH COMPLETE" if (changed or already) else "PATCH SKIPPED", panel_rows)
+    panel_rows.append(("هش", f"{hash_before[:8]}...{hash_before[56:]}" if hash_before else "n/a"))
+    print_panel("پچ با موفقیت انجام شد" if (changed or already) else "پچ لازم نبود", panel_rows, show_star=bool(changed or already))
     if changed:
-        hint("Reload VS Code window (Developer: Reload Window) for the change to take effect.")
+        hint("برای اعمال تغییر، پنجرهٔ VS Code را دوباره بارگذاری کنید (Developer: Reload Window).")
     return True
 
 
@@ -213,30 +213,30 @@ def do_restore_vscode(extension_js_path):
     from patcher.cli import confirmed
 
     if not extension_js_path or not os.path.isfile(extension_js_path):
-        err("Antigravity VS Code extension.js not found.")
+        err("extension.js افزونهٔ Antigravity VS Code پیدا نشد.")
         return
 
     path = extension_js_path
     bak = path + BAK_EXT
     if not os.path.exists(bak):
-        warn(f"No backup for {os.path.basename(path)} (nothing to restore).")
+        warn(f"بکاپی برای {os.path.basename(path)} وجود ندارد (چیزی برای بازگردانی نیست).")
         return
 
     try:
         with open(path, "r", encoding="utf-8") as f:
             content = f.read()
     except Exception as e:
-        err(f"Read error: {e}")
+        err(f"خطای خواندن: {e}")
         return
 
     if not is_already_patched(content):
-        warn("extension.js is not patched — skipping restore (backup may be a different build).")
-        if not confirmed("Restore from backup anyway?"):
-            hint("Restore cancelled.")
+        warn("extension.js پچ نشده است — بازگردانی رد شد (ممکن است بکاپ مربوط به بیلد دیگری باشد).")
+        if not confirmed("به هر حال از بکاپ بازگردانی شود؟"):
+            hint("بازگردانی لغو شد.")
             return
 
-    if not confirmed("Restore Antigravity VS Code extension.js from backup?"):
-        hint("Restore cancelled.")
+    if not confirmed("extension.js افزونهٔ Antigravity VS Code از بکاپ بازگردانی شود؟"):
+        hint("بازگردانی لغو شد.")
         return
 
     hash_before = file_hash(path)
@@ -244,21 +244,21 @@ def do_restore_vscode(extension_js_path):
         shutil.copy2(bak, path)
         fix_posix_permissions(path)
     except PermissionError as e:
-        err(f"Restore error (file locked?): {e}")
-        hint("Close VS Code windows and retry.")
+        err(f"خطای بازگردانی (فایل قفل است؟): {e}")
+        hint("پنجره‌های VS Code را ببندید و دوباره تلاش کنید.")
         return
     except Exception as e:
-        err(f"Restore error: {e}")
+        err(f"خطای بازگردانی: {e}")
         return
 
     hash_after = file_hash(path)
     print()
-    panel_rows = [("Target", os.path.basename(path))]
+    panel_rows = [("هدف", os.path.basename(path))]
     if hash_before and hash_after and hash_before != hash_after:
-        panel_rows.append(("Before", f"{hash_before[:8]}...{hash_before[56:]}"))
-        panel_rows.append(("After", f"{hash_after[:8]}...{hash_after[56:]}"))
-    print_panel("RESTORE COMPLETE", panel_rows)
-    hint("Reload VS Code window (Developer: Reload Window) for the change to take effect.")
+        panel_rows.append(("قبل", f"{hash_before[:8]}...{hash_before[56:]}"))
+        panel_rows.append(("بعد", f"{hash_after[:8]}...{hash_after[56:]}"))
+    print_panel("بازگردانی با موفقیت انجام شد", panel_rows)
+    hint("برای اعمال تغییر، پنجرهٔ VS Code را دوباره بارگذاری کنید (Developer: Reload Window).")
 
     # --- Восстановление бинаря в ~/.gemini/bin (пропатчен agy-патчером) ---
     from patcher.vscode.discovery import find_gemini_antigravity_binary
@@ -267,7 +267,7 @@ def do_restore_vscode(extension_js_path):
     gemini_bin = find_gemini_antigravity_binary()
     if gemini_bin and os.path.exists(gemini_bin + ".agybak"):
         print()
-        info(f"Found patched binary backup: {color(gemini_bin, COLOR_CYAN)}")
+        info(f"بکاپ فایل اجرایی (باینری) پچ‌شده پیدا شد: {color(gemini_bin, COLOR_CYAN)}")
         do_restore_agy(gemini_bin)
     elif gemini_bin:
-        hint(f"Binary {os.path.basename(gemini_bin)} in ~/.gemini/bin has no backup — nothing to restore.")
+        hint(f"فایل اجرایی (باینری) {os.path.basename(gemini_bin)} در ~/.gemini/bin بکاپ ندارد — چیزی برای بازگردانی نیست.")

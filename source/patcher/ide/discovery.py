@@ -142,9 +142,9 @@ def find_portable_candidates(search_type="ide"):
                                 candidates.append(dirpath)
                                 label = "Antigravity IDE"
                                 try:
-                                    ok(f"Found portable {label} at: {dirpath}")
+                                    ok(f"نسخه قابل حمل {label} پیدا شد در: {dirpath}")
                                 except Exception:
-                                    print(f"  [+] Found portable {label} at: {dirpath}")
+                                    print(f"  [+] نسخه قابل حمل {label} پیدا شد در: {dirpath}")
                                 break
                 elif search_type == "antigravity":
                     # Ищем признаки Antigravity
@@ -154,9 +154,9 @@ def find_portable_candidates(search_type="ide"):
                             candidates.append(dirpath)
                             label = "Antigravity"
                             try:
-                                ok(f"Found portable {label} at: {dirpath}")
+                                ok(f"نسخه قابل حمل {label} پیدا شد در: {dirpath}")
                             except Exception:
-                                print(f"  [+] Found portable {label} at: {dirpath}")
+                                print(f"  [+] نسخه قابل حمل {label} پیدا شد در: {dirpath}")
 
     return candidates
 

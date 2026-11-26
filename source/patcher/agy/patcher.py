@@ -55,7 +55,7 @@ class Gate:
             return ("patched", patched_offsets)
         unpatched_offsets = [m.start() + self.offset for m in self.sig.finditer(data)]
         if not unpatched_offsets:
-            raise LookupError("gate signature not found (unsupported version?)")
+            raise LookupError("امضای دروازه پیدا نشد (نسخه پشتیبانی‌نشده؟)")
         return ("unpatched", unpatched_offsets)
 
 
@@ -94,7 +94,7 @@ class MultiGate:
             except LookupError as e:
                 err = e
         if not matches:
-            raise err or LookupError("no gate signature matched")
+            raise err or LookupError("هیچ امضای دروازه‌ای مطابقت نداشت")
         return matches
 
 
@@ -110,7 +110,7 @@ CLI_GATE_X64 = Gate(
     rb"\x48\x85\xc0\x0f\x84....\x48\x85\xc0\x90\x0f\x85....",
     b"\x48\x85\xc0\x90",
     offset=9,
-    desc="eligibility screen off (x64)",
+    desc="غیرفعال‌سازی صفحهٔ بررسی واجد شرایط (x64)",
 )
 # arm64:
 #   cbnz x1,error ; cbz x0,eligible ; ldrb w1,[x0,#8] ; tbnz w1,#0,eligible
@@ -128,7 +128,7 @@ CLI_GATE_ARM64 = Gate(
     rb"|\xe0\x4f\x00\xf9\xe1\x33\x00\xf9\xe2\x47\x00\xf9\xe3\x2f\x00\xf9)",
     b"\x21\x00\x80\x52",
     offset=8,
-    desc="eligibility screen off (arm64)",
+    desc="غیرفعال‌سازی صفحهٔ بررسی واجد شرایط (arm64)",
 )
 # arm64 (CLI 1.2.7+): проверка перекомпилирована — внешний cbnz исчез,
 # флаг читается в w4, а за tbnz идёт ldp вместо bl+spills:
@@ -145,7 +145,7 @@ CLI_GATE_ARM64_W4 = Gate(
     rb"[\x04\x24\x44\x64\x84\xa4\xc4\xe4].[\x00-\x07]\x37\x04\x94\x44\xa9",
     b"\x24\x00\x80\x52",
     offset=4,
-    desc="eligibility screen off (arm64, w4)",
+    desc="غیرفعال‌سازی صفحهٔ بررسی واجد شرایط (arm64, w4)",
 )
 # arm64 (CLI 1.2.7+, инлайн-проверка в функции экрана) — главный гейт экрана,
 # без него экран "Eligibility check failed:" выживает даже с пропатченным w4:
@@ -160,7 +160,7 @@ CLI_GATE_ARM64_W2 = Gate(
     rb"\x22\x00\x80\x52[\x02\x22\x42\x62\x82\xa2\xc2\xe2].[\x00-\x07]\x37...[\x94-\x97]",
     b"\x22\x00\x80\x52",
     offset=8,
-    desc="eligibility screen off (arm64, w2)",
+    desc="غیرفعال‌سازی صفحهٔ بررسی واجد شرایط (arm64, w2)",
 )
 
 CLI_GATE = MultiGate(
@@ -168,11 +168,11 @@ CLI_GATE = MultiGate(
     CLI_GATE_ARM64,
     CLI_GATE_ARM64_W2,
     CLI_GATE_ARM64_W4,
-    desc="eligibility screen off",
+    desc="غیرفعال‌سازی صفحهٔ بررسی واجد شرایط",
 )
 
 ALL_GATES = [
-    (CLI_GATE, "eligibility screen off"),
+    (CLI_GATE, "غیرفعال‌سازی صفحهٔ بررسی واجد شرایط"),
 ]
 
 
@@ -263,9 +263,9 @@ def _make_backup(path):
     if os.path.exists(bak):
         if filecmp.cmp(path, bak, shallow=False):
             return  # бэкап уже соответствует этому билду
-        info(f"Backup is stale (app updated) — refreshing {os.path.basename(path)}{BAK_EXT}")
+        info(f"بکاپ قدیمی است (برنامه به‌روزرسانی شده) — در حال تازه‌سازی {os.path.basename(path)}{BAK_EXT}")
     else:
-        info(f"Creating backup -> {os.path.basename(path)}{BAK_EXT}")
+        info(f"در حال ایجاد بکاپ: {os.path.basename(path)}{BAK_EXT}")
     if sys.platform == "darwin":
         ensure_macos_writable(path)
     try:
@@ -277,13 +277,13 @@ def _make_backup(path):
             and e.errno in (errno.EPERM, errno.EACCES)
         )
         if need_retry:
-            warn("Backup blocked by macOS flags, retrying after removing flags...")
+            warn("بکاپ توسط فلگ‌های macOS مسدود شد، پس از حذف فلگ‌ها دوباره تلاش می‌شود...")
             ensure_macos_writable(path)
             shutil.copy2(path, bak)
         else:
             raise
     fix_posix_permissions(bak)
-    ok(f"Backup: {os.path.basename(bak)} ({format_bytes(file_size(bak))})")
+    ok(f"بکاپ: {os.path.basename(bak)} ({format_bytes(file_size(bak))})")
 
 
 def _copy_to_user_bin(path):
@@ -293,7 +293,7 @@ def _copy_to_user_bin(path):
     dest_path = os.path.join(dest_dir, "agy")
     if os.path.abspath(path) == os.path.abspath(dest_path):
         return
-    info(f"Storing file in user system folder -> {dest_path}")
+    info(f"کپی فایل به پوشهٔ کاربر: {dest_path}")
     try:
         os.makedirs(dest_dir, exist_ok=True)
         if os.path.exists(dest_path):
@@ -303,9 +303,9 @@ def _copy_to_user_bin(path):
                 pass
         shutil.copy2(path, dest_path)
         os.chmod(dest_path, 0o755)
-        ok(f"File successfully copied to: {dest_path}")
+        ok(f"فایل با موفقیت در این مسیر کپی شد: {dest_path}")
     except Exception as e:
-        warn(f"Could not copy file to {dest_path}: {e}")
+        warn(f"کپی فایل به {dest_path} ممکن نشد: {e}")
 
 
 def do_patch_agy(path):
@@ -314,12 +314,12 @@ def do_patch_agy(path):
 
     if not path or not os.path.isfile(path):
         from patcher.cli import offer_download_and_block
-        offer_download_and_block("Antigravity CLI")
+        offer_download_and_block("آنتی‌گراویتی CLI", target_type="agy")
         return
 
     hash_before = file_hash(path)
-    info(f"Target: {color(path, COLOR_CYAN)}")
-    hint(f"Size: {color(format_bytes(file_size(path)), COLOR_CYAN)}")
+    info(f"هدف: {color(path, COLOR_CYAN)}")
+    hint(f"حجم: {color(format_bytes(file_size(path)), COLOR_CYAN)}")
     print()
 
     write_success = False
@@ -327,13 +327,13 @@ def do_patch_agy(path):
     for attempt in range(2):
         if is_locked(path):
             if attempt == 0:
-                warn("Binary is locked (Antigravity CLI is running).")
-                if confirmed("Would you like to automatically close running agy processes and retry?"):
+                warn("فایل اجرایی (باینری) قفل است (Antigravity CLI در حال اجراست).")
+                if confirmed("می‌خواهید فرایندهای در حال اجرای agy را خودکار ببندم و دوباره تلاش کنم؟"):
                     terminate_processes(["agy"])
                     import time
                     time.sleep(1.5)
                     continue
-            err("File is locked — close Antigravity CLI first.")
+            err("فایل قفل است — ابتدا Antigravity CLI را ببندید.")
             return
 
         # Сканируем в mmap, закрываем ДО записи (zero-copy scan)
@@ -354,8 +354,8 @@ def do_patch_agy(path):
                             for off in offsets:
                                 patches.append((off, g))
                 if all_patched:
-                    hint("agy already patched (all gates).")
-                    if not confirm_with_captcha("Apply patch anyway?"):
+                    hint("agy قبلاً پچ شده است (همهٔ دروازه‌ها).")
+                    if not confirm_with_captcha("به هر حال پچ اعمال شود؟"):
                         return
                     # re-patch: перезаписываем все гейты
                     patches = []
@@ -364,7 +364,7 @@ def do_patch_agy(path):
                             for off in offsets:
                                 patches.append((off, g))
         except OSError as e:
-            err(f"Read error: {e}")
+            err(f"خطای خواندن: {e}")
             return
 
         if not patches:
@@ -373,13 +373,13 @@ def do_patch_agy(path):
         try:
             _make_backup(path)
         except (PermissionError, OSError) as e:
-            err(f"Backup error: {e}")
+            err(f"خطای بکاپ: {e}")
             if sys.platform == "darwin":
-                hint("macOS blocked writing (Errno 1 Operation not permitted).")
-                hint("Close Antigravity, then re-run the patcher with sudo:")
-                hint("  sudo python3 main.py   (or sudo ./Antigravity_Patcher_macOS)")
+                hint("macOS از نوشتن جلوگیری کرد (Errno 1: Operation not permitted).")
+                hint("Antigravity را ببندید، سپس پچر را با sudo دوباره اجرا کنید:")
+                hint("  sudo python3 main.py   (یا sudo ./Antigravity_Patcher_macOS)")
             else:
-                hint("No write access — re-run as admin/root and close agy first.")
+                hint("دسترسی نوشتن وجود ندارد — با دسترسی مدیر/root دوباره اجرا کنید و ابتدا agy را ببندید.")
             handle_patch_failure()
             return
 
@@ -410,34 +410,34 @@ def do_patch_agy(path):
         except PermissionError as e:
             if attempt == 0:
                 if sys.platform == "darwin":
-                    warn(f"Write blocked by macOS (flags/owner): {e}")
+                    warn(f"نوشتن با macOS مسدود شد (فلگ‌ها/مالکیت): {e}")
                     ensure_macos_writable(path)
                     import time
                     time.sleep(0.5)
                     continue
-                warn(f"Permission denied (file locked): {e}")
-                if confirmed("Would you like to automatically close running agy processes and retry?"):
+                warn(f"دسترسی رد شد (فایل قفل است): {e}")
+                if confirmed("می‌خواهید فرایندهای در حال اجرای agy را خودکار ببندم و دوباره تلاش کنم؟"):
                     terminate_processes(["agy"])
                     import time
                     time.sleep(1.5)
                     continue
-            err(f"Write error (Permission denied): {e}")
+            err(f"خطای نوشتن (دسترسی رد شد): {e}")
             if sys.platform == "darwin":
-                hint("Close Antigravity and re-run with sudo: sudo python main.py")
+                hint("Antigravity را ببندید و با sudo دوباره اجرا کنید: sudo python main.py")
             handle_patch_failure()
             return
         except OSError as e:
             if e.errno in (errno.EPERM, errno.EACCES) and attempt == 0 and sys.platform == "darwin":
-                warn(f"Write blocked by macOS (flags/owner): {e}")
+                warn(f"نوشتن با macOS مسدود شد (فلگ‌ها/مالکیت): {e}")
                 ensure_macos_writable(path)
                 import time
                 time.sleep(0.5)
                 continue
-            err(f"Write error: {e}")
+            err(f"خطای نوشتن: {e}")
             handle_patch_failure()
             return
         except Exception as e:
-            err(f"Write error: {e}")
+            err(f"خطای نوشتن: {e}")
             handle_patch_failure()
             return
 
@@ -451,45 +451,45 @@ def do_patch_agy(path):
     if os.name == "posix":
         _copy_to_user_bin(path)
     print()
-    step("Patch agy binary", True, f"{len(patches)} gate(s)")
+    step("پچ فایل اجرایی (باینری) agy", True, f"{len(patches)} دروازه")
     print()
     panel_rows = [
-        ("Target", os.path.basename(path)),
+        ("هدف", os.path.basename(path)),
     ]
     for off, g in patches:
-        panel_rows.append(("Gate", f"{g.desc} @ 0x{off:x}"))
+        panel_rows.append(("دروازه", f"{g.desc} @ 0x{off:x}"))
     if hash_before and hash_after:
-        panel_rows.append(("Before", f"{hash_before[:8]}...{hash_before[56:]}"))
-        panel_rows.append(("After", f"{hash_after[:8]}...{hash_after[56:]}"))
-    print_panel("PATCH COMPLETE", panel_rows)
-    hint("Restart Antigravity CLI for the change to take effect.")
+        panel_rows.append(("قبل", f"{hash_before[:8]}...{hash_before[56:]}"))
+        panel_rows.append(("بعد", f"{hash_after[:8]}...{hash_after[56:]}"))
+    print_panel("پچ با موفقیت انجام شد", panel_rows, show_star=True)
+    hint("برای اعمال تغییرات، Antigravity CLI را دوباره اجرا کنید.")
 
 
 def do_restore_agy(path):
     from patcher.cli import confirmed
 
     if not os.path.isfile(path):
-        err(f"Target is not a file: {path}")
+        err(f"هدف یک فایل نیست: {path}")
         return
 
     bak = path + BAK_EXT
     if not os.path.exists(bak):
-        warn(f"No backup for {os.path.basename(path)} (nothing to restore).")
+        warn(f"بکاپی برای {os.path.basename(path)} وجود ندارد (چیزی برای بازگردانی نیست).")
         return
 
     status, _ = get_status(path)
     if status != "patched":
-        warn("agy is not patched — skipping restore (backup may be a different build).")
-        if not confirmed("Restore from backup anyway?"):
-            hint("Restore cancelled.")
+        warn("agy پچ نشده است — بازگردانی رد شد (ممکن است بکاپ مربوط به بیلد دیگری باشد).")
+        if not confirmed("به هر حال از بکاپ بازگردانی شود؟"):
+            hint("بازگردانی لغو شد.")
             return
 
     if is_locked(path):
-        err("Binary is locked — close Antigravity CLI first.")
+        err("فایل اجرایی (باینری) قفل است — ابتدا Antigravity CLI را ببندید.")
         return
 
-    if not confirmed("Restore agy from backup?"):
-        hint("Restore cancelled.")
+    if not confirmed("agy از بکاپ بازگردانی شود؟"):
+        hint("بازگردانی لغو شد.")
         return
 
     hash_before = file_hash(path)
@@ -506,7 +506,7 @@ def do_restore_agy(path):
 
         fix_posix_permissions(path)
     except Exception as e:
-        err(f"Restore error: {e}")
+        err(f"خطای بازگردانی: {e}")
         return
 
     hash_after = file_hash(path)
@@ -515,8 +515,8 @@ def do_restore_agy(path):
     if os.name == "posix":
         _copy_to_user_bin(path)
     print()
-    panel_rows = [("Target", os.path.basename(path))]
+    panel_rows = [("هدف", os.path.basename(path))]
     if hash_before and hash_after and hash_before != hash_after:
-        panel_rows.append(("Before", f"{hash_before[:8]}...{hash_before[56:]}"))
-        panel_rows.append(("After", f"{hash_after[:8]}...{hash_after[56:]}"))
-    print_panel("RESTORE COMPLETE", panel_rows)
+        panel_rows.append(("قبل", f"{hash_before[:8]}...{hash_before[56:]}"))
+        panel_rows.append(("بعد", f"{hash_after[:8]}...{hash_after[56:]}"))
+    print_panel("بازگردانی با موفقیت انجام شد", panel_rows)

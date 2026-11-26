@@ -33,10 +33,10 @@ def atomic_replace_posix(path, data, meta_source=None):
 
     # Запрещаем работу с символическими ссылками
     if os.path.islink(path):
-        raise ValueError("Refusing to patch symlink")
+        raise ValueError("پچ کردن symlink مجاز نیست")
 
     if not os.path.isfile(path):
-        raise ValueError("Target is not a regular file")
+        raise ValueError("هدف یک فایل معمولی نیست")
 
     if meta_source is None:
         meta_source = path
@@ -97,7 +97,7 @@ def validate_patch_params(bdata, patches):
     for off, g in patches:
         # Проверка на отрицательное смещение
         if off < 0:
-            raise ValueError(f"Negative offset: {off}")
+            raise ValueError(f"آفست منفی: {off}")
 
         fix = g.fix
 
@@ -108,26 +108,26 @@ def validate_patch_params(bdata, patches):
             # Патч не должен менять размер файла
             if len(fix) != len(orig):
                 raise ValueError(
-                    f"Patch changes file size: orig={len(orig)}, fix={len(fix)}"
+                    f"پچ حجم فایل را تغییر می‌دهد: orig={len(orig)}, fix={len(fix)}"
                 )
 
             # Проверка выхода за границы файла
             if off + len(orig) > len(bdata):
                 raise ValueError(
-                    f"Patch offset out of bounds: offset={off}, "
+                    f"آفست پچ خارج از محدوده: offset={off}, "
                     f"patch_size={len(orig)}, file_size={len(bdata)}"
                 )
 
             # Проверка соответствия оригинальных байтов
             if bdata[off:off + len(orig)] != orig:
                 raise ValueError(
-                    f"Original bytes mismatch at offset {off}"
+                    f"عدم تطابق بایت‌های اصلی در آفست {off}"
                 )
         else:
             # Без оригинала хотя бы проверяем границы
             if off + len(fix) > len(bdata):
                 raise ValueError(
-                    f"Patch offset out of bounds: offset={off}, "
+                    f"آفست پچ خارج از محدوده: offset={off}, "
                     f"patch_size={len(fix)}, file_size={len(bdata)}"
                 )
 

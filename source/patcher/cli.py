@@ -65,7 +65,7 @@ from patcher.vscode.patcher import (
 )
 
 
-def pause(prompt="  Press Enter to return to menu..."):
+def pause(prompt="  برای بازگشت به منو Enter را بزنید..."):
     print(color(prompt, COLOR_DIM), end="", flush=True)
     if os.name == "nt":
         import msvcrt
@@ -105,7 +105,7 @@ def print_launch_examples():
     macos_example = f'{cmd} "/Applications/Antigravity IDE.app"'
     linux_example = f'{cmd} "/usr/share/antigravity-ide"'
 
-    hint("Usage examples with custom path:")
+    hint("نمونهٔ اجرا با مسیر دستی:")
     print(f"      Windows: {color(windows_example, COLOR_YELLOW)}")
     print(f"      macOS:   {color(macos_example, COLOR_YELLOW)}")
     print(f"      Linux:   {color(linux_example, COLOR_YELLOW)}")
@@ -116,7 +116,7 @@ def print_path_examples():
     macos_path = "/Applications/Antigravity IDE.app"
     linux_path = "/usr/share/antigravity-ide"
 
-    hint("Path examples:")
+    hint("نمونهٔ مسیرها:")
     print(f"      Windows: {color(windows_path, COLOR_YELLOW)}")
     print(f"      macOS:   {color(macos_path, COLOR_YELLOW)}")
     print(f"      Linux:   {color(linux_path, COLOR_YELLOW)}")
@@ -157,63 +157,63 @@ def prompt_yn(question):
 
 def confirmed(question):
     """Возвращает True, если пользователь ответил 'y'."""
-    return prompt_yn(question) in ("y", "yes", "\u0434", "\u0434\u0430")
+    return prompt_yn(question) in ("y", "yes", "\u0434", "\u0434\u0430", "ب", "بله")
 
 
 def offer_download_and_block(software_name="Antigravity", target_type=None):
-    err(f"{software_name} path is not set or software is not installed.")
-    err("Patching attempt blocked.")
-    hint(f"Download URL: {color(DOWNLOAD_URL, COLOR_CYAN)}")
+    err(f"مسیر {software_name} تنظیم نشده یا نرم‌افزار نصب نیست.")
+    err("تلاش برای پچ کردن مسدود شد.")
+    hint(f"لینک دانلود: {color(DOWNLOAD_URL, COLOR_CYAN)}")
     print()
-    print_menu_row("1", "Open download page in browser", DOWNLOAD_URL, COLOR_GREEN)
-    print_menu_row("2", f"Specify path to installed {software_name}", "manual path selection", COLOR_CYAN)
-    print_menu_row("0", "Return to main menu", "", COLOR_RED)
+    print_menu_row("1", "باز کردن صفحهٔ دانلود", "در مرورگر", COLOR_GREEN)
+    print_menu_row("2", f"تعیین مسیر {software_name} نصب‌شده", "انتخاب دستی", COLOR_CYAN)
+    print_menu_row("0", "بازگشت به منوی اصلی", "", COLOR_RED)
     print()
 
-    action = input(color("  Select option > ", COLOR_CYAN, COLOR_BOLD)).strip()
+    action = input(color("  گزینه را انتخاب کنید > ", COLOR_CYAN, COLOR_BOLD)).strip()
     if action == "1":
         webbrowser.open(DOWNLOAD_URL)
-        ok(f"Opening: {color(DOWNLOAD_URL, COLOR_CYAN)}")
+        ok(f"در حال باز کردن: {color(DOWNLOAD_URL, COLOR_CYAN)}")
         return None
     elif action == "2":
         print()
-        hint(f"Enter the path to {software_name}.")
+        hint(f"مسیر {software_name} را وارد کنید.")
         print_path_examples()
-        raw = input(color(f"\n  {software_name} Path > ", COLOR_CYAN, COLOR_BOLD)).strip()
+        raw = input(color(f"\n  مسیر {software_name} > ", COLOR_CYAN, COLOR_BOLD)).strip()
         if raw:
-            if target_type == "ide" or software_name == "Antigravity IDE":
+            if target_type == "ide":
                 new_path = resolve_target_path(raw)
                 if new_path and os.path.isdir(new_path):
                     new_path = find_main_js(new_path)
                 if new_path and os.path.isfile(new_path) and new_path.endswith("main.js"):
-                    ok(f"{software_name} path updated!")
+                    ok(f"مسیر {software_name} به‌روزرسانی شد!")
                     return new_path
                 else:
-                    err(f"Could not resolve a valid {software_name} target (main.js not found).")
-            elif target_type == "manager" or software_name == "Antigravity 2.0":
+                    err(f"هدف معتبری برای {software_name} پیدا نشد (main.js در آن نیست).")
+            elif target_type == "manager":
                 new_path = resolve_manager_path(raw)
                 if new_path and os.path.isfile(new_path):
-                    ok(f"{software_name} path updated!")
+                    ok(f"مسیر {software_name} به‌روزرسانی شد!")
                     return new_path
                 else:
-                    err(f"Could not resolve a valid {software_name} target (language_server not found).")
-            elif target_type == "agy" or software_name == "Antigravity CLI":
+                    err(f"هدف معتبری برای {software_name} پیدا نشد (language_server در آن نیست).")
+            elif target_type == "agy":
                 new_path = resolve_agy_path(raw)
                 if new_path and os.path.isfile(new_path):
-                    ok(f"{software_name} path updated!")
+                    ok(f"مسیر {software_name} به‌روزرسانی شد!")
                     return new_path
                 else:
-                    err(f"Could not resolve a valid {software_name} target.")
+                    err(f"هدف معتبری برای {software_name} پیدا نشد.")
             else:
                 p = resolve_target_path(raw) or resolve_manager_path(raw) or resolve_agy_path(raw)
                 if p and os.path.exists(p):
-                    ok("Path updated!")
+                    ok("مسیر به‌روزرسانی شد!")
                     return p
                 else:
-                    err("Invalid path provided.")
+                    err("مسیر واردشده نامعتبر است.")
         return None
     else:
-        cancel("Cancelled.")
+        cancel("لغو شد.")
         return None
 
 
@@ -224,127 +224,127 @@ def _kv(label, value_text, value_color):
 
 def print_target_info(main_js_path, manager_path="", agy_path="", vscode_path="", vscode_agy_path="", show_search_line=False):
     if show_search_line:
-        info("Searching for installations...")
+        info("در حال جست‌وجوی نصب‌ها...")
 
     # 1. Antigravity IDE Info
-    print_menu_section("ANTIGRAVITY IDE")
-    _kv("Target:", main_js_path if main_js_path else "Not found", COLOR_CYAN)
+    print_menu_section("اطلاعات ANTIGRAVITY IDE")
+    _kv("هدف:", main_js_path if main_js_path else "پیدا نشد", COLOR_CYAN)
     if main_js_path and os.path.exists(main_js_path):
         try:
             with open(main_js_path, "r", encoding="utf-8") as f:
                 content = f.read()
-            _kv("Status:", "found", COLOR_GREEN)
+            _kv("وضعیت:", "پیدا شد", COLOR_GREEN)
             patched = is_already_patched(content)
-            _kv("Patch:", "already patched" if patched else "not patched",
+            _kv("پچ:", "قبلاً پچ شده" if patched else "پچ نشده",
                 COLOR_YELLOW if patched else COLOR_GREEN)
         except Exception:
-            _kv("Status:", "unreadable", COLOR_RED)
-            _kv("Patch:", "unreadable", COLOR_RED)
+            _kv("وضعیت:", "غیرقابل‌خواندن", COLOR_RED)
+            _kv("پچ:", "غیرقابل‌خواندن", COLOR_RED)
 
         ver_str, _ = get_ag_version(main_js_path)
-        _kv("Version:", ver_str if ver_str else "not detected",
+        _kv("نسخه:", ver_str if ver_str else "تشخیص داده نشد",
             COLOR_GREEN if ver_str else COLOR_YELLOW)
 
         size = file_size(main_js_path)
-        _kv("Size:", format_bytes(size), COLOR_GREEN if size > 0 else COLOR_YELLOW)
+        _kv("حجم:", format_bytes(size), COLOR_GREEN if size > 0 else COLOR_YELLOW)
     else:
-        _kv("Status:", "not found", COLOR_RED)
+        _kv("وضعیت:", "پیدا نشد", COLOR_RED)
 
     print()
 
     # 2. Antigravity 2.0 Info
-    print_menu_section("ANTIGRAVITY 2.0")
-    _kv("Target:", manager_path if manager_path else "Not found", COLOR_CYAN)
+    print_menu_section("اطلاعات ANTIGRAVITY 2.0")
+    _kv("هدف:", manager_path if manager_path else "پیدا نشد", COLOR_CYAN)
     if manager_path and os.path.isfile(manager_path):
-        _kv("Status:", "found", COLOR_GREEN)
+        _kv("وضعیت:", "پیدا شد", COLOR_GREEN)
         patched = is_mgr_patched(manager_path)
-        _kv("Patch:", "already patched" if patched else "not patched",
+        _kv("پچ:", "قبلاً پچ شده" if patched else "پچ نشده",
             COLOR_YELLOW if patched else COLOR_GREEN)
         
         ver_str = get_antigravity_version(manager_path)
-        _kv("Version:", ver_str if ver_str else "not detected",
+        _kv("نسخه:", ver_str if ver_str else "تشخیص داده نشد",
             COLOR_GREEN if ver_str else COLOR_YELLOW)
 
         size = file_size(manager_path)
-        _kv("Size:", format_bytes(size), COLOR_GREEN if size > 0 else COLOR_YELLOW)
+        _kv("حجم:", format_bytes(size), COLOR_GREEN if size > 0 else COLOR_YELLOW)
     else:
-        _kv("Status:", "not found", COLOR_YELLOW)
+        _kv("وضعیت:", "پیدا نشد", COLOR_YELLOW)
 
     print()
 
     # 3. Antigravity CLI Info
-    print_menu_section("ANTIGRAVITY CLI")
-    _kv("Target:", agy_path if agy_path else "Not found", COLOR_CYAN)
+    print_menu_section("اطلاعات ANTIGRAVITY CLI")
+    _kv("هدف:", agy_path if agy_path else "پیدا نشد", COLOR_CYAN)
     if agy_path and os.path.isfile(agy_path):
-        _kv("Status:", "found", COLOR_GREEN)
+        _kv("وضعیت:", "پیدا شد", COLOR_GREEN)
         patched = is_agy_patched(agy_path)
-        _kv("Patch:", "already patched" if patched else "not patched",
+        _kv("پچ:", "قبلاً پچ شده" if patched else "پچ نشده",
             COLOR_YELLOW if patched else COLOR_GREEN)
         size = file_size(agy_path)
-        _kv("Size:", format_bytes(size), COLOR_GREEN if size > 0 else COLOR_YELLOW)
+        _kv("حجم:", format_bytes(size), COLOR_GREEN if size > 0 else COLOR_YELLOW)
     else:
-        _kv("Status:", "not found", COLOR_YELLOW)
+        _kv("وضعیت:", "پیدا نشد", COLOR_YELLOW)
 
     print()
 
     # 4. Antigravity VS Code Extension Info (extension.js + бинарь agy)
-    print_menu_section("ANTIGRAVITY VS CODE EXTENSION")
-    _kv("Target:", vscode_path if vscode_path else "Not found", COLOR_CYAN)
+    print_menu_section("اطلاعات افزونه ANTIGRAVITY VS CODE")
+    _kv("هدف:", vscode_path if vscode_path else "پیدا نشد", COLOR_CYAN)
     if vscode_path and os.path.isfile(vscode_path):
-        _kv("Status:", "found", COLOR_GREEN)
+        _kv("وضعیت:", "پیدا شد", COLOR_GREEN)
         try:
             with open(vscode_path, "r", encoding="utf-8") as f:
                 content = f.read()
             patched = is_vscode_patched(content)
-            _kv("Patch:", "already patched" if patched else "not patched",
+            _kv("پچ:", "قبلاً پچ شده" if patched else "پچ نشده",
                 COLOR_YELLOW if patched else COLOR_GREEN)
         except Exception:
-            _kv("Patch:", "unreadable", COLOR_RED)
+            _kv("پچ:", "غیرقابل‌خواندن", COLOR_RED)
         size = file_size(vscode_path)
-        _kv("Size:", format_bytes(size), COLOR_GREEN if size > 0 else COLOR_YELLOW)
+        _kv("حجم:", format_bytes(size), COLOR_GREEN if size > 0 else COLOR_YELLOW)
     else:
-        _kv("Status:", "not found", COLOR_YELLOW)
+        _kv("وضعیت:", "پیدا نشد", COLOR_YELLOW)
 
     print()
 
-    _kv("AGY Bin:", vscode_agy_path if vscode_agy_path else "Not found", COLOR_CYAN)
+    _kv("باینری:", vscode_agy_path if vscode_agy_path else "پیدا نشد", COLOR_CYAN)
     if vscode_agy_path and os.path.isfile(vscode_agy_path):
-        _kv("Status:", "found", COLOR_GREEN)
+        _kv("وضعیت:", "پیدا شد", COLOR_GREEN)
         patched = is_agy_patched(vscode_agy_path)
-        _kv("Patch:", "already patched" if patched else "not patched",
+        _kv("پچ:", "قبلاً پچ شده" if patched else "پچ نشده",
             COLOR_YELLOW if patched else COLOR_GREEN)
         size = file_size(vscode_agy_path)
-        _kv("Size:", format_bytes(size), COLOR_GREEN if size > 0 else COLOR_YELLOW)
+        _kv("حجم:", format_bytes(size), COLOR_GREEN if size > 0 else COLOR_YELLOW)
     else:
-        _kv("Status:", "not found", COLOR_YELLOW)
+        _kv("وضعیت:", "پیدا نشد", COLOR_YELLOW)
 
 
 def show_about():
     clear_screen()
     print_banner()
-    print_menu_section("ABOUT ANTIGRAVITY PATCHER")
+    print_menu_section("درباره برنامه")
     print()
     print(f"  {color('Antigravity Patcher', COLOR_BOLD, COLOR_CYAN)} v{VERSION}")
-    print("  Open-source region lock bypass tool for Antigravity products:")
-    print("  Antigravity IDE, Antigravity 2.0 (language_server), and Antigravity CLI (agy).")
-    print("  Allows using Antigravity without VPN or changing Google account region.")
+    print("  ابزار متن‌باز دور زدن قفل منطقه‌ای برای محصولات Antigravity:")
+    print("  Antigravity IDE، Antigravity 2.0 (language_server) و Antigravity CLI (agy).")
+    print("  امکان استفاده از Antigravity بدون VPN و بدون تغییر منطقه حساب Google را فراهم می‌کند.")
     print()
-    hint("Features:")
-    print(f"   • {color('Antigravity IDE patch', COLOR_GREEN)}     — main.js isGoogleInternal bypass")
-    print(f"   • {color('Antigravity 2.0 patch', COLOR_GREEN)}     — language_server binary patch")
-    print(f"   • {color('Antigravity CLI patch', COLOR_GREEN)}     — agy eligibility check bypass")
-    print(f"   • {color('VS Code Extension patch', COLOR_GREEN)}   — extension.js + ~/.gemini/bin/agy bypass")
-    print(f"   • {color('Backup & Restore', COLOR_GREEN)}          — safe, fully reversible modifications")
+    hint("قابلیت‌ها:")
+    print(f"   • {color('پچ Antigravity IDE', COLOR_GREEN)}        — دور زدن isGoogleInternal در main.js")
+    print(f"   • {color('پچ Antigravity 2.0', COLOR_GREEN)}        — پچ باینری language_server")
+    print(f"   • {color('پچ Antigravity CLI', COLOR_GREEN)}        — دور زدن بررسی واجد شرایط بودن حساب در agy")
+    print(f"   • {color('پچ افزونهٔ VS Code', COLOR_GREEN)}        — دور زدن extension.js + ~/.gemini/bin/agy")
+    print(f"   • {color('بکاپ و بازگردانی', COLOR_GREEN)}         — تغییرات ایمن و کاملاً قابل بازگشت")
     print()
-    hint("Repository & Support:")
+    hint("مخزن و پشتیبانی:")
     repo_link = link(GITHUB_URL, GITHUB_REPO, COLOR_CYAN, COLOR_UNDERLINE)
     tg_link = link(TELEGRAM_URL, TELEGRAM_HANDLE, COLOR_CYAN, COLOR_UNDERLINE)
-    print(f"   • GitHub:   {repo_link}  {color('(★ Give us a Star!)', COLOR_YELLOW, COLOR_BOLD)}")
+    print(f"   • GitHub:   {repo_link}  {color('(★ به ما ستاره بدهید!)', COLOR_YELLOW, COLOR_BOLD)}")
     print(f"   • Telegram: {tg_link}")
     print()
-    hint("License:")
+    hint("مجوز:")
     attr_link = link("https://github.com/QNIX-Dev/eligibility-antigravity-patcher", "eligibility-antigravity-patcher", COLOR_CYAN, COLOR_UNDERLINE)
-    print(f"   • GPL-3.0 License (Attribution: {attr_link} / MIT)")
+    print(f"   • مجوز GPL-3.0 (ارجاع: {attr_link} / MIT)")
 
 
 
@@ -394,17 +394,17 @@ def do_patch_vscode_flow(vscode_path, vscode_agy_path, set_js_cb=None, set_agy_c
 
     missing = []
     if not vscode_path or not os.path.isfile(vscode_path):
-        missing.append("extension.js (VS Code extension 'google.google-antigravity')")
+        missing.append("extension.js (افزونهٔ VS Code با شناسهٔ «google.google-antigravity»)")
     if not vscode_agy_path or not os.path.isfile(vscode_agy_path):
-        missing.append(f"agy binary ({describe_gemini_binary_path()})")
+        missing.append(f"باینری agy ({describe_gemini_binary_path()})")
 
     if missing:
-        err("Antigravity VS Code Patch blocked — required files not found:")
+        err("پچ افزونهٔ Antigravity VS Code مسدود شد — فایل‌های لازم پیدا نشد:")
         for m in missing:
             err(f"  - {m}")
-        hint("Install the 'Google Antigravity' extension in VS Code first")
-        hint("(Extensions view -> search 'Antigravity' -> Install),")
-        hint("run it once — it downloads the binary to ~/.gemini/bin automatically.")
+        hint("ابتدا افزونهٔ «Google Antigravity» را در VS Code نصب کنید")
+        hint("(از نمای Extensions، «Antigravity» را جست‌وجو و Install کنید)،")
+        hint("یک‌بار آن را اجرا کنید — باینری به‌طور خودکار در ~/.gemini/bin دانلود می‌شود.")
         return False
 
     # --- 1. Патчим extension.js ---
@@ -412,7 +412,7 @@ def do_patch_vscode_flow(vscode_path, vscode_agy_path, set_js_cb=None, set_agy_c
 
     # --- 2. Патчим бинарь ~/.gemini/bin/antigravity (agy-патчем) ---
     print()
-    info(f"Found downloaded binary: {color(vscode_agy_path, COLOR_CYAN)}")
+    info(f"باینری دانلودشده پیدا شد: {color(vscode_agy_path, COLOR_CYAN)}")
     do_patch_agy(vscode_agy_path)
     return True
 
@@ -448,18 +448,18 @@ def run_cli():
                     if agy_p and os.path.isfile(agy_p):
                         agy_path = agy_p
                     else:
-                        err(f"Provided path does not exist or invalid: {arg}")
+                        err(f"مسیر داده‌شده وجود ندارد یا نامعتبر است: {arg}")
 
     # 2. Проверяем текущую директорию (для Antigravity IDE)
     if not main_js_path and not manager_path and not agy_path:
         local = os.path.join(os.getcwd(), "main.js")
         if os.path.exists(local):
             main_js_path = local
-            info("Found main.js in current directory")
+            info("main.js در پوشهٔ فعلی پیدا شد")
 
     # 3. Авто-поиск в системе
     if not main_js_path and not manager_path and not agy_path:
-        info("Searching for installations...")
+        info("در حال جست‌وجوی نصب‌ها...")
         searched = True
 
         ide_root = find_install_root()
@@ -473,7 +473,7 @@ def run_cli():
     # найдены ли остальные цели (это отдельный продукт со своей директорией).
     if not vscode_path or not vscode_agy_path:
         if not searched:
-            info("Searching for installations...")
+            info("در حال جست‌وجوی نصب‌ها...")
         if not vscode_path:
             vscode_path = find_extension_js()
         if not vscode_agy_path:
@@ -481,24 +481,24 @@ def run_cli():
 
     # Если ничего не нашли вообще, даем выбор между открытием страницы загрузки и вводом пути
     if not main_js_path and not manager_path and not agy_path:
-        warn("No installations found automatically.")
-        hint(f"Download URL: {color(DOWNLOAD_URL, COLOR_CYAN)}")
+        warn("هیچ نصبی به‌طور خودکار پیدا نشد.")
+        hint(f"لینک دانلود: {color(DOWNLOAD_URL, COLOR_CYAN)}")
         print()
-        print_menu_row("1", "Open download page in browser", DOWNLOAD_URL, COLOR_GREEN)
-        print_menu_row("2", "Specify path to installed software", "manual path selection", COLOR_CYAN)
-        print_menu_row("0", "Skip for now (go to main menu)", "", COLOR_YELLOW)
+        print_menu_row("1", "باز کردن صفحهٔ دانلود", "در مرورگر", COLOR_GREEN)
+        print_menu_row("2", "تعیین مسیر نرم‌افزار نصب‌شده", "انتخاب دستی", COLOR_CYAN)
+        print_menu_row("0", "فعلاً رد شود (منوی اصلی)", "", COLOR_YELLOW)
         print()
 
-        act = input(color("  Select option > ", COLOR_CYAN, COLOR_BOLD)).strip()
+        act = input(color("  گزینه را انتخاب کنید > ", COLOR_CYAN, COLOR_BOLD)).strip()
         if act == "1":
             webbrowser.open(DOWNLOAD_URL)
-            ok(f"Opening: {color(DOWNLOAD_URL, COLOR_CYAN)}")
+            ok(f"در حال باز کردن: {color(DOWNLOAD_URL, COLOR_CYAN)}")
             print()
         elif act == "2":
             print()
-            hint("Please specify the path to Antigravity IDE, Antigravity 2.0, or agy.")
+            hint("مسیر Antigravity IDE، Antigravity 2.0 یا agy را وارد کنید.")
             print_path_examples()
-            raw = input(color("\n  Path > ", COLOR_CYAN, COLOR_BOLD)).strip()
+            raw = input(color("\n  مسیر > ", COLOR_CYAN, COLOR_BOLD)).strip()
             if raw:
                 ide_path = resolve_target_path(raw)
                 if ide_path and os.path.isdir(ide_path):
@@ -522,29 +522,29 @@ def run_cli():
                        vscode_agy_path=vscode_agy_path, show_search_line=searched)
 
     while True:
-        print_menu_section("PATCH")
-        print_menu_row("1", "Antigravity IDE patch", "bypass region lock (isGoogleInternal)", COLOR_GREEN)
-        print_menu_row("2", "Antigravity 2.0 patch", "patch language_server binary", COLOR_GREEN)
-        print_menu_row("3", "Antigravity CLI (agy) patch", "unlock agy tool", COLOR_GREEN)
-        print_menu_row("4", "Antigravity VS Code Patch", "patch google.google-antigravity extension.js + agy binary", COLOR_GREEN)
+        print_menu_section("پچ")
+        print_menu_row("1", "پچ Antigravity IDE", "دور زدن قفل منطقه", COLOR_GREEN)
+        print_menu_row("2", "پچ Antigravity 2.0", "پچ language_server", COLOR_GREEN)
+        print_menu_row("3", "پچ Antigravity CLI", "رفع قفل ابزار agy", COLOR_GREEN)
+        print_menu_row("4", "پچ افزونهٔ VS Code", "extension.js و باینری agy", COLOR_GREEN)
 
-        print_menu_section("RESTORE")
-        print_menu_row("5", "Antigravity IDE", "from backup", COLOR_YELLOW)
-        print_menu_row("6", "Antigravity 2.0", "from backup", COLOR_YELLOW)
-        print_menu_row("7", "Antigravity CLI", "from backup", COLOR_YELLOW)
-        print_menu_row("8", "Antigravity VS Code extension", "from backup", COLOR_YELLOW)
+        print_menu_section("بازگردانی")
+        print_menu_row("5", "Antigravity IDE", "از بکاپ", COLOR_YELLOW)
+        print_menu_row("6", "Antigravity 2.0", "از بکاپ", COLOR_YELLOW)
+        print_menu_row("7", "Antigravity CLI", "از بکاپ", COLOR_YELLOW)
+        print_menu_row("8", "افزونهٔ Antigravity VS Code", "از بکاپ", COLOR_YELLOW)
 
-        print_menu_section("TOOLS")
-        print_menu_row("9", "Check for updates", "check GitHub releases", COLOR_CYAN)
-        print_menu_row("10", "Star on GitHub / Open repo", "support project & updates", COLOR_YELLOW)
-        print_menu_row("11", "Select custom path", "override auto-detected target", COLOR_CYAN)
-        print_menu_row("12", "About program", "information & author links", COLOR_CYAN)
+        print_menu_section("ابزارها")
+        print_menu_row("9", "بررسی به‌روزرسانی", "نسخه‌های GitHub", COLOR_CYAN)
+        print_menu_row("10", "ستاره در GitHub", "حمایت از پروژه", COLOR_YELLOW)
+        print_menu_row("11", "انتخاب مسیر دستی", "بازنویسی هدف", COLOR_CYAN)
+        print_menu_row("12", "درباره برنامه", "نسخه و نویسنده", COLOR_CYAN)
 
         print()
-        print_menu_row("0", "Exit", "quit the patcher", COLOR_RED)
-        print_menu_footer("Tip: if this tool helped you, please ★ Star us on GitHub (Option 10)!")
+        print_menu_row("0", "خروج", "خروج از پچر", COLOR_RED)
+        print_menu_footer("نکته: اگر این ابزار به کارتان آمد، لطفاً در GitHub به ما ★ بدهید (گزینه ۱۰)!")
 
-        choice = input(color("\n  Select option > ", COLOR_CYAN, COLOR_BOLD)).strip()
+        choice = input(color("\n  گزینه را انتخاب کنید > ", COLOR_CYAN, COLOR_BOLD)).strip()
         print()
 
         if choice == "0":
@@ -558,7 +558,7 @@ def run_cli():
 
         valid_choices = {str(i) for i in range(1, 13)}
         if choice not in valid_choices:
-            err("Invalid choice")
+            err("گزینه نامعتبر")
             print()
             pause()
             redraw_main_screen(main_js_path, manager_path, agy_path, vscode_path,
@@ -573,7 +573,7 @@ def run_cli():
             if main_js_path and os.path.isfile(main_js_path):
                 do_patch(main_js_path, show_search_line=searched)
             else:
-                new_p = offer_download_and_block("Antigravity IDE", target_type="ide")
+                new_p = offer_download_and_block("آنتی‌گراویتی IDE", target_type="ide")
                 if new_p:
                     main_js_path = new_p
                     searched = False
@@ -582,7 +582,7 @@ def run_cli():
             if manager_path and os.path.isfile(manager_path):
                 do_patch_manager(manager_path)
             else:
-                new_p = offer_download_and_block("Antigravity 2.0", target_type="manager")
+                new_p = offer_download_and_block("آنتی‌گراویتی 2.0", target_type="manager")
                 if new_p:
                     manager_path = new_p
                     searched = False
@@ -591,7 +591,7 @@ def run_cli():
             if agy_path and os.path.isfile(agy_path):
                 do_patch_agy(agy_path)
             else:
-                new_p = offer_download_and_block("Antigravity CLI", target_type="agy")
+                new_p = offer_download_and_block("آنتی‌گراویتی CLI", target_type="agy")
                 if new_p:
                     agy_path = new_p
                     searched = False
@@ -603,58 +603,58 @@ def run_cli():
             if main_js_path:
                 do_restore(main_js_path, show_search_line=searched)
             else:
-                err("Antigravity IDE path is not set. Please select custom path (Option 11) first.")
+                err("مسیر Antigravity IDE تنظیم نشده است. ابتدا گزینه ۱۱ (انتخاب دستی مسیر) را انتخاب کنید.")
         elif choice == "6":
             if manager_path:
                 do_restore_manager(manager_path)
             else:
-                err("Antigravity 2.0 (language_server) path is not set. Please select custom path (Option 11) first.")
+                err("مسیر Antigravity 2.0 (language_server) تنظیم نشده است. ابتدا گزینه ۱۱ (انتخاب دستی مسیر) را انتخاب کنید.")
         elif choice == "7":
             if agy_path:
                 do_restore_agy(agy_path)
             else:
-                err("Antigravity CLI path is not set. Please select custom path (Option 11) first.")
+                err("مسیر Antigravity CLI تنظیم نشده است. ابتدا گزینه ۱۱ (انتخاب دستی مسیر) را انتخاب کنید.")
         elif choice == "8":
             if vscode_path:
                 do_restore_vscode(vscode_path)
             else:
-                err("Antigravity VS Code extension path is not set. Please select custom path (Option 11) first.")
+                err("مسیر افزونهٔ Antigravity VS Code تنظیم نشده است. ابتدا گزینه ۱۱ (انتخاب دستی مسیر) را انتخاب کنید.")
         elif choice == "9":
             check_for_updates(silent=False)
         elif choice == "10":
             print_target_info(main_js_path, manager_path, agy_path, vscode_path=vscode_path,
                               vscode_agy_path=vscode_agy_path, show_search_line=searched)
             print()
-            if confirmed("Open GitHub repository in browser?"):
+            if confirmed("مخزن GitHub در مرورگر باز شود؟"):
                 url = GITHUB_URL
                 webbrowser.open(url)
-                ok(f"Opening: {color(url, COLOR_CYAN)}")
+                ok(f"در حال باز کردن: {color(url, COLOR_CYAN)}")
             else:
-                cancel("Cancelled.")
+                cancel("لغو شد.")
         elif choice == "11":
             while True:
                 redraw_main_screen(main_js_path, manager_path, agy_path, vscode_path,
                                    vscode_agy_path, show_search_line=searched)
-                print_menu_section("SELECT CUSTOM PATH")
-                print_menu_row("1", "Antigravity IDE path", "folder or main.js", COLOR_GREEN)
-                print_menu_row("2", "Antigravity 2.0 path", "folder or language_server binary", COLOR_GREEN)
-                print_menu_row("3", "Antigravity CLI path", "agy.exe or folder", COLOR_GREEN)
-                print_menu_row("4", "VS Code extension path (JS)", "extension.js or extensions folder", COLOR_GREEN)
-                print_menu_row("5", "VS Code binary path (agy)", "agy/antigravity binary in ~/.gemini/bin", COLOR_GREEN)
+                print_menu_section("انتخاب دستی مسیر")
+                print_menu_row("1", "مسیر Antigravity IDE", "پوشه یا main.js", COLOR_GREEN)
+                print_menu_row("2", "مسیر Antigravity 2.0", "پوشه یا language_server", COLOR_GREEN)
+                print_menu_row("3", "مسیر Antigravity CLI", "agy.exe یا پوشه", COLOR_GREEN)
+                print_menu_row("4", "مسیر افزونهٔ VS Code", "extension.js یا پوشه", COLOR_GREEN)
+                print_menu_row("5", "مسیر باینری agy", "در ~/.gemini/bin", COLOR_GREEN)
                 print()
-                print_menu_row("0", "Back", "return to main menu", COLOR_RED)
-                print_menu_footer("Leaves auto-detection results intact for other targets.")
+                print_menu_row("0", "بازگشت", "بازگشت به منو", COLOR_RED)
+                print_menu_footer("نتایج شناسایی خودکار سایر هدف‌ها دست‌نخورده می‌ماند.")
 
-                sub_choice = input(color("\n  Select option > ", COLOR_CYAN, COLOR_BOLD)).strip()
+                sub_choice = input(color("\n  گزینه را انتخاب کنید > ", COLOR_CYAN, COLOR_BOLD)).strip()
                 if sub_choice == "0":
                     handled = False
                     break
 
                 if sub_choice == "1":
                      print()
-                     hint("Enter the path to Antigravity IDE folder or main.js file.")
+                     hint("مسیر پوشهٔ Antigravity IDE یا فایل main.js را وارد کنید.")
                      print_path_examples()
-                     raw = input(color("\n  IDE Path > ", COLOR_CYAN, COLOR_BOLD)).strip()
+                     raw = input(color("\n  مسیر IDE > ", COLOR_CYAN, COLOR_BOLD)).strip()
                      if raw:
                          new_path = resolve_target_path(raw)
                          if new_path and os.path.exists(new_path):
@@ -663,71 +663,71 @@ def run_cli():
                              if new_path and os.path.isfile(new_path):
                                  main_js_path = new_path
                                  searched = False
-                                 ok("Antigravity IDE path updated!")
+                                 ok("مسیر Antigravity IDE به‌روزرسانی شد!")
                              else:
-                                 err("Could not resolve a valid Antigravity IDE target (main.js not found).")
+                                 err("هدف معتبری برای Antigravity IDE پیدا نشد (main.js پیدا نشد).")
                          else:
-                             err("Path does not exist.")
+                             err("مسیر وجود ندارد.")
                      print()
                      pause()
                 elif sub_choice == "2":
                      print()
-                     hint("Enter the path to Antigravity 2.0 app folder or language_server binary.")
+                     hint("مسیر پوشهٔ برنامه Antigravity 2.0 یا باینری language_server را وارد کنید.")
                      print_path_examples()
-                     raw = input(color("\n  Antigravity 2.0 Path > ", COLOR_CYAN, COLOR_BOLD)).strip()
+                     raw = input(color("\n  مسیر Antigravity 2.0 > ", COLOR_CYAN, COLOR_BOLD)).strip()
                      if raw:
                          new_path = resolve_manager_path(raw)
                          if new_path and os.path.isfile(new_path):
                              manager_path = new_path
                              searched = False
-                             ok("Antigravity 2.0 path updated!")
+                             ok("مسیر Antigravity 2.0 به‌روزرسانی شد!")
                          else:
-                             err("Could not resolve a valid Antigravity 2.0 target (language_server not found).")
+                             err("هدف معتبری برای Antigravity 2.0 پیدا نشد (language_server پیدا نشد).")
                      print()
                      pause()
                 elif sub_choice == "3":
                      print()
-                     hint("Enter the path to the agy binary (agy.exe) or its folder.")
+                     hint("مسیر باینری agy (agy.exe) یا پوشهٔ آن را وارد کنید.")
                      print_path_examples()
-                     raw = input(color("\n  AGY Path > ", COLOR_CYAN, COLOR_BOLD)).strip()
+                     raw = input(color("\n  مسیر AGY > ", COLOR_CYAN, COLOR_BOLD)).strip()
                      if raw:
                          new_path = resolve_agy_path(raw)
                          if new_path and os.path.isfile(new_path):
                              agy_path = new_path
                              searched = False
-                             ok("Antigravity CLI path updated!")
+                             ok("مسیر Antigravity CLI به‌روزرسانی شد!")
                          else:
-                             err("Could not resolve a valid Antigravity CLI target.")
+                             err("هدف معتبری برای Antigravity CLI پیدا نشد.")
                      print()
                      pause()
                 elif sub_choice == "4":
                      print()
-                     hint("Enter the path to extension.js, the google.google-antigravity-*")
-                     hint("extension folder, or the .vscode/extensions root folder.")
-                     raw = input(color("\n  VS Code Extension Path (JS) > ", COLOR_CYAN, COLOR_BOLD)).strip()
+                     hint("مسیر فایل extension.js، پوشهٔ افزونهٔ google.google-antigravity-*")
+                     hint("یا ریشهٔ پوشهٔ .vscode/extensions را وارد کنید.")
+                     raw = input(color("\n  مسیر افزونهٔ VS Code (JS) > ", COLOR_CYAN, COLOR_BOLD)).strip()
                      if raw:
                          new_path = resolve_extension_path(raw)
                          if new_path and os.path.isfile(new_path):
                              vscode_path = new_path
                              searched = False
-                             ok("Antigravity VS Code extension path updated!")
+                             ok("مسیر افزونهٔ Antigravity VS Code به‌روزرسانی شد!")
                          else:
-                             err("Could not resolve a valid VS Code extension target (extension.js not found).")
+                             err("هدف معتبری برای افزونهٔ VS Code پیدا نشد (extension.js پیدا نشد).")
                      print()
                      pause()
                 elif sub_choice == "5":
                      print()
-                     hint(f"Enter the path to the agy/antigravity binary downloaded")
-                     hint(f"by the extension ({describe_gemini_binary_path()}) or any agy file.")
-                     raw = input(color("\n  VS Code Binary Path (agy) > ", COLOR_CYAN, COLOR_BOLD)).strip()
+                     hint(f"مسیر باینری agy/antigravity دانلودشده")
+                     hint(f"توسط افزونه ({describe_gemini_binary_path()}) یا هر فایلی به نام agy را وارد کنید.")
+                     raw = input(color("\n  مسیر باینری VS Code (agy) > ", COLOR_CYAN, COLOR_BOLD)).strip()
                      if raw:
                          new_path = resolve_agy_path(raw)
                          if new_path and os.path.isfile(new_path):
                              vscode_agy_path = new_path
                              searched = False
-                             ok("VS Code agy binary path updated!")
+                             ok("مسیر باینری agy در VS Code به‌روزرسانی شد!")
                          else:
-                             err("Could not resolve a valid VS Code agy binary target.")
+                             err("هدف معتبری برای باینری agy در VS Code پیدا نشد.")
                      print()
                      pause()
             handled = True

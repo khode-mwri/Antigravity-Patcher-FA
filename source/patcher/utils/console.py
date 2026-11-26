@@ -72,13 +72,22 @@ BANNER_INNER_WIDTH = 47
 MENU_WIDTH = BANNER_INNER_WIDTH + 2
 
 
+# Persian/Arabic text uses zero-width characters (ZWNJ «نیم‌فاصله», bidi marks and
+# diacritics). len() counts them as one cell each, which would shift every framed
+# row and menu column, so they are stripped before measuring the visible width.
+_ZERO_WIDTH_RE = re.compile(
+    "[\u200b-\u200f\u202a-\u202e\u2060-\u2064\u2066-\u2069\ufeff"
+    "\u064b-\u065f\u0670\u06d6-\u06ed]"
+)
+
+
 def _visible_len(text):
-    """Return visible text length without ANSI escape codes (color/link)."""
-    if "\x1b" not in text:
-        return len(text)
-    clean = re.sub(r'\x1b\]8;;.*?(?:\x1b\\|\x07)', '', text)
-    clean = re.sub(r'\x1b\[[0-9;]*[a-zA-Z]', '', clean)
-    return len(clean)
+    """Return visible text width without ANSI escape codes or zero-width chars."""
+    clean = text
+    if "\x1b" in clean:
+        clean = re.sub(r'\x1b\]8;;.*?(?:\x1b\\|\x07)', '', clean)
+        clean = re.sub(r'\x1b\[[0-9;]*[a-zA-Z]', '', clean)
+    return len(_ZERO_WIDTH_RE.sub('', clean))
 
 
 
@@ -121,8 +130,8 @@ def print_banner():
     print()
     print(f"  {_frame_border('╔', '═', '╗')}")
     print(f"  {_frame_row(title_left, title_right)}")
-    print(f"  {_frame_row(color('Region bypass for Antigravity', COLOR_CYAN))}")
-    print(f"  {_frame_row(color('Clean • No keys • No telemetry', COLOR_GREEN))}")
+    print(f"  {_frame_row(color('رفع تحریم و قفل منطقه‌ای آنتی‌گراویتی', COLOR_CYAN))}")
+    print(f"  {_frame_row(color('تمیز • بدون کلید • بدون ردگیری', COLOR_GREEN))}")
     if rows_to_show:
         print(f"  {_frame_border('╟', '─', '╢')}")
         for r in rows_to_show:
@@ -132,8 +141,12 @@ def print_banner():
     print()
 
 
-def print_panel(title, rows, accent=COLOR_GREEN):
-    """Render a compact framed summary panel for operation results."""
+def print_panel(title, rows, accent=COLOR_GREEN, show_star=False):
+    """Render a compact framed summary panel for operation results.
+
+    show_star — draw the GitHub Star reminder under the panel (used only after a
+    successful patch, never after a restore/skip).
+    """
     print()
     try:
         print(f"  {_frame_border('╔', '═', '╗', accent)}")
@@ -152,10 +165,10 @@ def print_panel(title, rows, accent=COLOR_GREEN):
             print(f"  {label}: {value}")
         print("-" * (len(title) + 8))
     print()
-    if title == "PATCH COMPLETE" and GITHUB_URL:
+    if show_star and GITHUB_URL:
         star_link = link(GITHUB_URL, GITHUB_URL, COLOR_YELLOW, COLOR_BOLD, COLOR_UNDERLINE)
         try:
-            print(f"  {color('★', COLOR_YELLOW, COLOR_BOLD)} If this tool helped you, please give us a {color('Star', COLOR_YELLOW, COLOR_BOLD)} on GitHub: {star_link}")
+            print(f"  {color('★', COLOR_YELLOW, COLOR_BOLD)} اگر این ابزار به کارتان آمد، لطفاً در گیت‌هاب به ما {color('ستاره', COLOR_YELLOW, COLOR_BOLD)} بدهید: {star_link}")
         except UnicodeEncodeError:
             print(f"  [*] If this tool helped you, please give us a Star on GitHub: {GITHUB_URL}")
         print()

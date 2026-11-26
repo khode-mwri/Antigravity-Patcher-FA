@@ -213,19 +213,19 @@ def resign_macos_bundle(main_js_path):
         # main.js лежит не внутри .app (например, portable-копия) — пропускаем
         return
 
-    info(f"Re-signing {os.path.basename(app_path)} (ad-hoc)...")
+    info(f"در حال امضای دوبارهٔ {os.path.basename(app_path)} (ad-hoc)...")
     try:
         subprocess.run(
             ["/usr/bin/codesign", "--force", "--deep", "--sign", "-", app_path],
             check=True, capture_output=True, text=True, timeout=60,
         )
-        ok("Ad-hoc signature applied")
+        ok("امضای ad-hoc اعمال شد")
     except FileNotFoundError:
-        warn("codesign not found - install Xcode Command Line Tools")
+        warn("codesign پیدا نشد — Xcode Command Line Tools را نصب کنید")
         return
     except subprocess.CalledProcessError as e:
         stderr = (e.stderr or "").strip()
-        warn(f"codesign failed: {stderr}")
+        warn(f"codesign ناموفق بود: {stderr}")
         return
 
     remove_macos_quarantine(app_path)
@@ -245,14 +245,14 @@ def resign_macos_binary(path):
     from patcher.utils.console import info, ok, warn
 
     real = os.path.realpath(path)
-    info(f"Re-signing {os.path.basename(real)} (ad-hoc)...")
+    info(f"در حال امضای دوبارهٔ {os.path.basename(real)} (ad-hoc)...")
     try:
         subprocess.run(
             ["/usr/bin/codesign", "--force", "--sign", "-", real],
             check=True, capture_output=True, text=True, timeout=60,
         )
-        ok("Ad-hoc signature applied")
+        ok("امضای ad-hoc اعمال شد")
     except FileNotFoundError:
-        warn("codesign not found — install Xcode Command Line Tools")
+        warn("codesign پیدا نشد — Xcode Command Line Tools را نصب کنید")
     except subprocess.CalledProcessError as e:
-        warn(f"codesign failed: {(e.stderr or '').strip()}")
+        warn(f"codesign ناموفق بود: {(e.stderr or '').strip()}")
