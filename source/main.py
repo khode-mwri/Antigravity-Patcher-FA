@@ -5,7 +5,7 @@ import shutil
 import subprocess
 
 from patcher.utils.admin import is_admin, run_as_admin
-from patcher.utils.console import setup_console, emit, ask
+from patcher.utils.console import setup_console, emit, ask, is_legacy_console
 from patcher.cli import run_cli, confirmed
 
 RTL_MODES = ("visual", "raw")
@@ -60,21 +60,22 @@ def _calibrate_rtl():
     """
     try:
         emit()
-        emit("  [i] کالیبراسیون نمایش فارسی (فقط یک‌بار پرسیده می‌شود)")
-        emit("      اگر خط زیر را درست می‌خوانید Enter بزنید؛ اگر برعکس یا ناخوانا بود n بزنید.")
+        emit("  [i] Persian display calibration (once) / کالیبراسیون نمایش فارسی")
+        emit("      Press Enter if the line below reads correctly, n if it is reversed or boxes.")
+        emit("      اگر خط زیر خوانا و راست‌به‌چپ است Enter؛ اگر برعکس یا مربع بود n بزنید.")
         for mode in RTL_MODES:
             _apply_mode(mode)
             emit()
             emit("      " + RTL_CALIBRATION_SAMPLE)
-            answer = ask("  آیا این خط راست‌به‌چپ و خوانا است؟ (y/n): ").strip().lower()
+            answer = ask("  Readable? [y/n] / خوانا است؟: ").strip().lower()
             if answer in _YES_ANSWERS:
                 emit()
                 return mode
         _apply_mode("visual")
         emit()
-        emit("  [!] This terminal cannot display Persian text.")
-        emit("      Use Windows Terminal, or run with: --rtl raw")
-        emit("      (or set the environment variable AG_PATCHER_RTL=raw)")
+        emit("  [!] Could not confirm a readable Persian rendering.")
+        emit("      - Empty boxes (tofu)?  Use Windows Terminal instead of the legacy console.")
+        emit("      - Text mirrored?       Run with: --rtl raw  (or AG_PATCHER_RTL=raw)")
         emit()
         return None
     except (EOFError, KeyboardInterrupt, OSError):
@@ -110,6 +111,10 @@ def _setup_rtl(requested_mode):
     if saved in RTL_MODES:
         _apply_mode(saved)
         return
+
+    if is_legacy_console():
+        emit()
+        emit("  [i] Tip: Windows Terminal renders Persian better than the legacy console.")
 
     chosen = _calibrate_rtl()
     if chosen in RTL_MODES:

@@ -38,3 +38,6 @@ venv.bak/
 .idea/
 .DS_Store
 *.swp
+
+# Verification tool scratch space (built test exe, logs)
+tools/_runtime/

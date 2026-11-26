@@ -51,7 +51,7 @@ errors **without a VPN and without changing your Google account region** on Wind
 
 ```text
   ╔═══════════════════════════════════════════════╗
-  ║  Antigravity Patcher                   v1.4.0 ║
+  ║  Antigravity Patcher                   v1.4.1 ║
   ║  رفع تحریم و قفل منطقه‌ای آنتی‌گراویتی          ║
   ║  تمیز • بدون کلید • بدون ردگیری               ║
   ╟───────────────────────────────────────────────╢
@@ -286,7 +286,9 @@ python main.py --rtl visual
 
 # raw — for terminals that already apply bidi themselves
 python main.py --rtl raw
-```
+
+> If you run inside the **legacy console (conhost)**, Windows may lack glyph coverage for the shaped text
+> and show empty boxes. Use **Windows Terminal** for reliable Persian rendering.
 
 Or set `AG_PATCHER_RTL=visual` / `AG_PATCHER_RTL=raw`. To re-run the calibration, delete the settings file:
 

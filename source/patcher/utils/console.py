@@ -56,10 +56,44 @@ def enable_ansi():
         return False
 
 
+def _set_utf8_codepage():
+    """Switch the console to UTF-8 without spawning chcp (which eats redirected stdin)."""
+    try:
+        k32 = ctypes.windll.kernel32
+        k32.SetConsoleCP(65001)
+        k32.SetConsoleOutputCP(65001)
+    except Exception:
+        pass
+
+
+def console_class():
+    """Window class of the hosting terminal ('' when unknown).
+
+    "ConsoleWindowClass" is the legacy conhost; Windows Terminal reports
+    "CASCADIA_HOSTING_WINDOW_CLASS" (or a pseudo window).
+    """
+    if os.name != "nt":
+        return ""
+    try:
+        hwnd = ctypes.windll.kernel32.GetConsoleWindow()
+        if not hwnd:
+            return ""
+        buf = ctypes.create_unicode_buffer(128)
+        ctypes.windll.user32.GetClassNameW(hwnd, buf, 128)
+        return buf.value
+    except Exception:
+        return ""
+
+
+def is_legacy_console():
+    """True inside the classic conhost where Persian glyph fallback may fail."""
+    return console_class() == "ConsoleWindowClass"
+
+
 def setup_console():
     global ANSI_OK, USE_COLOR
     if os.name == "nt":
-        os.system("chcp 65001 >nul")
+        _set_utf8_codepage()
         if hasattr(sys.stdout, "reconfigure"):
             try:
                 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
