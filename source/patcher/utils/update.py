@@ -8,7 +8,7 @@ from patcher.constants import (
     VERSION, COLOR_CYAN, COLOR_GREEN, COLOR_YELLOW, COLOR_RED, COLOR_BOLD, COLOR_UNDERLINE,
     GITHUB_REPO
 )
-from patcher.utils.console import color, link, info, ok, warn, err, hint, _frame_border, _frame_row, emit
+from patcher.utils.console import print_warning_box, color, link, info, ok, warn, err, hint, _frame_border, _frame_row, emit
 
 
 RELEASES_URL = f"https://github.com/{GITHUB_REPO}/releases"
@@ -45,12 +45,7 @@ def print_network_error_banner(reason="network_error"):
     else:
         title = "بررسی به‌روزرسانی ناموفق (خطای شبکه)"
         subtitle = "اتصال یا VPN را برای GitHub بررسی کنید"
-    emit(f"  {_frame_border('╔', '═', '╗', COLOR_YELLOW)}")
-    emit(f"  {_frame_row(color(title, COLOR_YELLOW, COLOR_BOLD), accent=COLOR_YELLOW)}")
-    emit(f"  {_frame_row(color(subtitle, COLOR_CYAN, COLOR_BOLD), accent=COLOR_YELLOW)}")
-    emit(f"  {_frame_border('╚', '═', '╝', COLOR_YELLOW)}")
-    emit()
-
+    print_warning_box(title, subtitle)
 
 
 def print_update_status_notice():

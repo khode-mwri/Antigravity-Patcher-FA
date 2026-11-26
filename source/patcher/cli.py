@@ -20,6 +20,7 @@ from patcher.constants import (
     TELEGRAM_HANDLE,
 )
 from patcher.utils.console import (
+    is_raw_mode as console_is_raw,
     ask,
     emit,
     color,
@@ -223,6 +224,9 @@ def _kv(label, value_text, value_color):
     """RTL key/value row: the value on the left, its Persian label on the right."""
     from patcher.utils.rtl import visual
 
+    if console_is_raw():
+        print(f"      {label} {value_text}")
+        return
     label_v = visual(str(label))
     value_v = visual(str(value_text))
     gap = max(2, 45 - len(label_v) - len(value_v))

@@ -15,8 +15,28 @@ from patcher.utils.rtl import visual
 # _paint() after the text has been transformed instead.
 RTL_MODE = True
 
+# "visual": we pre-shape/reorder every line ourselves and lay the UI out RTL
+#           (works in terminals without bidi support: conhost, Windows Terminal, ...).
+# "raw":    the text is printed in logical order and the *terminal* applies bidi
+#           (works in terminals that already implement the Unicode bidi algorithm);
+#           layout must then stay logical/LTR so the terminal can reorder it once.
+RENDER_MODE = "visual"
+
 ANSI_OK = False
 USE_COLOR = False
+
+
+def set_render_mode(mode):
+    """Switch the rendering/layout strategy. Returns False for unknown modes."""
+    global RENDER_MODE
+    if mode in ("visual", "raw"):
+        RENDER_MODE = mode
+        return True
+    return False
+
+
+def is_raw_mode():
+    return RENDER_MODE == "raw"
 
 
 def enable_ansi():
@@ -141,7 +161,9 @@ def _visible_len(text):
 
 # Shared frame helpers for the banner and operation summary panels.
 def _frame_border(left_ch, fill_ch, right_ch, accent=COLOR_CYAN):
-    """Build a horizontal frame border."""
+    """Build a horizontal frame border (empty in raw mode: the terminal lays out)."""
+    if is_raw_mode():
+        return ""
     return _paint(left_ch + fill_ch * BANNER_INNER_WIDTH + right_ch, accent, COLOR_BOLD)
 
 
@@ -150,7 +172,10 @@ def _frame_row(left, right="", accent=COLOR_CYAN):
 
     Both cells are rendered in visual order and measured after shaping, so the
     frame stays aligned with Persian text (ligatures change the glyph count).
+    In raw mode the terminal applies bidi itself, so the pair is emitted plainly.
     """
+    if is_raw_mode():
+        return _rtl(left) + ((" " + _rtl(right)) if right else "")
     left_str = "  " + _rtl(left)
     right_str = _rtl(right)
     fill = BANNER_INNER_WIDTH - _visible_len(left_str) - _visible_len(right_str) - 1
@@ -179,6 +204,16 @@ def print_banner():
         tg_text = TELEGRAM_HANDLE if TELEGRAM_HANDLE else TELEGRAM_URL
         rows_to_show.append(color("Telegram".ljust(label_col), COLOR_YELLOW) + tg_text)
 
+    if is_raw_mode():
+        print()
+        print(f"  Antigravity Patcher {title_right}")
+        print("  رفع تحریم و قفل منطقه‌ای آنتی‌گراویتی")
+        print("  تمیز • بدون کلید • بدون ردگیری")
+        for row_text in rows_to_show:
+            print("  " + row_text)
+        print()
+        return
+
     print()
     print(f"  {_frame_border('╔', '═', '╗')}")
     print(f"  {_frame_row(title_left, title_right)}")
@@ -199,6 +234,18 @@ def print_panel(title, rows, accent=COLOR_GREEN, show_star=False):
     show_star — draw the GitHub Star reminder under the panel (used only after a
     successful patch, never after a restore/skip).
     """
+    if is_raw_mode():
+        print()
+        print(f"  {title}")
+        print()
+        for label, value in rows:
+            print(f"  {label}: {value}")
+        print()
+        if show_star and GITHUB_URL:
+            print(f"  ★ اگر این ابزار به کارتان آمد، لطفاً در گیت‌هاب ستاره بدهید: {GITHUB_URL}")
+            print()
+        return
+
     print()
     try:
         print(f"  {_frame_border('╔', '═', '╗', accent)}")
@@ -217,6 +264,21 @@ def print_panel(title, rows, accent=COLOR_GREEN, show_star=False):
         msg = f"  ★ اگر این ابزار به کارتان آمد، لطفاً در گیت‌هاب ستاره بدهید: {GITHUB_URL}"
         print(_paint(visual(msg), COLOR_YELLOW, COLOR_BOLD))
         print()
+
+
+def print_warning_box(title, subtitle):
+    """Framed warning for the main menu (plain in raw mode)."""
+    print()
+    if is_raw_mode():
+        print(f"  [!] {_rtl(title)}")
+        print(f"      {_rtl(subtitle)}")
+        print()
+        return
+    print(f"  {_frame_border('╔', '═', '╗', COLOR_YELLOW)}")
+    print(f"  {_frame_row(title, accent=COLOR_YELLOW)}")
+    print(f"  {_frame_row(subtitle, accent=COLOR_YELLOW)}")
+    print(f"  {_frame_border('╚', '═', '╝', COLOR_YELLOW)}")
+    print()
 
 
 # Shared marker helpers for all operation output.
@@ -284,6 +346,10 @@ def _center_line(text, width=MENU_WIDTH):
 # ─── Menu UI helpers ──────────────────────────────────────────────────────────
 def print_menu_section(title):
     """Section header, right-aligned with a rule filling the rest of the line."""
+    if is_raw_mode():
+        print()
+        print(f"  ── {_rtl(title)} ──")
+        return
     label = " " + _rtl(title) + " "
     dashes = "─" * max(1, MENU_WIDTH - _visible_len(label))
     print("  " + _paint(dashes, COLOR_GRAY) + _paint(label, COLOR_CYAN, COLOR_BOLD))
@@ -291,6 +357,13 @@ def print_menu_section(title):
 
 def print_menu_row(number, label, hint="", accent=COLOR_GREEN):
     """Menu row laid out for RTL: [number] rightmost, then the label, hint leftmost."""
+    if is_raw_mode():
+        line = f"  [{number}] {_rtl(label)}" if number != "" else f"  {_rtl(label)}"
+        if hint:
+            line += "  — " + _rtl(hint)
+        print(line)
+        return
+
     num_part = _paint(f"[{number}]", accent, COLOR_BOLD) if number != "" else "  "
     label_part = _rtl(label)
     right_block = label_part + "  " + num_part
@@ -311,6 +384,11 @@ def print_menu_divider():
 
 def print_menu_footer(note=""):
     """Footer under the menu: separator plus an optional note."""
+    if is_raw_mode():
+        print()
+        if note:
+            print(f"  {_rtl(note)}")
+        return
     print(f"  {_paint('─' * MENU_WIDTH, COLOR_GRAY)}")
     if note:
         print(_paint("  " + _rtl(note), COLOR_DIM))
