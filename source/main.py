@@ -176,6 +176,51 @@ def _ensure_interactive_terminal():
                     continue
 
 
+def _launch_in_windows_terminal():
+    """Re-open the UI inside Windows Terminal when started in the legacy console.
+
+    The classic conhost window relies on GDI font fallback for the shaped
+    Persian glyphs and, depending on the machine/window, may show them as empty
+    boxes. Windows Terminal has reliable fallback, so an interactive, non-elevated
+    session is moved there automatically (the new instance asks for elevation
+    itself when the patch needs it).
+    """
+    if os.name != "nt" or os.environ.get("AG_PATCHER_WT") == "1":
+        return False
+    try:
+        if not (sys.stdin.isatty() and sys.stdout.isatty()):
+            return False
+    except Exception:
+        return False
+    try:
+        from patcher.utils.console import is_legacy_console
+        if not is_legacy_console() or is_admin():
+            return False
+    except Exception:
+        return False
+
+    wt = shutil.which("wt.exe")
+    if not wt:
+        candidate = os.path.join(os.environ.get("LOCALAPPDATA", ""), "Microsoft", "WindowsApps", "wt.exe")
+        wt = candidate if os.path.exists(candidate) else None
+    if not wt:
+        return False
+
+    if getattr(sys, "frozen", False):
+        command = [sys.executable]
+    else:
+        command = [sys.executable, os.path.abspath(sys.argv[0])]
+    command += sys.argv[1:]
+
+    env = os.environ.copy()
+    env["AG_PATCHER_WT"] = "1"
+    try:
+        subprocess.Popen([wt, "-w", "-1"] + command, env=env, cwd=os.getcwd(), close_fds=True)
+    except Exception:
+        return False
+    return True
+
+
 if __name__ == "__main__":
     _ensure_interactive_terminal()
     setup_console()
@@ -184,6 +229,8 @@ if __name__ == "__main__":
     if requested_rtl in RTL_MODES:
         # Let a possible elevated re-launch inherit the explicit choice.
         os.environ["AG_PATCHER_RTL"] = requested_rtl
+    if _launch_in_windows_terminal():
+        sys.exit(0)
     if os.name == "nt" and os.environ.get("SKIP_ELEVATION") != "1" and not is_admin():
         if run_as_admin():
             sys.exit(0)

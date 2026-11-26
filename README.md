@@ -51,7 +51,7 @@ errors **without a VPN and without changing your Google account region** on Wind
 
 ```text
   ╔═══════════════════════════════════════════════╗
-  ║  Antigravity Patcher                   v1.4.1 ║
+  ║  Antigravity Patcher                   v1.4.2 ║
   ║  رفع تحریم و قفل منطقه‌ای آنتی‌گراویتی          ║
   ║  تمیز • بدون کلید • بدون ردگیری               ║
   ╟───────────────────────────────────────────────╢
@@ -288,7 +288,9 @@ python main.py --rtl visual
 python main.py --rtl raw
 
 > If you run inside the **legacy console (conhost)**, Windows may lack glyph coverage for the shaped text
-> and show empty boxes. Use **Windows Terminal** for reliable Persian rendering.
+> and show empty boxes. When the patcher is started there interactively it **automatically reopens itself in
+> Windows Terminal** (unless it is already elevated or stdin is redirected); otherwise open **Windows Terminal**
+> manually for reliable Persian rendering.
 
 Or set `AG_PATCHER_RTL=visual` / `AG_PATCHER_RTL=raw`. To re-run the calibration, delete the settings file:
 
