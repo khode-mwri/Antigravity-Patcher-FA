@@ -51,7 +51,7 @@ errors **without a VPN and without changing your Google account region** on Wind
 
 ```text
   ╔═══════════════════════════════════════════════╗
-  ║  Antigravity Patcher                   v1.3.8 ║
+  ║  Antigravity Patcher                   v1.4.0 ║
   ║  رفع تحریم و قفل منطقه‌ای آنتی‌گراویتی          ║
   ║  تمیز • بدون کلید • بدون ردگیری               ║
   ╟───────────────────────────────────────────────╢
@@ -84,6 +84,8 @@ Requires **Python 3.10+** and **Git**.
 
 > The Persian UI needs `arabic-reshaper` and `python-bidi` (installed with `requirements.txt`). Without them the
 > tool still works, but Persian text is shown unreadable (reversed) in the terminal.
+> On the first run the app calibrates once: it shows a sample line and asks whether it is readable, then stores
+> the right mode (`visual` or `raw`) for your terminal.
 
 ```bash
 # 1) clone
@@ -269,6 +271,31 @@ rm -rf ~/Antigravity-backup
 - **GitHub rate limit:** unauthenticated GitHub API requests are limited per hour. The message
   “update check failed — GitHub rate limit” means exactly that; retry in a few minutes.
 - **Network error:** check your connection or VPN access to `api.github.com`.
+
+### 8. Persian text looks mirrored / reversed
+
+Terminals differ: most do not apply the Unicode bidi algorithm and therefore need the **pre-shaped** text; a few
+terminals already apply bidi and would re-reverse it. That is why the app runs a **one-time calibration** on the
+first launch: it displays a sample line and asks whether it reads correctly, then remembers your answer.
+
+You can also pick the mode manually:
+
+```bash
+# default — pre-shaped visual order (CMD / PowerShell / Windows Terminal)
+python main.py --rtl visual
+
+# raw — for terminals that already apply bidi themselves
+python main.py --rtl raw
+```
+
+Or set `AG_PATCHER_RTL=visual` / `AG_PATCHER_RTL=raw`. To re-run the calibration, delete the settings file:
+
+```bash
+# Windows
+Remove-Item "$env:APPDATA\Antigravity-Patcher\ui.json"
+# Linux / macOS
+rm -f ~/.config/Antigravity-Patcher/ui.json
+```
 
 ---
 
