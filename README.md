@@ -286,6 +286,7 @@ python main.py --rtl visual
 
 # raw — for terminals that already apply bidi themselves
 python main.py --rtl raw
+```
 
 > If you run inside the **legacy console (conhost)**, Windows may lack glyph coverage for the shaped text
 > and show empty boxes. When the patcher is started there interactively it **automatically reopens itself in
