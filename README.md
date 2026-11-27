@@ -51,7 +51,7 @@ errors **without a VPN and without changing your Google account region** on Wind
 
 ```text
   ╔═══════════════════════════════════════════════╗
-  ║  Antigravity Patcher                   v1.4.2 ║
+  ║  Antigravity Patcher                   v1.4.3 ║
   ║  رفع تحریم و قفل منطقه‌ای آنتی‌گراویتی          ║
   ║  تمیز • بدون کلید • بدون ردگیری               ║
   ╟───────────────────────────────────────────────╢
