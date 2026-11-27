@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge" alt="GPL-3.0"></a>
-  <a href="https://github.com/khode-mwri/Antigravity-Patcher-FA/stargazers"><img src="https://img.shields.io/github/stars/khode-mwri/Antigravity-Patcher-FA?style=for-the-badge&logo=github&color=yellow" alt="Stars"></a>
+  <a href="https://github.com/khode-mwri/Antigravity-Patcher-Persian/stargazers"><img src="https://img.shields.io/github/stars/khode-mwri/Antigravity-Patcher-Persian?style=for-the-badge&logo=github&color=yellow" alt="Stars"></a>
   <img src="https://img.shields.io/badge/UI-Persian%20(RTL)-success?style=for-the-badge" alt="Persian UI">
 </p>
 
@@ -89,8 +89,8 @@ Requires **Python 3.10+** and **Git**.
 
 ```bash
 # 1) clone
-git clone https://github.com/khode-mwri/Antigravity-Patcher-FA.git
-cd Antigravity-Patcher-FA/source
+git clone https://github.com/khode-mwri/Antigravity-Patcher-Persian.git
+cd Antigravity-Patcher-Persian/source
 
 # 2) virtualenv + dependencies
 python -m venv .venv
@@ -114,7 +114,7 @@ sudo python3 main.py
 
 ### Option 2: prebuilt binaries (`.exe` / `.deb` / `.run` / `.pkg` / `.dmg`)
 
-Built artifacts are published in [**Releases**](https://github.com/khode-mwri/Antigravity-Patcher-FA/releases)
+Built artifacts are published in [**Releases**](https://github.com/khode-mwri/Antigravity-Patcher-Persian/releases)
 after every release tag, or you can [build them yourself](#-building-binaries).
 
 ---
@@ -365,7 +365,7 @@ pyinstaller --onefile --name="Antigravity_Patcher_macOS" --target-arch universal
 ## 📁 Project layout
 
 ```text
-Antigravity-Patcher-FA/
+Antigravity-Patcher-Persian/
 ├── README.md                  # English (this file)
 ├── README.fa.md               # Persian
 ├── README.ru.md               # Russian
@@ -406,7 +406,7 @@ Persian edition and its changes: [khode-mwri](https://github.com/khode-mwri) —
 
 ## 💬 Support
 
-- **This fork:** [Issues](https://github.com/khode-mwri/Antigravity-Patcher-FA/issues)
+- **This fork:** [Issues](https://github.com/khode-mwri/Antigravity-Patcher-Persian/issues)
 - **Upstream project:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — Telegram: [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
 
 ---

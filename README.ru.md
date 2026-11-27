@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge" alt="GPL-3.0"></a>
-  <a href="https://github.com/khode-mwri/Antigravity-Patcher-FA/stargazers"><img src="https://img.shields.io/github/stars/khode-mwri/Antigravity-Patcher-FA?style=for-the-badge&logo=github&color=yellow" alt="Stars"></a>
+  <a href="https://github.com/khode-mwri/Antigravity-Patcher-Persian/stargazers"><img src="https://img.shields.io/github/stars/khode-mwri/Antigravity-Patcher-Persian?style=for-the-badge&logo=github&color=yellow" alt="Stars"></a>
   <img src="https://img.shields.io/badge/UI-Persian%20(RTL)-success?style=for-the-badge" alt="Persian UI">
 </p>
 
@@ -90,8 +90,8 @@
 
 ```bash
 # 1) клонирование
-git clone https://github.com/khode-mwri/Antigravity-Patcher-FA.git
-cd Antigravity-Patcher-FA/source
+git clone https://github.com/khode-mwri/Antigravity-Patcher-Persian.git
+cd Antigravity-Patcher-Persian/source
 
 # 2) виртуальное окружение и зависимости
 python -m venv .venv
@@ -115,7 +115,7 @@ sudo python3 main.py
 
 ### Вариант 2: готовые сборки (`.exe` / `.deb` / `.run` / `.pkg` / `.dmg`)
 
-Собранные файлы публикуются в разделе [**Releases**](https://github.com/khode-mwri/Antigravity-Patcher-FA/releases)
+Собранные файлы публикуются в разделе [**Releases**](https://github.com/khode-mwri/Antigravity-Patcher-Persian/releases)
 после каждого тега, либо соберите их самостоятельно — см. [Сборка бинарников](#-сборка-бинарников).
 
 ---
@@ -369,7 +369,7 @@ pyinstaller --onefile --name="Antigravity_Patcher_macOS" --target-arch universal
 ## 📁 Структура проекта
 
 ```text
-Antigravity-Patcher-FA/
+Antigravity-Patcher-Persian/
 ├── README.md                  # английский
 ├── README.fa.md               # персидский
 ├── README.ru.md               # русский (этот файл)
@@ -411,7 +411,7 @@ Antigravity-Patcher-FA/
 
 ## 💬 Поддержка
 
-- **Этот форк:** [Issues](https://github.com/khode-mwri/Antigravity-Patcher-FA/issues)
+- **Этот форк:** [Issues](https://github.com/khode-mwri/Antigravity-Patcher-Persian/issues)
 - **Оригинальный проект:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — Telegram: [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
 
 ---

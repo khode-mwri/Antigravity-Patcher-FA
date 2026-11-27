@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge" alt="GPL-3.0"></a>
-  <a href="https://github.com/khode-mwri/Antigravity-Patcher-FA/stargazers"><img src="https://img.shields.io/github/stars/khode-mwri/Antigravity-Patcher-FA?style=for-the-badge&logo=github&color=yellow" alt="Stars"></a>
+  <a href="https://github.com/khode-mwri/Antigravity-Patcher-Persian/stargazers"><img src="https://img.shields.io/github/stars/khode-mwri/Antigravity-Patcher-Persian?style=for-the-badge&logo=github&color=yellow" alt="Stars"></a>
   <img src="https://img.shields.io/badge/زبان-فارسی-success?style=for-the-badge" alt="فارسی">
 </p>
 
@@ -86,8 +86,8 @@
 
 ```bash
 # ۱) دریافت پروژه
-git clone https://github.com/khode-mwri/Antigravity-Patcher-FA.git
-cd Antigravity-Patcher-FA/source
+git clone https://github.com/khode-mwri/Antigravity-Patcher-Persian.git
+cd Antigravity-Patcher-Persian/source
 
 # ۲) محیط مجازی و نصب وابستگی‌ها
 python -m venv .venv
@@ -111,7 +111,7 @@ sudo python3 main.py
 
 ### روش دوم: نسخهٔ اجرایی آماده (`.exe` / `.deb` / `.run` / `.pkg` / `.dmg`)
 
-نسخه‌های بیلدشده پس از انتشار تگ در بخش [**Releases همین مخزن**](https://github.com/khode-mwri/Antigravity-Patcher-FA/releases) قرار می‌گیرند. تا آن زمان می‌توانید با [دستورهای بیلد](#-ساخت-نسخهٔ-اجرایی) خودتان فایل اجرایی بسازید.
+نسخه‌های بیلدشده پس از انتشار تگ در بخش [**Releases همین مخزن**](https://github.com/khode-mwri/Antigravity-Patcher-Persian/releases) قرار می‌گیرند. تا آن زمان می‌توانید با [دستورهای بیلد](#-ساخت-نسخهٔ-اجرایی) خودتان فایل اجرایی بسازید.
 
 ---
 
@@ -349,7 +349,7 @@ pyinstaller --onefile --name="Antigravity_Patcher_macOS" --target-arch universal
 ## 📁 ساختار پروژه
 
 ```text
-Antigravity-Patcher-FA/
+Antigravity-Patcher-Persian/
 ├── README.md                  # همین راهنما (فارسی)
 ├── NOTICE.md                  # انتساب و فهرست تغییرات نسخهٔ فارسی
 ├── LICENSE                    # مجوز GPL-3.0
@@ -386,7 +386,7 @@ Antigravity-Patcher-FA/
 
 ## 💬 پشتیبانی
 
-- **این فورک فارسی:** [Issues در همین مخزن](https://github.com/khode-mwri/Antigravity-Patcher-FA/issues)
+- **این فورک فارسی:** [Issues در همین مخزن](https://github.com/khode-mwri/Antigravity-Patcher-Persian/issues)
 - **پروژهٔ اصلی:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — تلگرام: [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
 
 ---
