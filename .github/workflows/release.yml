@@ -90,6 +90,21 @@ jobs:
             --hidden-import=packaging.requirements \
             main.py
 
+      - name: Build Windows GUI (.exe)
+        if: runner.os == 'Windows'
+        working-directory: source
+        shell: bash
+        run: |
+          python -m PyInstaller --onefile --windowed --uac-admin --icon=icon.ico \
+            --name="Antigravity_Patcher_FA_GUI" --noupx --clean --version-file=version.txt \
+            --hidden-import=packaging \
+            --hidden-import=packaging.version \
+            --hidden-import=packaging.specifiers \
+            --hidden-import=packaging.requirements \
+            --collect-data arabic_reshaper \
+            --hidden-import=bidi.algorithm \
+            gui.py
+
       - name: Build Ubuntu Linux (.deb & .run)
         if: runner.os == 'Linux'
         working-directory: source
@@ -297,6 +312,7 @@ jobs:
           chmod +x Antigravity_Patcher_Linux.run || true
           sha256sum \
             Antigravity_Patcher_Windows.exe \
+            Antigravity_Patcher_FA_GUI.exe \
             Antigravity_Patcher_Ubuntu.deb \
             Antigravity_Patcher_Linux.run \
             Antigravity_Patcher_macOS.pkg \
@@ -337,6 +353,7 @@ jobs:
           generate_release_notes: true
           files: |
             release-assets/Antigravity_Patcher_Windows.exe
+            release-assets/Antigravity_Patcher_FA_GUI.exe
             release-assets/Antigravity_Patcher_Ubuntu.deb
             release-assets/Antigravity_Patcher_Linux.run
             release-assets/Antigravity_Patcher_macOS.pkg
@@ -366,6 +383,7 @@ jobs:
           if gh release view python >/dev/null 2>&1; then
             gh release upload python \
               release-assets/Antigravity_Patcher_Windows.exe \
+              release-assets/Antigravity_Patcher_FA_GUI.exe \
               release-assets/Antigravity_Patcher_Ubuntu.deb \
               release-assets/Antigravity_Patcher_Linux.run \
               release-assets/Antigravity_Patcher_macOS.pkg \

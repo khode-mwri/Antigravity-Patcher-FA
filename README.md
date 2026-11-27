@@ -51,7 +51,7 @@ errors **without a VPN and without changing your Google account region** on Wind
 
 ```text
   ╔═══════════════════════════════════════════════╗
-  ║  Antigravity Patcher                   v1.4.3 ║
+  ║  Antigravity Patcher                   v1.5.0 ║
   ║  رفع تحریم و قفل منطقه‌ای آنتی‌گراویتی          ║
   ║  تمیز • بدون کلید • بدون ردگیری               ║
   ╟───────────────────────────────────────────────╢
@@ -341,6 +341,16 @@ The service is written in Go. The patcher matches the assembly byte signature an
 > to guess instead of corrupting the file.
 
 ---
+
+## 🖥 Desktop GUI (tkinter)
+
+A native windowed app ships with every release as `Antigravity_Patcher_FA_GUI.exe`
+(Windows, built with a UAC manifest). It wraps the same patcher core as the
+terminal UI and has a language selector with **English (default)**, **Persian**
+and **Russian** — pick it in the header and it applies instantly.
+
+Run it from source with `python source/gui.py`, or build the executable locally
+with `python tools/build_gui.py`.
 
 ## 🛠 Building binaries
 
