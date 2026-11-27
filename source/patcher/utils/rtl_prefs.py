@@ -57,6 +57,15 @@ def load_mode():
     return mode if is_valid(mode) else None
 
 
+def needs_calibration():
+    """True when no usable RTL mode is saved.
+
+    A missing, unreadable, empty, malformed or out-of-range preference all mean
+    "calibration is needed", exactly when :func:`load_mode` returns ``None``.
+    """
+    return load_mode() is None
+
+
 def save_mode(mode):
     """Persist ``mode`` in the preferences file; return True on success.
 

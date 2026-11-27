@@ -53,19 +53,25 @@ def _apply_mode(mode):
 def _calibrate_rtl():
     """Ask the user once which rendering mode is readable in their terminal.
 
-    Terminals without bidi support need the pre-shaped `visual` output, while
-    terminals that already apply bidi need the untouched `raw` text and a plain
-    (logical-order) layout. Returns the chosen mode, or None when calibration
-    could not run / neither mode was readable.
+    The sample line is printed once per mode (twice in total) and the user
+    answers y for the rendering that reads correctly. Terminals without bidi
+    support need the pre-shaped `visual` output, while terminals that already
+    apply bidi need the untouched `raw` text and a plain (logical-order) layout.
+    Returns the chosen mode, or None when calibration could not run / neither
+    mode was readable.
     """
+    total = len(RTL_MODES)
     try:
         emit()
         emit("  [i] Persian display calibration (once) / کالیبراسیون نمایش فارسی")
-        emit("      Press Enter if the line below reads correctly, n if it is reversed or boxes.")
-        emit("      اگر خط زیر خوانا و راست‌به‌چپ است Enter؛ اگر برعکس یا مربع بود n بزنید.")
-        for mode in RTL_MODES:
+        emit("      The sample line will be shown twice, once in each display mode.")
+        emit("      Press Enter/y for the sample that reads correctly, n for the other one.")
+        emit("      خط نمونه دو بار نمایش داده می‌شود، یک بار در هر حالت نمایش.")
+        emit("      برای نمونهٔ خوانا Enter/y و برای نمونهٔ برعکس یا مربع n بزنید.")
+        for number, mode in enumerate(RTL_MODES, 1):
             _apply_mode(mode)
             emit()
+            emit("      Sample %d of %d:" % (number, total))
             emit("      " + RTL_CALIBRATION_SAMPLE)
             answer = ask("  Readable? [y/n] / خوانا است؟: ").strip().lower()
             if answer in _YES_ANSWERS:
@@ -76,6 +82,7 @@ def _calibrate_rtl():
         emit("  [!] Could not confirm a readable Persian rendering.")
         emit("      - Empty boxes (tofu)?  Use Windows Terminal instead of the legacy console.")
         emit("      - Text mirrored?       Run with: --rtl raw  (or AG_PATCHER_RTL=raw)")
+        emit("      - Re-run calibration:  --rtl auto")
         emit()
         return None
     except (EOFError, KeyboardInterrupt, OSError):
@@ -84,7 +91,13 @@ def _calibrate_rtl():
 
 
 def _setup_rtl(requested_mode):
-    """Choose the RTL rendering mode: CLI flag > environment > saved choice > calibration."""
+    """Choose the RTL rendering mode: CLI flag > environment > saved choice > calibration.
+
+    ``visual``/``raw`` given on the command line (or via ``AG_PATCHER_RTL``) win
+    over the saved choice. An explicit ``--rtl auto`` re-runs the interactive
+    calibration even when a mode is already saved, e.g. after moving to a
+    different terminal whose bidi support differs from the old one.
+    """
     from patcher.utils import rtl
 
     if not rtl.AVAILABLE:
@@ -92,20 +105,29 @@ def _setup_rtl(requested_mode):
         emit("      متن فارسی ناخوانا می‌شود. اجرا کنید: pip install -r requirements.txt")
         return
 
-    env_mode = os.environ.get("AG_PATCHER_RTL", "").strip().lower()
     if requested_mode in RTL_MODES:
         _apply_mode(requested_mode)
         return
-    if env_mode in RTL_MODES:
-        _apply_mode(env_mode)
-        return
+
+    # An explicit "auto" on the command line means "calibrate now": it outranks
+    # both the environment and the saved preference, so the two rendering modes
+    # are shown again (e.g. after switching to a terminal with different bidi
+    # support). ``AG_PATCHER_RTL=auto`` expresses the same thing for one run.
+    force_calibration = requested_mode == "auto"
+    if not force_calibration:
+        env_mode = os.environ.get("AG_PATCHER_RTL", "").strip().lower()
+        if env_mode in RTL_MODES:
+            _apply_mode(env_mode)
+            return
+        force_calibration = env_mode == "auto"
 
     rtl_prefs = None
     saved = None
     try:
         from patcher.utils import rtl_prefs as _prefs
         rtl_prefs = _prefs
-        saved = rtl_prefs.load_mode()
+        if not force_calibration and not rtl_prefs.needs_calibration():
+            saved = rtl_prefs.load_mode()
     except Exception:
         rtl_prefs = None
     if saved in RTL_MODES:
@@ -226,8 +248,9 @@ if __name__ == "__main__":
     setup_console()
     requested_rtl, clean_args = _extract_rtl_flag(sys.argv[1:])
     sys.argv = [sys.argv[0]] + clean_args
-    if requested_rtl in RTL_MODES:
-        # Let a possible elevated re-launch inherit the explicit choice.
+    if requested_rtl in RTL_MODES or requested_rtl == "auto":
+        # Let a possible elevated / Windows Terminal re-launch inherit the
+        # explicit choice (--rtl auto = re-run calibration in the new terminal).
         os.environ["AG_PATCHER_RTL"] = requested_rtl
     if _launch_in_windows_terminal():
         sys.exit(0)

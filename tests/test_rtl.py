@@ -10,9 +10,15 @@ tests pin that contract down:
 * idempotency    — rendering an already-visual line is a no-op;
 * raw mode       — ``set_mode("raw")`` switches the transformation off;
 * edge cases     — empty/``None``/Latin/multiline input stays sane.
+
+The tail of the file covers the mode-selection policy around rendering:
+``rtl_prefs.needs_calibration()`` and ``main._setup_rtl`` / ``main._calibrate_rtl``
+(CLI flag > environment > saved choice > calibration, with an explicit
+``--rtl auto`` forcing a fresh calibration).
 """
 
 import collections
+import os
 import re
 
 import pytest
@@ -256,3 +262,224 @@ def test_rtl_prefs_contract_is_read_only_safe():
     # Read only: the suite must never overwrite the real user preferences.
     saved = prefs.load_mode()
     assert saved in (None, "visual", "raw")
+
+
+# ─── Mode selection: needs_calibration() and main._setup_rtl ─────────────────
+#
+# Everything below runs against a throw-away APPDATA / HOME, so the user's real
+# ui.json is never read or written.
+
+
+@pytest.fixture
+def prefs_env(tmp_path, monkeypatch):
+    """Point rtl_prefs at a temporary preferences directory."""
+    monkeypatch.setenv("APPDATA", str(tmp_path))
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path))
+    prefs = pytest.importorskip("patcher.utils.rtl_prefs")
+    return prefs
+
+
+@pytest.fixture
+def rtl_env(monkeypatch):
+    """Keep AG_PATCHER_RTL out of the picture unless a test sets it itself."""
+    monkeypatch.delenv("AG_PATCHER_RTL", raising=False)
+
+
+@pytest.fixture
+def calib_recorder(monkeypatch):
+    """Replace main._calibrate_rtl with a recorder returning a fixed mode."""
+    main_module = pytest.importorskip("main")
+    calls = []
+    result = {"mode": "visual"}
+
+    def fake_calibrate():
+        calls.append(True)
+        return result["mode"]
+
+    monkeypatch.setattr(main_module, "_calibrate_rtl", fake_calibrate, raising=False)
+    return main_module, calls, result
+
+
+def _mode_after_setup(main_module, requested):
+    """Run _setup_rtl and return (rtl mode, console render mode)."""
+    from patcher.utils import console
+
+    main_module._setup_rtl(requested)
+    return rtl.get_mode(), console.RENDER_MODE
+
+
+def test_needs_calibration_true_without_saved_file(prefs_env, rtl_env):
+    assert prefs_env.needs_calibration() is True
+    assert prefs_env.load_mode() is None
+
+
+@pytest.mark.parametrize("mode", ["visual", "raw"])
+def test_needs_calibration_false_after_save(prefs_env, rtl_env, mode):
+    assert prefs_env.save_mode(mode) is True
+    assert prefs_env.needs_calibration() is False
+    assert prefs_env.load_mode() == mode
+
+
+def _write_prefs(prefs, content):
+    """Write raw preference-file content, creating the directory if needed."""
+    path = prefs.prefs_path()
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as handle:
+        handle.write(content)
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        "",
+        "not json at all",
+        "[]",
+        '{"rtl_mode": ""}',
+        '{"rtl_mode": "sideways"}',
+        '{"other_key": 1}',
+        "null",
+    ],
+    ids=["empty_file", "garbage", "json_list", "empty_mode", "unknown_mode",
+         "missing_key", "null_json"],
+)
+def test_needs_calibration_true_for_invalid_preferences(prefs_env, rtl_env, content):
+    """Empty / malformed / out-of-range preferences must request calibration."""
+    _write_prefs(prefs_env, content)
+    assert prefs_env.needs_calibration() is True
+
+
+def test_needs_calibration_is_consistent_with_load_mode(prefs_env, rtl_env):
+    """The helper must never disagree with load_mode()'s contract."""
+    assert prefs_env.needs_calibration() == (prefs_env.load_mode() is None)
+    prefs_env.save_mode("raw")
+    assert prefs_env.needs_calibration() == (prefs_env.load_mode() is None)
+
+
+def test_setup_rtl_cli_flag_beats_saved_choice(prefs_env, rtl_env, calib_recorder):
+    """An explicit --rtl visual/raw wins over the saved mode and skips calibration."""
+    main_module, calls, _ = calib_recorder
+    prefs_env.save_mode("raw")
+    assert _mode_after_setup(main_module, "visual") == ("visual", "visual")
+    assert calls == [], "calibration must not run when the CLI flag is explicit"
+
+
+def test_setup_rtl_env_mode_beats_saved_choice(prefs_env, rtl_env, calib_recorder, monkeypatch):
+    main_module, calls, _ = calib_recorder
+    prefs_env.save_mode("visual")
+    monkeypatch.setenv("AG_PATCHER_RTL", "raw")
+    assert _mode_after_setup(main_module, None) == ("raw", "raw")
+    assert calls == []
+
+
+def test_setup_rtl_uses_saved_choice_without_calibration(prefs_env, rtl_env, calib_recorder):
+    """A valid saved mode is applied as-is; the user is not asked again."""
+    main_module, calls, _ = calib_recorder
+    prefs_env.save_mode("raw")
+    assert _mode_after_setup(main_module, None) == ("raw", "raw")
+    assert calls == []
+
+
+def test_setup_rtl_calibrates_when_no_saved_mode(prefs_env, rtl_env, calib_recorder):
+    main_module, calls, result = calib_recorder
+    result["mode"] = "raw"
+    assert _mode_after_setup(main_module, None) == ("raw", "raw")
+    assert calls == [True], "calibration must run when nothing is saved"
+    assert prefs_env.load_mode() == "raw", "the calibrated mode must be persisted"
+
+
+def test_setup_rtl_calibrates_when_saved_preference_is_invalid(prefs_env, rtl_env, calib_recorder):
+    """An old/corrupt ui.json is treated as 'no saved mode' and re-calibrated."""
+    main_module, calls, result = calib_recorder
+    result["mode"] = "raw"
+    _write_prefs(prefs_env, '{"rtl_mode": "broken"}')
+    assert _mode_after_setup(main_module, None) == ("raw", "raw")
+    assert calls == [True]
+    assert prefs_env.load_mode() == "raw"
+
+
+def test_setup_rtl_auto_forces_calibration_even_with_saved_mode(
+    prefs_env, rtl_env, calib_recorder
+):
+    """--rtl auto must re-run calibration despite a saved (stale) mode."""
+    main_module, calls, result = calib_recorder
+    prefs_env.save_mode("raw")  # e.g. saved on another machine/terminal
+    result["mode"] = "visual"
+    assert _mode_after_setup(main_module, "auto") == ("visual", "visual")
+    assert calls == [True], "--rtl auto must always ask"
+    assert prefs_env.load_mode() == "visual", "the new choice must replace the old one"
+
+
+def test_setup_rtl_auto_outranks_environment_mode(
+    prefs_env, rtl_env, calib_recorder, monkeypatch
+):
+    """An explicit CLI 'auto' is stronger than AG_PATCHER_RTL=raw."""
+    main_module, calls, result = calib_recorder
+    prefs_env.save_mode("raw")
+    monkeypatch.setenv("AG_PATCHER_RTL", "raw")
+    result["mode"] = "visual"
+    assert _mode_after_setup(main_module, "auto") == ("visual", "visual")
+    assert calls == [True]
+
+
+def test_setup_rtl_env_auto_forces_calibration(prefs_env, rtl_env, calib_recorder, monkeypatch):
+    """AG_PATCHER_RTL=auto also means 'calibrate now' (inherited by relaunches)."""
+    main_module, calls, result = calib_recorder
+    prefs_env.save_mode("visual")
+    monkeypatch.setenv("AG_PATCHER_RTL", "auto")
+    result["mode"] = "raw"
+    assert _mode_after_setup(main_module, None) == ("raw", "raw")
+    assert calls == [True]
+    assert prefs_env.load_mode() == "raw"
+
+
+def test_calibrate_rtl_shows_sample_in_both_modes_before_choosing(
+    rtl_env, monkeypatch, capsys
+):
+    """Calibration must explain the two-pass sample and honour a 'n' then 'y'."""
+    main_module = pytest.importorskip("main")
+    answers = iter(["n", "y"])
+    asked_modes = []
+    monkeypatch.setattr(main_module, "ask", lambda prompt="": next(answers))
+
+    original_apply = main_module._apply_mode
+
+    def recording_apply(mode):
+        asked_modes.append(mode)
+        original_apply(mode)
+
+    monkeypatch.setattr(main_module, "_apply_mode", recording_apply)
+    chosen = main_module._calibrate_rtl()
+
+    assert chosen == "raw", "answering n then y must select the second mode"
+    assert asked_modes == ["visual", "raw"], "sample must be shown once per mode"
+    output = capsys.readouterr().out
+    assert "twice" in output.lower(), "the prompt must mention the two-pass sample"
+    assert "Sample 1 of 2" in output and "Sample 2 of 2" in output
+
+
+def test_calibrate_rtl_first_yes_wins_without_showing_second_sample(
+    rtl_env, monkeypatch, capsys
+):
+    """Answering y on the first sample must stop calibration immediately."""
+    main_module = pytest.importorskip("main")
+    monkeypatch.setattr(main_module, "ask", lambda prompt="": "y")
+    chosen = main_module._calibrate_rtl()
+    assert chosen == "visual"
+    output = capsys.readouterr().out
+    assert "Sample 1 of 2" in output
+    assert "Sample 2 of 2" not in output
+
+
+def test_calibrate_rtl_eof_falls_back_to_visual(rtl_env, monkeypatch):
+    """EOF/Ctrl-C during calibration must not crash and must restore visual mode."""
+    main_module = pytest.importorskip("main")
+    from patcher.utils import console
+
+    def raise_eof(prompt=""):
+        raise EOFError
+
+    monkeypatch.setattr(main_module, "ask", raise_eof)
+    assert main_module._calibrate_rtl() is None
+    assert rtl.get_mode() == "visual"
+    assert console.RENDER_MODE == "visual"

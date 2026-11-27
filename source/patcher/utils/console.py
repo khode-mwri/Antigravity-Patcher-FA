@@ -22,6 +22,19 @@ RTL_MODE = True
 #           layout must then stay logical/LTR so the terminal can reorder it once.
 RENDER_MODE = "visual"
 
+# Raw-mode alignment toggle.
+# Raw mode emits Persian in logical order; only the terminal's own Unicode bidi
+# implementation can place the *words* at the right edge. What the layout can
+# still do is mirror the geometry of visual mode: section titles are pushed to
+# the right edge with plain ASCII spaces and menu rows are padded on the right
+# to the same 51-column block. That keeps the menu aligned in terminals without
+# bidi support and stays harmless in bidi-capable terminals (the padding is
+# neutral whitespace; the logical character order is untouched, so the terminal
+# still reorders each line exactly once). Exact right-alignment of the Persian
+# text itself therefore depends on the terminal's bidi support either way.
+# Set RAW_MODE_ALIGN = False to print the bare, unpadded logical layout.
+RAW_MODE_ALIGN = True
+
 ANSI_OK = False
 USE_COLOR = False
 
@@ -382,7 +395,17 @@ def print_menu_section(title):
     """Section header, right-aligned with a rule filling the rest of the line."""
     if is_raw_mode():
         print()
-        print(f"  ── {_rtl(title)} ──")
+        if RAW_MODE_ALIGN:
+            # Mirror visual mode's right-aligned header without bidi: the title
+            # sits at the right edge and the rest of the 49-column block is
+            # filled with plain ASCII spaces to its left. Spaces (not dashes)
+            # are used because they are bidi-neutral: the Persian words stay in
+            # logical order for the terminal to reorder, and a terminal without
+            # bidi still shows the title against the right margin.
+            label = " " + _rtl(title) + " "
+            print("  " + " " * max(0, MENU_WIDTH - _visible_len(label)) + label)
+        else:
+            print(f"  ── {_rtl(title)} ──")
         return
     label = " " + _rtl(title) + " "
     dashes = "─" * max(1, MENU_WIDTH - _visible_len(label))
@@ -390,12 +413,23 @@ def print_menu_section(title):
 
 
 def print_menu_row(number, label, hint="", accent=COLOR_GREEN):
-    """Menu row laid out for RTL: [number] rightmost, then the label, hint leftmost."""
+    """Menu row laid out for RTL: [number] rightmost, then the label, hint leftmost.
+
+    Raw mode cannot move ``[n]`` to the right edge without reversing the line
+    (the terminal's bidi would then mirror it again), so the number stays at the
+    visual start of the line and the whole row is right-padded to MENU_WIDTH.
+    Shorter rows therefore share one right edge; rows already wider than the
+    block are never truncated, so they keep their natural (longer) width.
+    """
     if is_raw_mode():
-        line = f"  [{number}] {_rtl(label)}" if number != "" else f"  {_rtl(label)}"
+        body = f"[{number}] {_rtl(label)}" if number != "" else _rtl(label)
         if hint:
-            line += "  — " + _rtl(hint)
-        print(line)
+            body += "  — " + _rtl(hint)
+        if RAW_MODE_ALIGN:
+            # Pad the logical body (without the indent) to MENU_WIDTH so all
+            # rows share the same right edge; longer rows are left untouched.
+            body = _center_line(body, MENU_WIDTH)
+        print("  " + body)
         return
 
     num_part = _paint(f"[{number}]", accent, COLOR_BOLD) if number != "" else "  "

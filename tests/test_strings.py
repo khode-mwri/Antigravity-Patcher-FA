@@ -123,6 +123,29 @@ def test_source_uses_persian_letters_not_arabic_variants():
     )
 
 
+def test_tests_conftest_has_no_unused_imports():
+    """Keep ``tests/conftest.py`` free of dead imports.
+
+    The isolation rework added a stray ``import os`` that nothing used; an
+    unused import in the conftest is easy to mistake for part of the fixture
+    setup, so it is pinned statically.
+    """
+    conftest = REPO_ROOT / "tests" / "conftest.py"
+    tree = ast.parse(_read_text(conftest), filename=str(conftest))
+    imported = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                imported[alias.asname or alias.name.split(".")[0]] = node.lineno
+        elif isinstance(node, ast.ImportFrom):
+            for alias in node.names:
+                if alias.name != "*":
+                    imported[alias.asname or alias.name] = node.lineno
+    used = {node.id for node in ast.walk(tree) if isinstance(node, ast.Name)}
+    unused = {name: line for name, line in imported.items() if name not in used}
+    assert not unused, "unused imports in tests/conftest.py: %r" % (unused,)
+
+
 def test_every_persian_source_string_is_shapeable():
     """All Persian string literals must render into presentation forms."""
     reshapable = _reshapable_letters()
