@@ -113,8 +113,12 @@ def build_command() -> list[str]:
         "--noconfirm",
     ]
     if os.name == "nt":
-        # Relative names resolve against cwd=source/.
-        command += [f"--icon={ICON_NAME}", f"--version-file={VERSION_FILE_NAME}"]
+        # Absolute paths: PyInstaller resolves --version-file against the spec
+        # directory (--specpath), not cwd, so bare names break the build.
+        command += [
+            f"--icon={SOURCE_DIR / ICON_NAME}",
+            f"--version-file={SOURCE_DIR / VERSION_FILE_NAME}",
+        ]
 
     command += [f"--hidden-import={name}" for name in HIDDEN_IMPORTS]
 
