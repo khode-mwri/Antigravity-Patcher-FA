@@ -66,6 +66,12 @@ def main():
                  "Maintainer: mwri <https://github.com/khode-mwri/Antigravity-Patcher-Persian>"),
                 ("com.dramir0240.antigravity-patcher", "com.khode-mwri.antigravity-patcher"),
             ],
+            # The Releases page serves "Source code" archives straight from the
+            # tag tree, so the docs there carry the same handle and must match.
+            "README.md": [("AmirOmidi_Dev", "bxiqm")],
+            "README.fa.md": [("AmirOmidi_Dev", "bxiqm")],
+            "README.ru.md": [("AmirOmidi_Dev", "bxiqm")],
+            "NOTICE.md": [("AmirOmidi_Dev", "bxiqm")],
         }
 
         staged = []
@@ -81,6 +87,32 @@ def main():
             if new_text != text:
                 path.write_text(new_text, encoding="utf-8")
                 staged.append(rel)
+
+        if tag == "v1.5.0":
+            # The tag-driven rebuild regenerates the release notes from this
+            # template, so the GUI download row must exist in the tag tree too.
+            wf = root / ".github/workflows/release.yml"
+            if wf.is_file():
+                text = wf.read_text(encoding="utf-8")
+                marker = ("| **Windows (x64)** | `.exe` | "
+                          "`Antigravity_Patcher_Windows.exe`")
+                if marker in text and "Windows — GUI" not in text:
+                    rows = []
+                    for line in text.split("\n"):
+                        rows.append(line)
+                        if line.strip().startswith(marker):
+                            indent = line[: len(line) - len(line.lstrip())]
+                            rows.append(
+                                indent
+                                + "| **Windows — GUI** | `.exe` | "
+                                + "`Antigravity_Patcher_FA_GUI.exe` | "
+                                + "نسخهٔ گرافیکی پنجره‌ای با رابط "
+                                + "انگلیسی/فارسی/روسی (پیش‌فرض انگلیسی)؛ "
+                                + "با دسترسی مدیر اجرا شود |"
+                            )
+                    wf.write_text("\n".join(rows), encoding="utf-8")
+                    if ".github/workflows/release.yml" not in staged:
+                        staged.append(".github/workflows/release.yml")
 
         if not staged:
             print("  %s: nothing to patch" % tag)
