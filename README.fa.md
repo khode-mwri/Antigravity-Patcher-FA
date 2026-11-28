@@ -52,7 +52,7 @@
   ║  تمیز • بدون کلید • بدون ردگیری               ║
   ╟───────────────────────────────────────────────╢
   ║  GitHub    DrAmir0240/Antigravity-Patcher     ║
-  ║  Telegram  @AmirOmidi_Dev                     ║
+  ║  Telegram  @bxiqm                     ║
   ╚═══════════════════════════════════════════════╝
 
   ─ پچ ────────────────────────────────────────────
@@ -397,7 +397,7 @@ Antigravity-Patcher-Persian/
 ## 💬 پشتیبانی
 
 - **این فورک فارسی:** [Issues در همین مخزن](https://github.com/khode-mwri/Antigravity-Patcher-Persian/issues)
-- **پروژهٔ اصلی:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — تلگرام: [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
+- **پروژهٔ اصلی:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — تلگرام: [@bxiqm](https://t.me/bxiqm)
 
 ---
 
