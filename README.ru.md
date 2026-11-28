@@ -56,7 +56,7 @@
   ║  تمیز • بدون کلید • بدون ردگیری               ║
   ╟───────────────────────────────────────────────╢
   ║  GitHub    DrAmir0240/Antigravity-Patcher     ║
-  ║  Telegram  @AmirOmidi_Dev                     ║
+  ║  Telegram  @bxiqm                     ║
   ╚═══════════════════════════════════════════════╝
 
   ───────────────────────────────────────────── پچ
@@ -412,7 +412,7 @@ Antigravity-Patcher-FA/
 ## 💬 Поддержка
 
 - **Этот форк:** [Issues](https://github.com/khode-mwri/Antigravity-Patcher-FA/issues)
-- **Оригинальный проект:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — Telegram: [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
+- **Оригинальный проект:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — Telegram: [@bxiqm](https://t.me/bxiqm)
 
 ---
 
