@@ -56,7 +56,7 @@ errors **without a VPN and without changing your Google account region** on Wind
   ║  تمیز • بدون کلید • بدون ردگیری               ║
   ╟───────────────────────────────────────────────╢
   ║  GitHub    DrAmir0240/Antigravity-Patcher     ║
-  ║  Telegram  @AmirOmidi_Dev                     ║
+  ║  Telegram  @bxiqm                     ║
   ╚═══════════════════════════════════════════════╝
 
   ───────────────────────────────────────────── پچ
@@ -404,7 +404,7 @@ Persian edition and its changes: [khode-mwri](https://github.com/khode-mwri) —
 ## 💬 Support
 
 - **This fork:** [Issues](https://github.com/khode-mwri/Antigravity-Patcher-FA/issues)
-- **Upstream project:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — Telegram: [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
+- **Upstream project:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — Telegram: [@bxiqm](https://t.me/bxiqm)
 
 ---
 
