@@ -11,9 +11,10 @@
 </p>
 
 > **This repository is a Persian-localized derivative of the open-source project [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher).**
-> The whole terminal UI (banner, menus, status/warning/error messages, prompts) is translated to Persian and
-> rendered **right-to-left** in the terminal. Full upstream git history, authorship and the GPL-3.0 license are
-> preserved; the exact list of changes is in [`NOTICE.md`](NOTICE.md).
+> It ships two front-ends: a fully Persian terminal UI rendered **right-to-left** (banner, menus, status/warning/error
+> messages, prompts) and a trilingual desktop app (tkinter) with an **English / Persian / Russian** interface —
+> English by default. The GPL-3.0 license and the upstream attribution are preserved; the exact list of changes is
+> in [`NOTICE.md`](NOTICE.md).
 
 An open-source patcher that removes the **region lock / geoblocking** from Google's Antigravity products:
 
