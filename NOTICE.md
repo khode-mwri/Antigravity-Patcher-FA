@@ -11,7 +11,7 @@
 | مخزن | https://github.com/DrAmir0240/Antigravity-Patcher |
 | نسخهٔ پایه | `1.3.8` |
 | مجوز | GPL-3.0 |
-| تلگرام نویسنده | https://t.me/AmirOmidi_Dev |
+| تلگرام نویسنده | https://t.me/bxiqm |
 
 ## منابع و انتساب‌های ذکرشده در پروژهٔ اصلی
 
