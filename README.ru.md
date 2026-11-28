@@ -50,14 +50,14 @@
 ## 🖥 Скриншот
 
 ```text
-  ╔═══════════════════════════════════════════════╗
-  ║  Antigravity Patcher                   v1.5.0 ║
-  ║  رفع تحریم و قفل منطقه‌ای آنتی‌گراویتی          ║
-  ║  تمیز • بدون کلید • بدون ردگیری               ║
-  ╟───────────────────────────────────────────────╢
-  ║  GitHub    DrAmir0240/Antigravity-Patcher     ║
-  ║  Telegram  @AmirOmidi_Dev                     ║
-  ╚═══════════════════════════════════════════════╝
+  ╔════════════════════════════════════════════════════╗
+  ║  Antigravity Patcher                        v1.5.0 ║
+  ║  رفع تحریم و قفل منطقه‌ای آنتی‌گراویتی               ║
+  ║  تمیز • بدون کلید • بدون ردگیری                    ║
+  ╟────────────────────────────────────────────────────╢
+  ║  GitHub    khode-mwri/Antigravity-Patcher-Persian  ║
+  ║  Telegram  @bxiqm                                  ║
+  ╚════════════════════════════════════════════════════╝
 
   ───────────────────────────────────────────── پچ
   [1]  پچ Antigravity IDE        دور زدن قفل منطقه
@@ -421,7 +421,8 @@ Antigravity-Patcher-Persian/
 ## 💬 Поддержка
 
 - **Этот форк:** [Issues](https://github.com/khode-mwri/Antigravity-Patcher-Persian/issues)
-- **Оригинальный проект:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — Telegram: [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
+- **Сопровождающий:** [khode-mwri](https://github.com/khode-mwri) — Telegram: [@bxiqm](https://t.me/bxiqm) — Сайт: [mwry](https://khode-mwri.github.io/mwry/)
+- **Оригинальный проект:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher)
 
 ---
 

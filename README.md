@@ -50,14 +50,14 @@ errors **without a VPN and without changing your Google account region** on Wind
 ## 🖥 Screenshot
 
 ```text
-  ╔═══════════════════════════════════════════════╗
-  ║  Antigravity Patcher                   v1.5.0 ║
-  ║  رفع تحریم و قفل منطقه‌ای آنتی‌گراویتی          ║
-  ║  تمیز • بدون کلید • بدون ردگیری               ║
-  ╟───────────────────────────────────────────────╢
-  ║  GitHub    DrAmir0240/Antigravity-Patcher     ║
-  ║  Telegram  @AmirOmidi_Dev                     ║
-  ╚═══════════════════════════════════════════════╝
+  ╔════════════════════════════════════════════════════╗
+  ║  Antigravity Patcher                        v1.5.0 ║
+  ║  رفع تحریم و قفل منطقه‌ای آنتی‌گراویتی               ║
+  ║  تمیز • بدون کلید • بدون ردگیری                    ║
+  ╟────────────────────────────────────────────────────╢
+  ║  GitHub    khode-mwri/Antigravity-Patcher-Persian  ║
+  ║  Telegram  @bxiqm                                  ║
+  ╚════════════════════════════════════════════════════╝
 
   ───────────────────────────────────────────── پچ
   [1]  پچ Antigravity IDE        دور زدن قفل منطقه
@@ -417,7 +417,8 @@ Persian edition and its changes: [khode-mwri](https://github.com/khode-mwri) —
 ## 💬 Support
 
 - **This fork:** [Issues](https://github.com/khode-mwri/Antigravity-Patcher-Persian/issues)
-- **Upstream project:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher) — Telegram: [@AmirOmidi_Dev](https://t.me/AmirOmidi_Dev)
+- **Maintainer:** [khode-mwri](https://github.com/khode-mwri) — Telegram: [@bxiqm](https://t.me/bxiqm) — Website: [mwry](https://khode-mwri.github.io/mwry/)
+- **Upstream project:** [DrAmir0240/Antigravity-Patcher](https://github.com/DrAmir0240/Antigravity-Patcher)
 
 ---
 

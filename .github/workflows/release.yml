@@ -164,7 +164,7 @@ jobs:
           Section: utils
           Priority: optional
           Architecture: amd64
-          Maintainer: DrAmir0240 <https://github.com/DrAmir0240/Antigravity-Patcher>
+          Maintainer: mwri <https://github.com/khode-mwri/Antigravity-Patcher-Persian>
           Description: Antigravity Patcher
            Open-source region lock bypass tool for Google Antigravity IDE,
            Antigravity 2.0, Antigravity CLI (agy), and VS Code extension.
@@ -236,7 +236,7 @@ jobs:
               <key>CFBundleIconFile</key>
               <string>icon.icns</string>
               <key>CFBundleIdentifier</key>
-              <string>com.dramir0240.antigravity-patcher</string>
+              <string>com.khode-mwri.antigravity-patcher</string>
               <key>CFBundleName</key>
               <string>Antigravity Patcher</string>
               <key>CFBundleDisplayName</key>
@@ -271,7 +271,7 @@ jobs:
             --component "$APP_DIR" \
             --install-location "/Applications" \
             --scripts dist/pkg_scripts \
-            --identifier "com.dramir0240.antigravity-patcher" \
+            --identifier "com.khode-mwri.antigravity-patcher" \
             --version "${VERSION}" \
             dist/Antigravity_Patcher_macOS.pkg
 
@@ -367,6 +367,7 @@ jobs:
             | سیستم‌عامل | فرمت فایل | نام فایل دانلود | نحوه نصب و اجرا با یک کلیک |
             |:---|:---:|:---|:---|
             | **Windows (x64)** | `.exe` | `Antigravity_Patcher_Windows.exe` | دو بار کلیک کنید (درخواست دسترسی Admin به‌صورت خودکار انجام می‌شود) |
+            | **Windows — GUI** | `.exe` | `Antigravity_Patcher_FA_GUI.exe` | نسخهٔ گرافیکی پنجره‌ای با رابط انگلیسی/فارسی/روسی (پیش‌فرض انگلیسی)؛ با دسترسی مدیر اجرا شود |
             | **Ubuntu / Debian** | `.deb` | `Antigravity_Patcher_Ubuntu.deb` | با دو بار کلیک نصب کنید و از منوی برنامه‌ها **Antigravity Patcher** را باز کنید |
             | **Linux (Portable)** | `.run` | `Antigravity_Patcher_Linux.run` | نسخه پرتابل برای سایر توزیع‌های لینوکس (`chmod +x` و دبل‌کلیک) |
             | **macOS (Installer)** | `.pkg` | `Antigravity_Patcher_macOS.pkg` | با دو بار کلیک نصب کنید و برنامه **Antigravity Patcher** را از پوشه `Applications` اجرا کنید |

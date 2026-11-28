@@ -11,7 +11,16 @@
 | مخزن | https://github.com/DrAmir0240/Antigravity-Patcher |
 | نسخهٔ پایه | `1.3.8` |
 | مجوز | GPL-3.0 |
-| تلگرام نویسنده | https://t.me/AmirOmidi_Dev |
+
+## نگه‌دارندهٔ این فورک
+
+| مورد | مقدار |
+|---|---|
+| نگه‌دارنده | mwri |
+| گیت‌هاب | https://github.com/khode-mwri |
+| مخزن | https://github.com/khode-mwri/Antigravity-Patcher-Persian |
+| تلگرام | https://t.me/bxiqm |
+| وب‌سایت | https://khode-mwri.github.io/mwry/ |
 
 ## منابع و انتساب‌های ذکرشده در پروژهٔ اصلی
 
