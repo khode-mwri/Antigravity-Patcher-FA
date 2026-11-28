@@ -52,7 +52,7 @@ errors **without a VPN and without changing your Google account region** on Wind
 
 
 <p align="center">
-  <img src="../docs/screenshots/gui_en.png" alt="Desktop app in English (default language)" width="900">
+  <img src="docs/screenshots/gui_en.png" alt="Desktop app in English (default language)" width="900">
 </p>
 
 <sub>Desktop app (tkinter) in English — the default language. Switch languages from the selector in the top-right corner.</sub>

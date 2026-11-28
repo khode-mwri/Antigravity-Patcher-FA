@@ -52,7 +52,7 @@
 
 
 <p align="center">
-  <img src="../docs/screenshots/gui_ru.png" alt="Десктопное приложение на русском языке" width="900">
+  <img src="docs/screenshots/gui_ru.png" alt="Десктопное приложение на русском языке" width="900">
 </p>
 
 <sub>Десктопное приложение (tkinter) на русском. Язык переключается в селекторе справа сверху.</sub>
