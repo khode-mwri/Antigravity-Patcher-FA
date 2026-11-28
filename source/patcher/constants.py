@@ -4,10 +4,10 @@ MIN_ANTIGRAVITY_VERSION = "2.15.0"
 DOWNLOAD_URL = "https://antigravity.google/download"
 
 # Project & Author Details
-GITHUB_REPO = "DrAmir0240/Antigravity-Patcher"
+GITHUB_REPO = "khode-mwri/Antigravity-Patcher-Persian"
 GITHUB_URL = f"https://github.com/{GITHUB_REPO}"
-TELEGRAM_URL = "https://t.me/AmirOmidi_Dev"
-TELEGRAM_HANDLE = "@AmirOmidi_Dev"
+TELEGRAM_URL = "https://t.me/bxiqm"
+TELEGRAM_HANDLE = "@bxiqm"
 
 
 # Единственное место, где хранится GUID установщика Antigravity IDE
