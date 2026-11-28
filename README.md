@@ -50,6 +50,16 @@ errors **without a VPN and without changing your Google account region** on Wind
 
 ## 🖥 Screenshot
 
+
+<p align="center">
+  <img src="../docs/screenshots/gui_en.png" alt="Desktop app in English (default language)" width="900">
+</p>
+
+<sub>Desktop app (tkinter) in English — the default language. Switch languages from the selector in the top-right corner.</sub>
+
+<details>
+<summary><b>Terminal UI (text mode)</b></summary>
+
 ```text
   ╔════════════════════════════════════════════════════╗
   ║  Antigravity Patcher                        v1.5.0 ║
@@ -65,6 +75,8 @@ errors **without a VPN and without changing your Google account region** on Wind
   [2]  پچ Antigravity 2.0        پچ language_server
   ...
 ```
+
+</details>
 
 ---
 

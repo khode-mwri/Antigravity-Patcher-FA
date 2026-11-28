@@ -45,6 +45,16 @@
 
 ## 🖥 نمای برنامه
 
+
+<p align="center">
+  <img src="../docs/screenshots/gui_fa.png" alt="نمای اپ دسکتاپ به زبان فارسی" width="900">
+</p>
+
+<sub>نمای اپ دسکتاپ (tkinter) به فارسی. زبان را از انتخابگر بالا سمت راست می‌توان تغییر داد.</sub>
+
+<details>
+<summary><b>Terminal UI (text mode)</b></summary>
+
 ```text
   ╔════════════════════════════════════════════════════╗
   ║  Antigravity Patcher                        v1.5.0 ║
@@ -64,6 +74,8 @@
   [5]  Antigravity IDE                      از بکاپ
   ...
 ```
+
+</details>
 
 ---
 

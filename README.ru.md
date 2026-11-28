@@ -50,6 +50,16 @@
 
 ## 🖥 Скриншот
 
+
+<p align="center">
+  <img src="../docs/screenshots/gui_ru.png" alt="Десктопное приложение на русском языке" width="900">
+</p>
+
+<sub>Десктопное приложение (tkinter) на русском. Язык переключается в селекторе справа сверху.</sub>
+
+<details>
+<summary><b>Terminal UI (text mode)</b></summary>
+
 ```text
   ╔════════════════════════════════════════════════════╗
   ║  Antigravity Patcher                        v1.5.0 ║
@@ -65,6 +75,8 @@
   [2]  پچ Antigravity 2.0        پچ language_server
   ...
 ```
+
+</details>
 
 ---
 
