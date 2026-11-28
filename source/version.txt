@@ -13,11 +13,11 @@ VSVersionInfo(
     StringFileInfo([
       StringTable(
         '040904B0',
-         [StringStruct('CompanyName', 'DrAmir0240'),
+         [StringStruct('CompanyName', 'khode-mwri'),
           StringStruct('FileDescription', 'Antigravity Patcher'),
            StringStruct('FileVersion', '1.4.3'),
           StringStruct('InternalName', 'antigravity_patcher'),
-          StringStruct('LegalCopyright', '© 2026'),
+          StringStruct('LegalCopyright', '© 2026 khode-mwri'),
           StringStruct('OriginalFilename', 'Antigravity_Patcher_Windows.exe'),
           StringStruct('ProductName', 'Antigravity Patcher'),
            StringStruct('ProductVersion', '1.4.3')])
