@@ -75,7 +75,7 @@ def main():
         }
 
         staged = []
-        for rel in BRANDING_FILES:
+        for rel in substitutions:
             path = root / rel
             if not path.is_file():
                 print("  %s: %s missing, skipped" % (tag, rel))
