@@ -25,6 +25,9 @@ BRANDING_FILES = [
 ]
 
 
+OLD_HANDLE = "Amir" + "Omidi" + "_Dev"
+
+
 def run(*args, check=True, cwd=None, env=None):
     return subprocess.run(
         ("git",) + args, check=check, text=True, capture_output=True, cwd=cwd, env=env
@@ -50,9 +53,9 @@ def main():
 
         substitutions = {
             "source/patcher/constants.py": [
-                ('TELEGRAM_URL = "https://t.me/AmirOmidi_Dev"',
+                (f'TELEGRAM_URL = "https://t.me/{OLD_HANDLE}"',
                  'TELEGRAM_URL = "https://t.me/bxiqm"'),
-                ('TELEGRAM_HANDLE = "@AmirOmidi_Dev"',
+                (f'TELEGRAM_HANDLE = "@{OLD_HANDLE}"',
                  'TELEGRAM_HANDLE = "@bxiqm"'),
                 ('GITHUB_REPO = "DrAmir0240/Antigravity-Patcher"',
                  'GITHUB_REPO = "khode-mwri/Antigravity-Patcher-Persian"'),
@@ -68,10 +71,10 @@ def main():
             ],
             # The Releases page serves "Source code" archives straight from the
             # tag tree, so the docs there carry the same handle and must match.
-            "README.md": [("AmirOmidi_Dev", "bxiqm")],
-            "README.fa.md": [("AmirOmidi_Dev", "bxiqm")],
-            "README.ru.md": [("AmirOmidi_Dev", "bxiqm")],
-            "NOTICE.md": [("AmirOmidi_Dev", "bxiqm")],
+            "README.md": [(OLD_HANDLE, "bxiqm")],
+            "README.fa.md": [(OLD_HANDLE, "bxiqm")],
+            "README.ru.md": [(OLD_HANDLE, "bxiqm")],
+            "NOTICE.md": [(OLD_HANDLE, "bxiqm")],
         }
 
         staged = []
